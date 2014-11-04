@@ -34,7 +34,6 @@ public class TileController : MonoBehaviour {
 				t.name = tile.name + (i*boardHeight + j);
 				t.parent = tilesLayer.transform;
 				tilesObj[i, j] = t.gameObject;
-				print (i + " " + j);
 			}
 		}
 
