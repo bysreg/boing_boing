@@ -9,7 +9,7 @@ public class MoleMovement : MonoBehaviour {
 	bool isMoving;
 	Vector2 targetTilePos;
 	List<Vector3> path;
-	float stoppingDistance = 0.02f;
+	float stoppingDistance = 0.1f;
 	float sqrStoppingDistance;
 
 	TileController tileController;
@@ -43,17 +43,18 @@ public class MoleMovement : MonoBehaviour {
 			if(path.Count > 0)
 			{
 				//print(path.Count + " " + isMoving + " " + ((path[0] - transform.position).normalized * speed));
-				print (path.Count + " " + path[0] + " " + transform.position);
+				//print (path.Count + " " + path[0] + " " + transform.position);
 				transform.position += (path[0] - transform.position).normalized * speed * Time.deltaTime;
-
+				
 				if((transform.position - path[0]).sqrMagnitude < sqrStoppingDistance)
 				{
-					transform.position = path[0];
+					//transform.position = path[0];
 					path.RemoveAt(0);
 				}
 			}
 			else
 			{
+				transform.position = tileController.GetWorldPos((int) targetTilePos.x, (int) targetTilePos.y);
 				isMoving = false;
 			}
 		}
