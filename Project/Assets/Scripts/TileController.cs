@@ -51,8 +51,8 @@ public class TileController : MonoBehaviour {
 	//if it is outside the tile, then this function will return wrong value
 	public Vector2 GetTilePos(Vector3 worldPos)
 	{
-		int x = ((int) (worldPos.x - tilesObj[0, 0].transform.position.x) / boardWidth) - 1;
-		int y = ((int) (worldPos.z - tilesObj[0, 0].transform.position.z) / boardHeight) - 1;
+		int x = ((int) (worldPos.x - tilesObj[0, 0].transform.position.x) / boardWidth);
+		int y = ((int) (worldPos.z - tilesObj[0, 0].transform.position.z) / boardHeight);
 
 		return new Vector2(x, y);
 	}
