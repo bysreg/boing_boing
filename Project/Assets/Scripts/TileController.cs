@@ -46,4 +46,14 @@ public class TileController : MonoBehaviour {
 	{
 		tile.SetTileHeight(targetHeight);
 	}
+
+	//return tile pos given a world position
+	//if it is outside the tile, then this function will return wrong value
+	public Vector2 GetTilePos(Vector3 worldPos)
+	{
+		int x = ((int) (worldPos.x - tilesObj[0, 0].transform.position.x) / boardWidth) - 1;
+		int y = ((int) (worldPos.z - tilesObj[0, 0].transform.position.z) / boardHeight) - 1;
+
+		return new Vector2(x, y);
+	}
 }
