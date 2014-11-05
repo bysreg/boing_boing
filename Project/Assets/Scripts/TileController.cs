@@ -56,4 +56,9 @@ public class TileController : MonoBehaviour {
 
 		return new Vector2(x, y);
 	}
+
+	public Vector3 GetWorldPos(int tileX, int tileY)
+	{
+		return tilesObj[tileY, tileX].transform.position;
+	}
 }

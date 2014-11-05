@@ -1,15 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour {
-
-	// floating algorithm
-	protected Vector3 firstPosition;
-	protected float floatingSpeed = 6f;
-	protected float maxHeight = 0.4f;
-
-	protected float rotationSpeed = 3f;
-	protected float forwardSpeed = 2500f;
+public class PlayerController : CharacterBaseController {
 
 	bool simulateWithKeyboard = false;
 
@@ -17,8 +9,8 @@ public class PlayerController : MonoBehaviour {
 	Vector3 initialOrientation;
 
 	// Use this for initialization
-	void Start () {
-		firstPosition = transform.position;
+	protected override void Start () {
+		base.Start ();
 
 		try
 		{
@@ -38,14 +30,13 @@ public class PlayerController : MonoBehaviour {
 
 		if (!simulateWithKeyboard)
 		{
-			CalibratePsMove();
+			//CalibratePsMove(); // todo : unfinished
 		}
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		// idle floating
-		Floating ();
+	protected override void Update () {
+		base.Update ();
 
 		// steering
 		float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
@@ -53,7 +44,25 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void CalibratePsMove()
-//	{
+	{
+		MoveController moveController = null;
+		switch(index)
+		{
+		case 1:
+			moveController = PSMoveInput.MoveControllers[0];
+			break;
+		case 2:
+			moveController = PSMoveInput.MoveControllers[1];
+			break;
+		case 3:
+			moveController = PSMoveInput.MoveControllers[2];
+			break;
+		case 4:
+			moveController = PSMoveInput.MoveControllers[3];
+			break;
+		}
+
+
 //		if(PSMoveInput.IsConnected && PSMoveInput.MoveControllers[0].Connected) 
 //		{
 //			
@@ -83,18 +92,12 @@ public class PlayerController : MonoBehaviour {
 //		}	
 	}
 
-	void FixedUpdate() {
+	protected override void FixedUpdate() {
+		base.FixedUpdate ();
+
 		// acceleration
 		if (Input.GetKeyDown(KeyCode.UpArrow)) {
 			MoveForward();
 		}
-	}
-
-	void Floating() {
-		transform.position = new Vector3 (transform.position.x, firstPosition.y + (((Mathf.Sin (Time.time * floatingSpeed) + 1) / 2f) * maxHeight), transform.position.z);
-	}
-
-	void MoveForward() {
-		rigidbody.AddForce (transform.forward * forwardSpeed);
 	}
 }
