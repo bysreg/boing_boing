@@ -58,6 +58,8 @@ public class CharacterBaseController : MonoBehaviour {
 				y = 0;
 
 				isParabolicAnimating = false;
+				 
+				CheckGroundBelow();
 
 				// next jump
 				NextJump();
@@ -66,7 +68,12 @@ public class CharacterBaseController : MonoBehaviour {
 			transform.position = new Vector3 (transform.position.x, firstPosition.y + y, transform.position.z);
 		}
 	}
-	
+
+	void CheckGroundBelow()
+	{
+		//TODO :
+    }
+    
 	protected void NextJump () {
 		float speed = Vector2.SqrMagnitude (new Vector2 (rigidbody.velocity.x, rigidbody.velocity.z));
 		Vector2 speedRange = new Vector2 (v0default, v0default / 2f);

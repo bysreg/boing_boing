@@ -122,5 +122,16 @@ public class TileController : MonoBehaviour {
 		{
 			SetTileUpAndDown();
 		}
+
+		if(Input.GetKeyDown(KeyCode.B))
+		{
+			for(int i=0; i<boardHeight; i++)
+			{
+				for(int j=0; j<boardWidth; j++)
+				{
+					tilesObj[i, j].GetComponent<TileMovement>().SetTileHeightToNormal();
+				}
+			}
+		}
 	}
 }
