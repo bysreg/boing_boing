@@ -89,12 +89,11 @@ public class TileController : MonoBehaviour {
 	void SetTileUpAndDown()
 	{
 		int count = 10;
-		float minHeight = -10f;
-		float maxHeight = -3.5f;
+		float height = -20f;
 
 		for(int i=0; i<count; i++)
 		{
-			tilesObj[Random.Range(1, boardHeight - 1), Random.Range(1, boardWidth - 1)].GetComponent<TileMovement>().SetTileHeight(Random.Range(minHeight, maxHeight));
+			tilesObj[Random.Range(1, boardHeight - 1), Random.Range(1, boardWidth - 1)].GetComponent<TileMovement>().SetTileHeight(height);
 		}
 	}
 
