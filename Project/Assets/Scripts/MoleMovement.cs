@@ -7,6 +7,7 @@ public class MoleMovement : MonoBehaviour {
 	public float speed = 1f;
 
 	bool isMoving;
+	Vector3 offsetPos; // from tile
 	Vector2 targetTilePos;
 	List<Vector3> path;
 	float stoppingDistance = 0.1f;
@@ -21,6 +22,12 @@ public class MoleMovement : MonoBehaviour {
 		tileController = GameObject.Find("GameController").GetComponent<TileController>();
 	}
 
+	void Start()
+	{
+		//intentionally in Start()
+		offsetPos = transform.position - tileController.GetWorldPos(0, 0);
+	}
+
 	public void SetTargetMoveTilePos(int x, int y)
 	{
 		targetTilePos = new Vector2(x, y);
@@ -31,7 +38,7 @@ public class MoleMovement : MonoBehaviour {
 		//convert to world pos
 		for(int i=0; i<tilePath.Count; i++)
 		{
-			path.Add(tileController.GetWorldPos((int) tilePath[i].x, (int) tilePath[i].y));
+			path.Add(tileController.GetWorldPos((int) tilePath[i].x, (int) tilePath[i].y) + offsetPos);
 		}
 
 //		foreach(var worldPos in path)
@@ -53,13 +60,12 @@ public class MoleMovement : MonoBehaviour {
 				
 				if((transform.position - path[0]).sqrMagnitude < sqrStoppingDistance)
 				{
-					//transform.position = path[0];
 					path.RemoveAt(0);
 				}
 			}
 			else
 			{
-				transform.position = tileController.GetWorldPos((int) targetTilePos.x, (int) targetTilePos.y);
+				transform.position = tileController.GetWorldPos((int) targetTilePos.x, (int) targetTilePos.y) + offsetPos;
 				isMoving = false;
 			}
 		}

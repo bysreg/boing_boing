@@ -12,14 +12,18 @@ public class MoleController : MonoBehaviour {
 		moleMovement = GameObject.Find("Mole").GetComponent<MoleMovement>();
 	}
 
-	void Start()
-	{
-		MoveToTilePos(tileController.boardWidth - 1, tileController.boardHeight - 1);
-	}
-
 	void MoveToTilePos(int x, int y)
 	{
 		moleMovement.SetTargetMoveTilePos(x, y);
 	}
 
+
+	void Update()
+	{
+		//cheat
+		if(Input.GetKeyDown(KeyCode.M))
+		{
+			MoveToTilePos(Random.Range(0, tileController.boardWidth), Random.Range(0, tileController.boardHeight));
+		}
+	}
 }

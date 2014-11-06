@@ -7,6 +7,8 @@ public class TileMovement : MonoBehaviour {
 	float targetHeight; // y axis
 	float moveTime = 2f;
 
+	float isWalkable;
+
 	public void SetTileHeight(float targetHeight)
 	{
 		if(isMoving)
@@ -17,7 +19,7 @@ public class TileMovement : MonoBehaviour {
 		iTween.MoveTo(this.gameObject, iTween.Hash("y", targetHeight, "easeType", "easeInOutExpo", "time", moveTime, "oncomplete", "OnMoveComplete", "oncompletetarget", this.gameObject));
 	}
 
-	public void OnMoveComplete(Object o)
+	public void OnMoveComplete()
 	{
 		isMoving = false;
 	}
