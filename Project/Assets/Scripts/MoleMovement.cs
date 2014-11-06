@@ -63,11 +63,6 @@ public class MoleMovement : MonoBehaviour {
 				isMoving = false;
 			}
 		}
-
-		if(Input.GetKeyDown(KeyCode.Space))
-		{
-			SetTargetMoveTilePos(Random.Range(0, tileController.boardWidth), Random.Range(0, tileController.boardHeight));
-		}
 	}
 
 	List<Vector2> CreatePath(Vector2 targetTilePos)
