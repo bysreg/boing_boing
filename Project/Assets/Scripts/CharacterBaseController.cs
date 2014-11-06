@@ -22,11 +22,25 @@ public class CharacterBaseController : MonoBehaviour {
 	protected float v0default = 6f;
 	protected float v0;
 
+	bool fallDown;
+	float respawnTime;
+	const float MAX_RESPAWN_TIME = 3f;
+	Vector3 capsuleCollRadius;
+
+	GameController gameController;
+
 	protected virtual void Awake() {
 		if (isComputer) {
-			gameObject.AddComponent<AIController>();
-			Destroy(gameObject.GetComponent<PlayerController>());
+			AIController aicomp = gameObject.AddComponent<AIController>();
+			PlayerController playercomp = gameObject.GetComponent<PlayerController>();
+
+			aicomp.index = playercomp.index;
+
+			Destroy(playercomp);
 		}
+
+		gameController = GameObject.Find("GameController").GetComponent<GameController>();
+		capsuleCollRadius = new Vector3(GetComponent<CapsuleCollider>().bounds.extents.x, 0, 0);
 	}
 	
 	// Use this for initialization
@@ -39,7 +53,18 @@ public class CharacterBaseController : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update () {
 		// idle floating
-		Floating ();
+		if(!fallDown)
+			Floating ();
+
+		if(fallDown)
+		{
+			respawnTime -= Time.deltaTime;
+
+			if(respawnTime <= 0)
+			{
+				gameController.SpawnPlayer(index);
+			}
+		}
 	}
 
 	protected virtual void FixedUpdate() {
@@ -71,7 +96,19 @@ public class CharacterBaseController : MonoBehaviour {
 
 	void CheckGroundBelow()
 	{
-		//TODO :
+
+
+		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
+		if(!Physics.Raycast(transform.position, - transform.up, 1f, layerMask))
+		{
+
+			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 1f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 1f, layerMask))
+			{
+				// there is no tile below, so player falls down
+				fallDown = true;
+				respawnTime = MAX_RESPAWN_TIME;
+			}
+		}
     }
     
 	protected void NextJump () {
@@ -106,5 +143,10 @@ public class CharacterBaseController : MonoBehaviour {
 
 	public static float GetValue(Vector2 firstVector, Vector2 secondVector, float secondValue) {
 		return -((firstVector.y - firstVector.x) * (secondVector.y - secondValue) / (secondVector.y - secondVector.x)) + firstVector.y;
+	}
+
+	public void Reset()
+	{
+		fallDown = false;
 	}
 }

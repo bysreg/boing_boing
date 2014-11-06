@@ -133,4 +133,9 @@ public class TileController : MonoBehaviour {
 			}
 		}
 	}
+
+	public float GetTileHeight()
+	{
+		return tileHeight;
+	}
 }
