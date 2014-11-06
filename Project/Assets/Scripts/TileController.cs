@@ -6,9 +6,12 @@ public class TileController : MonoBehaviour {
 	public int boardWidth; // how many tiles for the board's width (x axis)
 	public int boardHeight; // how many tiles for the board's height (z axis)
 	public Transform tile;
+	public BoxCollider boundary;
 
-	private GameObject tilesLayer;
-	private GameObject[,] tilesObj;
+	GameObject tilesLayer;
+	GameObject[,] tilesObj;
+	float tileWidth;
+	float tileDepth;
 
 	void Awake()
 	{
@@ -18,12 +21,13 @@ public class TileController : MonoBehaviour {
 	void Start()
 	{
 		InitializeTiles();
+		CreateBoundaryCollider();
 	}
 
 	void InitializeTiles()
 	{
-		float tileWidth = tile.renderer.bounds.size.x;
-		float tileDepth = tile.renderer.bounds.size.z;
+		tileWidth = tile.renderer.bounds.size.x;
+		tileDepth = tile.renderer.bounds.size.z;
 		tilesObj = new GameObject[boardHeight, boardHeight];
 
 		for(int i=0; i<boardHeight; i++)
@@ -42,6 +46,38 @@ public class TileController : MonoBehaviour {
 		placeHolderTile.SetActive(false);
 	}
 
+	void CreateBoundaryCollider()
+	{
+		BoxCollider left = Instantiate(boundary) as BoxCollider;
+		BoxCollider right = Instantiate(boundary) as BoxCollider;
+		BoxCollider top = Instantiate(boundary) as BoxCollider;
+		BoxCollider down = Instantiate(boundary) as BoxCollider;
+		left.name = "left";
+		right.name = "right";
+		top.name = "top";
+		down.name = "down";
+
+		float midZ = (tilesObj[0, 0].transform.position.z + tilesObj[boardHeight - 1, 0].transform.position.z) / 2;
+		float midX = (tilesObj[0, 0].transform.position.x + tilesObj[0, boardWidth - 1].transform.position.x) / 2;
+
+		left.gameObject.transform.localScale = new Vector3(1, 3, boardHeight);
+		right.gameObject.transform.localScale = new Vector3(1, 3, boardHeight);
+		top.gameObject.transform.localScale = new Vector3(boardWidth, 3, 1);
+		down.gameObject.transform.localScale = new Vector3(boardWidth, 3, 1);
+
+		left.gameObject.transform.position = tilesObj[0, 0].transform.position + new Vector3(-tileWidth / 2 - boundary.size.x / 2, 0, midZ);
+		right.gameObject.transform.position = tilesObj[0, boardWidth - 1].transform.position + new Vector3(tileWidth / 2 + boundary.size.x / 2, 0, midZ);
+		top.gameObject.transform.position = new Vector3(midX, 0, tileDepth / 2 + boundary.size.z / 2) + tilesObj[boardHeight - 1, 0].transform.position;
+		down.gameObject.transform.position = new Vector3(midX, 0, - tileDepth / 2 - boundary.size.z / 2) + tilesObj[0, 0].transform.position;
+
+		GameObject parent = new GameObject();
+		parent.name = "Bounds";
+		left.transform.parent = parent.transform;
+		right.transform.parent = parent.transform;
+		top.transform.parent = parent.transform;
+		down.transform.parent = parent.transform;
+	}
+
 	void SetTileHeight(TileMovement tile, float targetHeight)
 	{
 		tile.SetTileHeight(targetHeight);
@@ -51,8 +87,8 @@ public class TileController : MonoBehaviour {
 	//if it is outside the tile, then this function will return wrong value
 	public Vector2 GetTilePos(Vector3 worldPos)
 	{
-		int x = ((int) (worldPos.x - tilesObj[0, 0].transform.position.x) / boardWidth);
-		int y = ((int) (worldPos.z - tilesObj[0, 0].transform.position.z) / boardHeight);
+		int x = (int)((worldPos.x - tilesObj[0, 0].transform.position.x) / tileWidth);
+		int y = (int)((worldPos.z - tilesObj[0, 0].transform.position.z) / tileDepth);
 
 		return new Vector2(x, y);
 	}

@@ -33,6 +33,11 @@ public class MoleMovement : MonoBehaviour {
 		{
 			path.Add(tileController.GetWorldPos((int) tilePath[i].x, (int) tilePath[i].y));
 		}
+
+//		foreach(var worldPos in path)
+//		{
+//			print (worldPos);
+//		}
 	}
 
 	void Update()
@@ -57,6 +62,11 @@ public class MoleMovement : MonoBehaviour {
 				transform.position = tileController.GetWorldPos((int) targetTilePos.x, (int) targetTilePos.y);
 				isMoving = false;
 			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.Space))
+		{
+			SetTargetMoveTilePos(Random.Range(0, tileController.boardWidth), Random.Range(0, tileController.boardHeight));
 		}
 	}
 
