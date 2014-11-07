@@ -43,7 +43,13 @@ public class PlayerController : CharacterBaseController {
 			float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
 			transform.Rotate(0, rotation, 0);
 		} else { // ps move
+			// forward
+			if (Mathf.Abs(moveController.Data.Acceleration.y) >= 100) {
+				MoveForward();
+			}
 
+			// steering
+			transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.y, transform.rotation.eulerAngles.z);
 		}
 	}
 }
