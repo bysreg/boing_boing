@@ -33,7 +33,7 @@ public class PlayerController : CharacterBaseController {
 	protected override void Update () {
 		base.Update ();
 
-		// keboard
+		// keyboard
 		if (simulateWithKeyboard) {
 			// forward
 			if (Input.GetKeyDown(KeyCode.UpArrow) && index == 1) {
@@ -48,12 +48,37 @@ public class PlayerController : CharacterBaseController {
 			}
 		} else { // ps move
 			// forward
-			if (Mathf.Abs(moveController.Data.Acceleration.y) >= 100) {
+			float value = moveController.Data.Velocity.y;
+			MoveData moveData = moveController.Data;
+
+			// move forward
+			elapsedTimeForward += Time.deltaTime;
+
+			if (Mathf.Abs(value) >= 7f && elapsedTimeForward >= waitingTimeToMove) {
+				elapsedTimeForward -= 0f;
 				MoveForward();
 			}
 
 			// steering
-			transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.y, transform.rotation.eulerAngles.z);
+			transform.localRotation = Quaternion.Euler(Vector3.zero);
+			transform.Rotate(new Vector3(0f,moveData.Orientation.z,0f));
+
+			Quaternion temp = new Quaternion(0,0,0,0);
+			temp = moveData.QOrientation;
+			temp.x = -moveData.QOrientation.x;
+			temp.y = -moveData.QOrientation.y;
+			transform.localRotation = temp;
+
+			//transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.z, transform.rotation.eulerAngles.z);
+		}
+	}
+
+	protected float GetRotationValue(float value) {
+		if (value < 0) {
+			float result = value % 360;
+			return result + 360;
+		} else {
+			return value % 360f;
 		}
 	}
 }

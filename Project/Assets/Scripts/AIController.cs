@@ -4,11 +4,8 @@ using System.Collections;
 public class AIController : CharacterBaseController {
 
 	private float minDistance = 0.7f;
-	private float waitingTimeToMove = 0.3f;
 
 	protected Vector3 targetPosition;
-
-	protected float elapsedTimeForward = 0f;
 
 	// Use this for initialization
 	protected override void Start () {
