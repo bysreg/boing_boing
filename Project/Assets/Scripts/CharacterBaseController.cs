@@ -96,8 +96,6 @@ public class CharacterBaseController : MonoBehaviour {
 
 	void CheckGroundBelow()
 	{
-
-
 		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
 		if(!Physics.Raycast(transform.position, - transform.up, 1f, layerMask))
 		{
@@ -148,5 +146,10 @@ public class CharacterBaseController : MonoBehaviour {
 	public void Reset()
 	{
 		fallDown = false;
+	}
+
+	public int GetIndex()
+	{
+		return index;
 	}
 }

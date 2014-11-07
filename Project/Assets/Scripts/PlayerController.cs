@@ -36,12 +36,16 @@ public class PlayerController : CharacterBaseController {
 		// keboard
 		if (simulateWithKeyboard) {
 			// forward
-			if (Input.GetKeyDown(KeyCode.UpArrow)) {
+			if (Input.GetKeyDown(KeyCode.UpArrow) && index == 1) {
 				MoveForward();
 			}
+
 			// steering
-			float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
-			transform.Rotate(0, rotation, 0);
+			if(index == 1)
+			{
+				float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
+				transform.Rotate(0, rotation, 0);
+			}
 		} else { // ps move
 			// forward
 			if (Mathf.Abs(moveController.Data.Acceleration.y) >= 100) {

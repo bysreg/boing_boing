@@ -26,6 +26,9 @@ public class MoleMovement : MonoBehaviour {
 	{
 		//intentionally in Start()
 		offsetPos = transform.position - tileController.GetWorldPos(0, 0);
+
+		//put the mole in the middle at the very first start
+		GameObject.Find("Mole").transform.position = tileController.GetWorldPos(tileController.boardWidth / 2, tileController.boardHeight / 2) + offsetPos;
 	}
 
 	public void SetTargetMoveTilePos(int x, int y)
