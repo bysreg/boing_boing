@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour {
 
@@ -7,18 +8,18 @@ public class PlayerAttack : MonoBehaviour {
 	const float MAX_FREEZE_TIME = 2f;
 	float attackDistance = 2.5f;
 	float forceMagnitude = 7f;
+	List<GameObject> playersInsideHitArea;
 
 	PlayerController playerController;
 
 	void Awake()
 	{
 		playerController = GetComponent<PlayerController>();
+		playersInsideHitArea = new List<GameObject>();
 	}
 
 	void Update()
 	{
-		Debug.DrawRay(transform.position, transform.forward * attackDistance, Color.blue);
-
 		if(freezeTime == 0)
 		{
 			if(playerController.GetIndex() == 1 && Input.GetKeyDown(KeyCode.C))
@@ -34,25 +35,44 @@ public class PlayerAttack : MonoBehaviour {
 				freezeTime = 0;
 			}
 		}
+	}
 
-		//test code
-//		if(Input.GetKeyDown(KeyCode.F) && playerController.GetIndex() == 1)
-//		{
-//			this.rigidbody.AddForceAtPosition(transform.forward * forceMagnitude, transform.position, ForceMode.Impulse);
-//		}
+	void OnTriggerEnter(Collider other)
+	{
+		if(other.tag == "Player")
+		{
+			playersInsideHitArea.Add(other.gameObject);
+		}
+	}
+
+	void OnTriggerExit(Collider other)
+	{
+		if(other.tag == "Player")
+		{
+			playersInsideHitArea.Remove(other.gameObject);
+		}
 	}
 
 	void Attack()
 	{
 		freezeTime = MAX_FREEZE_TIME;
-		
-		int layerMask = (1 << LayerMask.NameToLayer("Player"));
-		RaycastHit hit;
-		if(Physics.Raycast(transform.position, transform.forward, out hit, attackDistance, layerMask))
+
+		if(playersInsideHitArea.Count == 0)
 		{
-			print ("someone is hit by the attack : " + hit.transform.name);
-			hit.rigidbody.AddForceAtPosition(transform.forward * forceMagnitude, hit.point, ForceMode.Impulse);
-        }
+			return;
+		}
+
+		float minDistance = Mathf.Infinity;
+		GameObject nearestPlayer = null;
+		foreach(var player in playersInsideHitArea)
+		{
+			if((player.transform.position - transform.position).sqrMagnitude < minDistance)
+			{
+				nearestPlayer = player;
+			}
+		}
+
+		nearestPlayer.rigidbody.AddForce(transform.forward * forceMagnitude, ForceMode.Impulse);
     }
     
     public float GetFreezeTime()
