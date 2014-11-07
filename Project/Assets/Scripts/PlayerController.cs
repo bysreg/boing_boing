@@ -67,9 +67,14 @@ public class PlayerController : CharacterBaseController {
 			}
 
 			// steering
-			transform.localRotation = Quaternion.Euler(new Vector3(0f,moveData.Orientation.z,0f));
+			float _rotationSpeed = GetValue(speedRange, rotationRange, moveData.Orientation.z);
+			if (_rotationSpeed < speedRange.x) 
+				_rotationSpeed = speedRange.x;
+			else if (_rotationSpeed > speedRange.y)
+				_rotationSpeed = speedRange.y;
 
-			//transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.z, transform.rotation.eulerAngles.z);
+			transform.localRotation = Quaternion.Euler(new Vector3(0f, _rotationSpeed * Time.deltaTime, 0f));
+			//transform.localRotation = Quaternion.Euler(new Vector3(0f,moveData.Orientation.z,0f));
 		}
 	}
 
