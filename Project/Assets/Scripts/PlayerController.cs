@@ -48,12 +48,12 @@ public class PlayerController : CharacterBaseController {
 			}
 		} else { // ps move
 			// forward
-			if (Mathf.Abs(moveController.Data.Acceleration.y) >= 100) {
+			if (moveController.Data.Acceleration.z >= 400) {
 				MoveForward();
 			}
 
 			// steering
-			transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.y, transform.rotation.eulerAngles.z);
+			transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.z, transform.rotation.eulerAngles.z);
 		}
 	}
 
