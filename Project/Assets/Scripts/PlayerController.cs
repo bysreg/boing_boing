@@ -52,4 +52,13 @@ public class PlayerController : CharacterBaseController {
 			transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.y, transform.rotation.eulerAngles.z);
 		}
 	}
+
+	protected float GetRotationValue(float value) {
+		if (value < 0) {
+			float result = value % 360;
+			return result + 360;
+		} else {
+			return value % 360f;
+		}
+	}
 }
