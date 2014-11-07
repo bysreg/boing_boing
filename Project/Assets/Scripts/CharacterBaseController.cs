@@ -22,6 +22,10 @@ public class CharacterBaseController : MonoBehaviour {
 	protected float v0default = 6f;
 	protected float v0;
 
+	// forward
+	protected float waitingTimeToMove = 0.2f;
+	protected float elapsedTimeForward = 0f;
+
 	bool fallDown;
 	float respawnTime;
 	const float MAX_RESPAWN_TIME = 3f;

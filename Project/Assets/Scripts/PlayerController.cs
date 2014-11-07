@@ -49,14 +49,27 @@ public class PlayerController : CharacterBaseController {
 		} else { // ps move
 			// forward
 			float value = moveController.Data.Velocity.y;
-			Debug.Log("value : " + value);
+			MoveData moveData = moveController.Data;
 
-			if (Mathf.Abs(value) >= 7f) {
+			// move forward
+			elapsedTimeForward += Time.deltaTime;
+
+			if (Mathf.Abs(value) >= 7f && elapsedTimeForward >= waitingTimeToMove) {
+				elapsedTimeForward -= 0f;
 				MoveForward();
 			}
 
 			// steering
-			transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.z, transform.rotation.eulerAngles.z);
+			transform.localRotation = Quaternion.Euler(Vector3.zero);
+			transform.Rotate(new Vector3(0f,moveData.Orientation.z,0f));
+
+			Quaternion temp = new Quaternion(0,0,0,0);
+			temp = moveData.QOrientation;
+			temp.x = -moveData.QOrientation.x;
+			temp.y = -moveData.QOrientation.y;
+			transform.localRotation = temp;
+
+			//transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.z, transform.rotation.eulerAngles.z);
 		}
 	}
 
