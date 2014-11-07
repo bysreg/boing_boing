@@ -33,7 +33,7 @@ public class PlayerController : CharacterBaseController {
 	protected override void Update () {
 		base.Update ();
 
-		// keboard
+		// keyboard
 		if (simulateWithKeyboard) {
 			// forward
 			if (Input.GetKeyDown(KeyCode.UpArrow) && index == 1) {
@@ -48,7 +48,10 @@ public class PlayerController : CharacterBaseController {
 			}
 		} else { // ps move
 			// forward
-			if (moveController.Data.Acceleration.z >= 400) {
+			float value = moveController.Data.Velocity.y;
+			Debug.Log("value : " + value);
+
+			if (Mathf.Abs(value) >= 7f) {
 				MoveForward();
 			}
 
