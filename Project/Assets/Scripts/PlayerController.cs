@@ -9,10 +9,17 @@ public class PlayerController : CharacterBaseController {
 	MoveController moveController;
 	Vector3 initialOrientation;
 	public int psMoveIndex = 0;
+	protected float psMoveFirstRotation = 180f;
+	protected float psMoveRange = 70f;
+	protected float maxRotationSpeed = 10f;
+	protected Vector2 rotationRange, speedRange;
 
 	// Use this for initialization
 	protected override void Start () {
 		base.Start ();
+
+		rotationRange = new Vector2(psMoveIndex + psMoveRange, psMoveFirstRotation - psMoveRange);
+		speedRange = new Vector2(-maxRotationSpeed, maxRotationSpeed);
 
 		try {
 			if(PSMoveInput.IsConnected && PSMoveInput.MoveControllers[psMoveIndex].Connected) {
@@ -60,16 +67,14 @@ public class PlayerController : CharacterBaseController {
 			}
 
 			// steering
-			transform.localRotation = Quaternion.Euler(Vector3.zero);
-			transform.Rotate(new Vector3(0f,moveData.Orientation.z,0f));
+			float _rotationSpeed = GetValue(speedRange, rotationRange, moveData.Orientation.z);
+			if (_rotationSpeed < speedRange.x) 
+				_rotationSpeed = speedRange.x;
+			else if (_rotationSpeed > speedRange.y)
+				_rotationSpeed = speedRange.y;
 
-			Quaternion temp = new Quaternion(0,0,0,0);
-			temp = moveData.QOrientation;
-			temp.x = -moveData.QOrientation.x;
-			temp.y = -moveData.QOrientation.y;
-			transform.localRotation = temp;
-
-			//transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, moveController.Data.Orientation.z, transform.rotation.eulerAngles.z);
+			transform.localRotation = Quaternion.Euler(new Vector3(0f, _rotationSpeed * Time.deltaTime, 0f));
+			//transform.localRotation = Quaternion.Euler(new Vector3(0f,moveData.Orientation.z,0f));
 		}
 	}
 
