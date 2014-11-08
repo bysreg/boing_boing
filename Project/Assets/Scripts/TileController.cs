@@ -6,6 +6,7 @@ public class TileController : MonoBehaviour {
 	public int boardWidth; // how many tiles for the board's width (x axis)
 	public int boardHeight; // how many tiles for the board's height (z axis)
 	public Transform tile;
+	public Transform[] tileTypes;
 	public BoxCollider boundary;
 
 	GameObject tilesLayer;
@@ -28,9 +29,18 @@ public class TileController : MonoBehaviour {
 
 	void InitializeTiles()
 	{
-		tileWidth = tile.renderer.bounds.size.x;
-		tileDepth = tile.renderer.bounds.size.z;
-		tileHeight = tile.renderer.bounds.size.y;
+		//tileWidth = tile.renderer.bounds.size.x;
+		//tileDepth = tile.renderer.bounds.size.z;
+		//tileHeight = tile.renderer.bounds.size.y;
+		tileWidth = 1;
+		tileDepth = 1;
+		tileHeight = 1;
+
+//		var test = GameObject.Find("GameObject").renderer.bounds.size;
+//
+//		print (test.x + " " + test.y + " " + test.z);
+//		print (tileWidth)
+
 		tilesObj = new GameObject[boardHeight, boardHeight];
 
 		//deactive place holder tile not in tiles layer
@@ -41,7 +51,12 @@ public class TileController : MonoBehaviour {
 		{
 			for(int j=0; j<boardWidth; j++)
 			{
-				Transform t = Instantiate(tile, new Vector3(j*tileWidth, placeHolderTile.transform.position.y, i*tileDepth), Quaternion.identity) as Transform;
+//				Transform t = Instantiate(tile, new Vector3(j*tileWidth, placeHolderTile.transform.position.y, i*tileDepth), Quaternion.identity) as Transform;
+//				t.name = tile.name + (i*boardHeight + j);
+//				t.parent = tilesLayer.transform;
+//				tilesObj[i, j] = t.gameObject;
+
+				Transform t = Instantiate(tileTypes[Random.Range(0, tileTypes.Length)], new Vector3(j*tileWidth, placeHolderTile.transform.position.y, i*tileDepth), Quaternion.identity) as Transform;
 				t.name = tile.name + (i*boardHeight + j);
 				t.parent = tilesLayer.transform;
 				tilesObj[i, j] = t.gameObject;
