@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CharacterBaseController : MonoBehaviour {
@@ -160,5 +160,15 @@ public class CharacterBaseController : MonoBehaviour {
 	public int GetIndex()
 	{
 		return index;
+	}
+
+	public void PullMoleFreeze()
+	{
+		rigidbody.isKinematic = true;
+	}
+
+	public void StopPullMoleFreeze()
+	{
+		rigidbody.isKinematic = false;
 	}
 }

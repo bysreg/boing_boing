@@ -84,4 +84,9 @@ public class GameController : MonoBehaviour {
 			Init();
 		}
 	}
+
+	public void FinishGame(int winner)
+	{
+		print ("the winner is " + winner);
+	}
 }

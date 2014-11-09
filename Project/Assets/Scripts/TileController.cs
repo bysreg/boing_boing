@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class TileController : MonoBehaviour {
@@ -41,7 +41,7 @@ public class TileController : MonoBehaviour {
 //		print (test.x + " " + test.y + " " + test.z);
 //		print (tileWidth)
 
-		tilesObj = new GameObject[boardHeight, boardHeight];
+		tilesObj = new GameObject[boardHeight, boardWidth];
 
 		//deactive place holder tile not in tiles layer
 		GameObject placeHolderTile = GameObject.Find("Tile");
@@ -51,11 +51,6 @@ public class TileController : MonoBehaviour {
 		{
 			for(int j=0; j<boardWidth; j++)
 			{
-//				Transform t = Instantiate(tile, new Vector3(j*tileWidth, placeHolderTile.transform.position.y, i*tileDepth), Quaternion.identity) as Transform;
-//				t.name = tile.name + (i*boardHeight + j);
-//				t.parent = tilesLayer.transform;
-//				tilesObj[i, j] = t.gameObject;
-
 				Transform t = Instantiate(tileTypes[Random.Range(0, tileTypes.Length)], new Vector3(j*tileWidth, placeHolderTile.transform.position.y, i*tileDepth), Quaternion.identity) as Transform;
 				t.name = tile.name + (i*boardHeight + j);
 				t.parent = tilesLayer.transform;

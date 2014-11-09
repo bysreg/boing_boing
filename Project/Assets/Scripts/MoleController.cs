@@ -17,7 +17,6 @@ public class MoleController : MonoBehaviour {
 		moleMovement.SetTargetMoveTilePos(x, y);
 	}
 
-
 	void Update()
 	{
 		//cheat
