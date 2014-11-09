@@ -56,13 +56,14 @@ public class PlayerController : CharacterBaseController {
 			}
 		} else { // ps move
 			// FORWARD
-			float value = moveController.Data.Velocity.y;
+			float velocity = moveController.Data.Velocity.y;
+			Debug.Log("velocity : " + velocity);
 			MoveData moveData = moveController.Data;
 
 			// move forward
 			elapsedTimeForward += Time.deltaTime;
 
-			if (Mathf.Abs(value) >= 7f && elapsedTimeForward >= waitingTimeToMove) {
+			if (Mathf.Abs(velocity) >= 7f && elapsedTimeForward >= waitingTimeToMove) {
 				elapsedTimeForward -= 0f;
 				MoveForward();
 			}
@@ -70,20 +71,22 @@ public class PlayerController : CharacterBaseController {
 			// STEERING
 			// avoid Gimbal Lock
 			float orientation = GetRotationValue(Mathf.Rad2Deg * Mathf.Atan2(2*moveData.QOrientation.y*moveData.QOrientation.w - 2*moveData.QOrientation.x*moveData.QOrientation.z, 1 - 2*moveData.QOrientation.y*moveData.QOrientation.y - 2*moveData.QOrientation.z*moveData.QOrientation.z));
-
-			Debug.Log("orientation : " + orientation);
+			//Debug.Log("orientation : " + orientation);
 
 			/*
 			float _rotationSpeed = GetValue(speedRange, rotationRange, orientation);
-			if (_rotationSpeed < speedRange.x) 
-				_rotationSpeed = speedRange.x;
-			else if (_rotationSpeed > speedRange.y)
-				_rotationSpeed = speedRange.y;
-
+			if (Mathf.Abs(orientation - psMoveFirstRotation) <= 15f) {
+				_rotationSpeed = 0f;
+			} else {
+				if (_rotationSpeed < speedRange.x) 
+					_rotationSpeed = speedRange.x;
+				else if (_rotationSpeed > speedRange.y)
+					_rotationSpeed = speedRange.y;
+			}
 			transform.Rotate(new Vector3(0f, _rotationSpeed * Time.deltaTime, 0f));
 			*/
 
-			float playerRotation = playerFirstRotation + (orientation - psMoveFirstRotation);
+			float playerRotation = playerFirstRotation - (orientation - psMoveFirstRotation);
 			transform.localRotation = Quaternion.Euler(0, playerRotation, 0);
 		}
 	}
