@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour {
 
+	//static
+	public static GameObject playerPullingMole;
+
 	float freezeTime; // time until the player can attack
 	const float MAX_FREEZE_TIME = 2f;
 	float forceMagnitude = 14f;
@@ -16,11 +19,12 @@ public class PlayerAttack : MonoBehaviour {
 	GameObject mole;
 	float sqrMoleCatchingDistance = 4.5f;
 	float pullMoleTime;
-	float MAX_PULL_MOLE_TIME = 4f;
+	float MAX_PULL_MOLE_TIME = 5f;
 
 	PlayerController playerController;
 	CharacterBaseController characterBaseController;
 	GameController gameController;
+	MoleController moleController;
 
 	bool initialized;
 
@@ -31,6 +35,7 @@ public class PlayerAttack : MonoBehaviour {
 		index = GetComponent<CharacterBaseController>().index;
 		mole = GameObject.Find("Mole");
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
+		moleController = gameController.gameObject.GetComponent<MoleController>();
 		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z;
 	}
 
@@ -73,7 +78,7 @@ public class PlayerAttack : MonoBehaviour {
 				{
 					float sqrDistance = Mathf.Pow(mole.transform.position.x - transform.position.x, 2) + Mathf.Pow(mole.transform.position.z - transform.position.z, 2);
 					
-					if(sqrDistance <= sqrMoleCatchingDistance)
+					if(playerPullingMole == null && sqrDistance <= sqrMoleCatchingDistance)
 					{
 						PullMole();
 					}
@@ -146,6 +151,7 @@ public class PlayerAttack : MonoBehaviour {
 			pullMoleTime = MAX_PULL_MOLE_TIME;
 			isPulling = true;
 			characterBaseController.PullMoleFreeze();
+			playerPullingMole = this.gameObject;
 		}
 	}
     
@@ -166,11 +172,18 @@ public class PlayerAttack : MonoBehaviour {
 
 	public void KnockedDown(Vector2 direction)
 	{
-		rigidbody.AddForce(direction * forceMagnitude, ForceMode.Impulse);
 		//disrupt if the player is pulling mole
 		if(isPulling)
 		{
+			playerPullingMole = null;
 			characterBaseController.StopPullMoleFreeze();
+			isPulling = false;
+			pullMoleTime = 0f;
+
+			//mole starts to run around
+			moleController.MoleRunAround();
 		}
+
+		rigidbody.AddForce(direction * forceMagnitude, ForceMode.Impulse);
 	}
 }

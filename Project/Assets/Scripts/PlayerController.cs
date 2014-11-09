@@ -45,16 +45,22 @@ public class PlayerController : CharacterBaseController {
 		// keyboard
 		if (simulateWithKeyboard) {
 			// forward
-			if (Input.GetKeyDown(KeyCode.UpArrow) && index == 1) {
+			if ((Input.GetKeyDown(KeyCode.UpArrow) && index == 1) || 
+			    (Input.GetKeyDown(KeyCode.Keypad8) && index == 2)) {
 				MoveForward();
 			}
 
 			// steering
+			float rotation = 0f;
 			if(index == 1)
 			{
-				float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
-				transform.Rotate(0, rotation, 0);
+				rotation = Input.GetAxis("Horizontal");
 			}
+			else if(index == 2)
+			{
+				rotation = Input.GetAxis("HorizontalP2");
+			}
+			transform.Rotate(0, rotation * rotationSpeed, 0);
 		} else { // ps move
 			// forward
 			float value = moveController.Data.Velocity.y;
