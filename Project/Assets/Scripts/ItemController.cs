@@ -31,12 +31,12 @@ public class ItemController : ItemGenerator {
 	}
 
 	void Freeze(){
-		print ("Freeze all");
+		//print ("Freeze all");
 		Destroy (gameObject, 0f);
 	}
 
 	void SpeedUp(Collider c){
-		print ("speedup name" + c.name);
+		//print ("speedup name" + c.name);
 		Destroy (gameObject, 0f);
 	}
 
