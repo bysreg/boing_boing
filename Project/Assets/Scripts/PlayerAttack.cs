@@ -7,6 +7,7 @@ public class PlayerAttack : MonoBehaviour {
 	//static
 	public static GameObject playerPullingMole;
 
+	bool psMoveAvailable;
 	float freezeTime; // time until the player can attack
 	const float MAX_FREEZE_TIME = 2f;
 	float forceMagnitude = 14f;
@@ -25,7 +26,8 @@ public class PlayerAttack : MonoBehaviour {
 	CharacterBaseController characterBaseController;
 	GameController gameController;
 	MoleController moleController;
-
+	SoundController soundController;
+    
 	bool initialized;
 
 	void Awake()
@@ -37,6 +39,9 @@ public class PlayerAttack : MonoBehaviour {
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 		moleController = gameController.gameObject.GetComponent<MoleController>();
 		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z;
+		soundController = gameController.gameObject.GetComponent<SoundController>();
+
+		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[index].Connected;
 	}
 
 	void Update()
@@ -74,7 +79,9 @@ public class PlayerAttack : MonoBehaviour {
 				if((index == 1 && Input.GetKeyDown(KeyCode.W)) ||
 					(index == 2 && Input.GetKeyDown(KeyCode.A)) ||
 					(index == 3 && Input.GetKeyDown(KeyCode.S)) ||
-					(index == 4 && Input.GetKeyDown(KeyCode.D)))
+					(index == 4 && Input.GetKeyDown(KeyCode.D)) ||
+
+				   (psMoveAvailable && PSMoveInput.MoveControllers[index].Data.ValueT > 0))
 				{
 					float sqrDistance = Mathf.Pow(mole.transform.position.x - transform.position.x, 2) + Mathf.Pow(mole.transform.position.z - transform.position.z, 2);
 					
@@ -141,7 +148,10 @@ public class PlayerAttack : MonoBehaviour {
 			return;
 		}
 
-		nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
+		//play toet sound
+		soundController.PlaySound("SFX-Hit");
+        
+        nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
     }
 
 	void PullMole()
