@@ -3,9 +3,11 @@ using System.Collections;
 
 public class ItemController : ItemGenerator {
 	ItemType itc;
+	float existTime = 5f;
 	// Use this for initialization
 	void Start () {
 		collider.isTrigger = true;
+		StartCoroutine (BlinkToDestroy());
 	}
 	
 	// Update is called once per frame
@@ -36,5 +38,21 @@ public class ItemController : ItemGenerator {
 	void SpeedUp(Collider c){
 		print ("speedup name" + c.name);
 		Destroy (gameObject, 0f);
+	}
+
+	IEnumerator BlinkToDestroy() {
+		yield return new WaitForSeconds(existTime);
+		StartCoroutine(Blink ());
+
+	}
+
+	IEnumerator Blink() {
+		for(int i = 0; i < 5; i++) {
+			gameObject.GetComponent<MeshRenderer>().enabled = false;
+			yield return new WaitForSeconds(0.1f);
+			gameObject.GetComponent<MeshRenderer>().enabled = true;
+			yield return new WaitForSeconds(0.1f);
+		}
+		Destroy (gameObject);
 	}
 }
