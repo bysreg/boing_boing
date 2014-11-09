@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class SoundController : MonoBehaviour {
@@ -14,7 +14,7 @@ public class SoundController : MonoBehaviour {
 		StartCoroutine (CleanUp());
 	}
 
-	void PlaySound(string s, float vl = 1f, bool lop = false) { //value vloume
+	public void PlaySound(string s, float vl = 1f, bool lop = false) { //value vloume
 		GameObject soundOutput = Instantiate (soundfx) as GameObject;
 		soundOutput.transform.parent = GameObject.Find ("SoundSets").transform;
 		AudioSource audioS = GetAS (soundOutput);

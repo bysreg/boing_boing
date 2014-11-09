@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CharacterBaseController : MonoBehaviour {
@@ -32,6 +32,7 @@ public class CharacterBaseController : MonoBehaviour {
 	Vector3 capsuleCollRadius;
 
 	GameController gameController;
+	SoundController soundController;
 
 	protected virtual void Awake() {
 		if (isComputer) {
@@ -44,6 +45,7 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
+		soundController = gameController.gameObject.GetComponent<SoundController>();
 		capsuleCollRadius = new Vector3(GetComponent<CapsuleCollider>().bounds.extents.x, 0, 0);
 	}
 	
@@ -92,6 +94,9 @@ public class CharacterBaseController : MonoBehaviour {
 
 				// next jump
 				NextJump();
+
+				//play toet sound
+				soundController.PlaySound("SFX-Jump");
 			}
 
 			transform.position = new Vector3 (transform.position.x, firstPosition.y + y, transform.position.z);
@@ -155,5 +160,15 @@ public class CharacterBaseController : MonoBehaviour {
 	public int GetIndex()
 	{
 		return index;
+	}
+
+	public void PullMoleFreeze()
+	{
+		rigidbody.isKinematic = true;
+	}
+
+	public void StopPullMoleFreeze()
+	{
+		rigidbody.isKinematic = false;
 	}
 }
