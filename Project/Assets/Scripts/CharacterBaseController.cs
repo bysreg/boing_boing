@@ -93,13 +93,12 @@ public class CharacterBaseController : MonoBehaviour {
 
 			//yTime += Time.deltaTime * Mathf.Clamp(v.sqrMagnitude, 6, 10);
 			yTime += Time.deltaTime * GetValue(new Vector2(7,17), new Vector2(0,50), v.sqrMagnitude);
-			if (index == 1) {
-				Debug.Log("velocity : " + v.sqrMagnitude);
-			}
-			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
+//			if (index == 1) {
+//				Debug.Log("velocity : " + v.sqrMagnitude);
+//			}
 
-			if (y <= 0.05f) {
-				y = 0;
+			if (yTime >= Mathf.PI) {
+				yTime -= Mathf.PI;
 
 				isParabolicAnimating = false;
 				 
@@ -111,6 +110,7 @@ public class CharacterBaseController : MonoBehaviour {
 				//play toet sound
 				soundController.PlaySound("SFX-Jump");
 			}
+			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
 
 			transform.position = new Vector3 (transform.position.x, firstPosition.y + y, transform.position.z);
 		}
@@ -120,8 +120,12 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
 		RaycastHit hitInfo;
-		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 1f, layerMask))
+		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 2f, layerMask))
 		{
+			if(index == 1)
+			{
+				print ("nothing below");
+			}
 			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 1f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 1f, layerMask))
 			{
 				// there is no tile below, so player falls down
