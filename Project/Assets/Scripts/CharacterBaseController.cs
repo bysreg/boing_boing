@@ -91,7 +91,11 @@ public class CharacterBaseController : MonoBehaviour {
 
 			Vector2 v = new Vector2(rigidbody.velocity.x, rigidbody.velocity.z);
 
-			yTime += Time.deltaTime * Mathf.Clamp(v.sqrMagnitude, 2, 10);
+			//yTime += Time.deltaTime * Mathf.Clamp(v.sqrMagnitude, 6, 10);
+			yTime += Time.deltaTime * GetValue(new Vector2(7,17), new Vector2(0,50), v.sqrMagnitude);
+			if (index == 1) {
+				Debug.Log("velocity : " + v.sqrMagnitude);
+			}
 			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
 
 			if (y <= 0.05f) {
