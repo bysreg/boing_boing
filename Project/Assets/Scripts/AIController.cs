@@ -3,7 +3,7 @@ using System.Collections;
 
 public class AIController : CharacterBaseController {
 
-	private float minDistance = 0.7f;
+	private float minDistance = 1.5f;
 
 	protected Vector3 targetPosition;
 

@@ -44,20 +44,42 @@ public class TileController : MonoBehaviour {
 		tilesObj = new GameObject[boardHeight, boardWidth];
 
 		//deactive place holder tile not in tiles layer
-		GameObject placeHolderTile = GameObject.Find("Tile");
+		placeHolderTile = GameObject.Find("Tile");
 		placeHolderTile.SetActive(false);
 
-		for(int i=0; i<boardHeight; i++)
+		for(int i=0; i<Mathf.Ceil(boardHeight * 0.5f); i++)
 		{
-			for(int j=0; j<boardWidth; j++)
+			for(int j=0; j<Mathf.Ceil (boardWidth * 0.5f); j++)
 			{
-				int type = Random.Range(0, tileTypes.Length);
-				Transform t = Instantiate(tileTypes[type], new Vector3(j*tileWidth, placeHolderTile.transform.position.y, i*tileDepth), Quaternion.identity) as Transform;
-				t.name = tile.name + (i*boardHeight + j);
-				t.parent = tilesLayer.transform;
-				tilesObj[i, j] = t.gameObject;
+				int type;
+				//int type = Random.Range (0, tileTypes.Length);
+
+                if(j >= i && j <= boardWidth - 1 - i)
+                {
+                    type = i % tileTypes.Length;
+                }
+                else
+                {
+                    type = j % tileTypes.Length;
+                }
+                
+				CreateTile(j, i, type);
+				if(j != boardWidth - 1 - j)
+					CreateTile(boardWidth - 1 - j, i, type);
+				if(i != boardHeight - 1 - i)
+					CreateTile(j, boardHeight - 1 - i, type);
+				if(i != boardHeight - 1 - i && j != boardWidth - 1 - j)
+					CreateTile(boardWidth - 1 - j, boardHeight - 1 - i, type);
 			}
 		}
+	}
+
+	void CreateTile(int x, int y, int type)
+	{
+		Transform t = Instantiate(tileTypes[type], new Vector3(x*tileWidth, placeHolderTile.transform.position.y, y*tileDepth), Quaternion.identity) as Transform;
+		t.name = tile.name + (y*boardHeight + x);
+		t.parent = tilesLayer.transform;
+		tilesObj[y, x] = t.gameObject;
 	}
 
 	void CreateBoundaryCollider()
