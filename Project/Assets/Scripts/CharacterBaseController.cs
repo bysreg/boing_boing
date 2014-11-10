@@ -33,6 +33,9 @@ public class CharacterBaseController : MonoBehaviour {
 
 	GameController gameController;
 	SoundController soundController;
+	TileController tileController;
+
+	float yTime;
 
 	protected virtual void Awake() {
 		if (isComputer) {
@@ -47,6 +50,7 @@ public class CharacterBaseController : MonoBehaviour {
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 		soundController = gameController.gameObject.GetComponent<SoundController>();
 		capsuleCollRadius = new Vector3(GetComponent<CapsuleCollider>().bounds.extents.x, 0, 0);
+		tileController = gameController.gameObject.GetComponent<TileController>();
 	}
 	
 	// Use this for initialization
@@ -83,9 +87,14 @@ public class CharacterBaseController : MonoBehaviour {
 
 		if (isParabolicAnimating) {
 			elapsedTimeParabolic += Time.deltaTime;
-			float y = (v0 * elapsedTimeParabolic) - (0.5f * g * Mathf.Pow(elapsedTimeParabolic, 2));
+			//float y = (v0 * elapsedTimeParabolic) - (0.5f * g * Mathf.Pow(elapsedTimeParabolic, 2));
 
-			if (y <= 0f) {
+			Vector2 v = new Vector2(rigidbody.velocity.x, rigidbody.velocity.z);
+
+			yTime += Time.deltaTime * Mathf.Clamp(v.sqrMagnitude, 2, 10);
+			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
+
+			if (y <= 0.05f) {
 				y = 0;
 
 				isParabolicAnimating = false;
@@ -106,15 +115,19 @@ public class CharacterBaseController : MonoBehaviour {
 	void CheckGroundBelow()
 	{
 		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
-		if(!Physics.Raycast(transform.position, - transform.up, 1f, layerMask))
+		RaycastHit hitInfo;
+		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 1f, layerMask))
 		{
-
 			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 1f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 1f, layerMask))
 			{
 				// there is no tile below, so player falls down
 				fallDown = true;
 				respawnTime = MAX_RESPAWN_TIME;
 			}
+		}
+		else
+		{
+			hitInfo.collider.gameObject.GetComponent<TileMovement>().ShakeTile();
 		}
     }
     

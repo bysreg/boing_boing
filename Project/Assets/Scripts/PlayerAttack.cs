@@ -81,7 +81,7 @@ public class PlayerAttack : MonoBehaviour {
 					(index == 3 && Input.GetKeyDown(KeyCode.S)) ||
 					(index == 4 && Input.GetKeyDown(KeyCode.D)) ||
 
-				   (psMoveAvailable && PSMoveInput.MoveControllers[index].Data.ValueT > 0))
+				   	(psMoveAvailable && PSMoveInput.MoveControllers[index].Data.ValueT > 0))
 				{
 					float sqrDistance = Mathf.Pow(mole.transform.position.x - transform.position.x, 2) + Mathf.Pow(mole.transform.position.z - transform.position.z, 2);
 					
