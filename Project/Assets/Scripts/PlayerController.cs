@@ -3,8 +3,6 @@ using System.Collections;
 
 public class PlayerController : CharacterBaseController {
 
-	public GameObject handle,handle2;
-
 	bool simulateWithKeyboard = false;
 
 	//ps move
@@ -12,6 +10,7 @@ public class PlayerController : CharacterBaseController {
 	Vector3 initialOrientation;
 	public int psMoveIndex = 0;
 	protected float psMoveFirstRotation = 180f;
+	protected float playerFirstRotation = 0f;
 	protected float psMoveRange = 45f;
 	protected float maxRotationSpeed = 250f;
 	protected Vector2 rotationRange, speedRange;
@@ -45,57 +44,56 @@ public class PlayerController : CharacterBaseController {
 		// keyboard
 		if (simulateWithKeyboard) {
 			// forward
-			if (Input.GetKeyDown(KeyCode.UpArrow) && index == 1) {
+			if ((Input.GetKeyDown(KeyCode.UpArrow) && index == 1) || 
+			    (Input.GetKeyDown(KeyCode.Keypad8) && index == 2)) {
 				MoveForward();
 			}
 
 			// steering
+			float rotation = 0f;
 			if(index == 1)
 			{
-				float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
-				transform.Rotate(0, rotation, 0);
+				rotation = Input.GetAxis("Horizontal");
 			}
+			else if(index == 2)
+			{
+				rotation = Input.GetAxis("HorizontalP2");
+			}
+			transform.Rotate(0, rotation * rotationSpeed, 0);
 		} else { // ps move
-			// forward
-			float value = moveController.Data.Velocity.y;
+			// FORWARD
+			float velocity = moveController.Data.Velocity.y;
+			Debug.Log("velocity : " + velocity);
 			MoveData moveData = moveController.Data;
 
 			// move forward
 			elapsedTimeForward += Time.deltaTime;
 
-			if (Mathf.Abs(value) >= 7f && elapsedTimeForward >= waitingTimeToMove) {
+			if (Mathf.Abs(velocity) >= 7f && elapsedTimeForward >= waitingTimeToMove) {
 				elapsedTimeForward -= 0f;
 				MoveForward();
 			}
 
-			// steering
+			// STEERING
 			// avoid Gimbal Lock
 			float orientation = GetRotationValue(Mathf.Rad2Deg * Mathf.Atan2(2*moveData.QOrientation.y*moveData.QOrientation.w - 2*moveData.QOrientation.x*moveData.QOrientation.z, 1 - 2*moveData.QOrientation.y*moveData.QOrientation.y - 2*moveData.QOrientation.z*moveData.QOrientation.z));
+			//Debug.Log("orientation : " + orientation);
+
+			/*
 			float _rotationSpeed = GetValue(speedRange, rotationRange, orientation);
-			if (_rotationSpeed < speedRange.x) 
-				_rotationSpeed = speedRange.x;
-			else if (_rotationSpeed > speedRange.y)
-				_rotationSpeed = speedRange.y;
-
-			Debug.Log("orientation : " + orientation + "; _rotationSpeed : " + _rotationSpeed);
-
-			transform.Rotate(new Vector3(0f, _rotationSpeed * Time.deltaTime, 0f));
-
-			if (handle != null) {
-				/*
-				 * roll  = Mathf.Atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z);
-				 * pitch = Mathf.Atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z);
- 				 * yaw   = Mathf.Asin(2*x*y + 2*z*w);
-				 */
-
-				float x = moveData.QOrientation.x;
-				float y = moveData.QOrientation.y;
-				float z = moveData.QOrientation.z;
-				float w = moveData.QOrientation.w;
-
-				handle.transform.localRotation = Quaternion.Euler(moveData.Orientation);
-				handle2.transform.localRotation = Quaternion.Euler(270f, Mathf.Rad2Deg * Mathf.Atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z), 0f);
+			if (Mathf.Abs(orientation - psMoveFirstRotation) <= 15f) {
+				_rotationSpeed = 0f;
+			} else {
+				if (_rotationSpeed < speedRange.x) 
+					_rotationSpeed = speedRange.x;
+				else if (_rotationSpeed > speedRange.y)
+					_rotationSpeed = speedRange.y;
 			}
+			transform.Rotate(new Vector3(0f, _rotationSpeed * Time.deltaTime, 0f));
+			*/
+
+			float playerRotation = playerFirstRotation - (orientation - psMoveFirstRotation);
+			transform.localRotation = Quaternion.Euler(0, playerRotation, 0);
 		}
 	}
 

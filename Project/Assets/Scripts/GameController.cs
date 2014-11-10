@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
+	public int activePlayersCount = 4;
+
 	Transform p1;
 	Transform p2;
 	Transform p3;
@@ -25,6 +27,11 @@ public class GameController : MonoBehaviour {
 		players[1] = p2;
 		players[2] = p3;
 		players[3] = p4;
+
+		for(int i=activePlayersCount; i < 4; i++)
+		{
+			players[i].gameObject.SetActive(false);
+		}
 	}
 
 	void Init()

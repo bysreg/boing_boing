@@ -4,6 +4,8 @@ using System.Collections;
 public class SoundController : MonoBehaviour {
 
 	public GameObject soundfx;
+	public bool mute;
+
 	// Use this for initialization
 	void Start () {
 		PlaySound ("bgm",1f	, true);
@@ -15,6 +17,8 @@ public class SoundController : MonoBehaviour {
 	}
 
 	public void PlaySound(string s, float vl = 1f, bool lop = false) { //value vloume
+		if(mute)
+			return;
 		GameObject soundOutput = Instantiate (soundfx) as GameObject;
 		soundOutput.transform.parent = GameObject.Find ("SoundSets").transform;
 		AudioSource audioS = GetAS (soundOutput);
