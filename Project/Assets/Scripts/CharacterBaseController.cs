@@ -94,7 +94,7 @@ public class CharacterBaseController : MonoBehaviour {
 			//yTime += Time.deltaTime * Mathf.Clamp(v.sqrMagnitude, 6, 10);
 			yTime += Time.deltaTime * GetValue(new Vector2(7,17), new Vector2(0,50), v.sqrMagnitude);
 			if (index == 1) {
-				Debug.Log("velocity : " + v.sqrMagnitude);
+				//Debug.Log("velocity : " + v.sqrMagnitude);
 			}
 			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
 

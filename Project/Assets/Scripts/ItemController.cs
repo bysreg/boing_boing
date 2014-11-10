@@ -20,13 +20,16 @@ public class ItemController : ItemGenerator {
 	}
 
 	void OnTriggerEnter(Collider c) {
-		switch(itc) {
-		case ItemType.Freeze:
-			Freeze();
-			break;
-		case ItemType.SpeedUp:
-			SpeedUp(c);
-			break;
+		GameObject.Find ("GameController").GetComponent<SoundController>().PlaySound("itempickup");
+		if(c.tag == "Player") {
+			switch(itc) {
+			case ItemType.Freeze:
+				Freeze();
+				break;
+			case ItemType.SpeedUp:
+				SpeedUp(c);
+				break;
+			}
 		}
 	}
 

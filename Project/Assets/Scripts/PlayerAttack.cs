@@ -126,6 +126,8 @@ public class PlayerAttack : MonoBehaviour {
 	{
 		freezeTime = MAX_FREEZE_TIME;
 
+		soundController.PlaySound("whoosh");
+
 		if(playersInsideHitArea.Count == 0)
 		{
 			return;
@@ -149,7 +151,7 @@ public class PlayerAttack : MonoBehaviour {
 		}
 
 		//play toet sound
-		soundController.PlaySound("SFX-Hit");
+		soundController.PlaySound("punch Sound");
         
         nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
     }

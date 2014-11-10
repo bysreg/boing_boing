@@ -9,7 +9,6 @@ public class SoundController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		PlaySound ("Bgm_new",1f	, true);
-		//PlaySound ("dig",1f	, true);
 	}
 	
 	// Update is called once per frame
@@ -31,10 +30,18 @@ public class SoundController : MonoBehaviour {
 	}
 
 	AudioClip Load(string s) {
+		string path = "SoundTrack/" + s;
 		if(!Resources.Load ("SoundTrack/" + s)) {
-			return Resources.Load ("SoundTrack/" + s + Random.Range(0,6)) as AudioClip;
+			string newpath =  "SoundTrack/" + s + "/";
+			print(newpath);
+			return Resources.Load (newpath + s + Random.Range(0,6)) as AudioClip;
 		}
-		return Resources.Load ("SoundTrack/" + s) as AudioClip;
+		if (Resources.Load (path)) {
+				return Resources.Load (path) as AudioClip;
+			} else {
+			Debug.Log("Cannot Find the sound");
+		}
+		return null;
 	}
 
 	AudioSource GetAS(GameObject go) {
