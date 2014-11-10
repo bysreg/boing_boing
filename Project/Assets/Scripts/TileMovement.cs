@@ -8,9 +8,19 @@ public class TileMovement : MonoBehaviour {
 	float moveTime = 2f;
 	float normalY;
 
+	Vector3 normalPos;
+	float shakingTime;
+	float shakeSpeed = 10f;
+	float MAX_SHAKE_TIME = Mathf.PI;
+
 	void Awake()
 	{
 		normalY = transform.position.y;
+	}
+
+	void Start()
+	{
+		normalPos = transform.position;
 	}
 
 	public void SetTileHeight(float targetHeight)
@@ -45,5 +55,23 @@ public class TileMovement : MonoBehaviour {
 	public void SetTileHeightToNormal()
 	{
 		SetTileHeight(normalY);
+	}
+
+	void Update()
+	{
+		if(shakingTime > 0)
+		{
+			shakingTime -= Time.deltaTime * shakeSpeed;
+			if(shakingTime < 0)
+			{
+				shakingTime = 0;
+			}
+			transform.position = normalPos + new Vector3(0, -Mathf.Sin(shakingTime) * 0.2f, 0);
+		}
+	}
+
+	public void ShakeTile()
+	{
+		shakingTime = MAX_SHAKE_TIME;
 	}
 }

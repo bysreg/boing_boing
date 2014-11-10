@@ -51,7 +51,8 @@ public class TileController : MonoBehaviour {
 		{
 			for(int j=0; j<boardWidth; j++)
 			{
-				Transform t = Instantiate(tileTypes[Random.Range(0, tileTypes.Length)], new Vector3(j*tileWidth, placeHolderTile.transform.position.y, i*tileDepth), Quaternion.identity) as Transform;
+				int type = Random.Range(0, tileTypes.Length);
+				Transform t = Instantiate(tileTypes[type], new Vector3(j*tileWidth, placeHolderTile.transform.position.y, i*tileDepth), Quaternion.identity) as Transform;
 				t.name = tile.name + (i*boardHeight + j);
 				t.parent = tilesLayer.transform;
 				tilesObj[i, j] = t.gameObject;

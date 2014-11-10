@@ -69,8 +69,8 @@ public class PlayerController : CharacterBaseController {
 			// move forward
 			elapsedTimeForward += Time.deltaTime;
 
-			if (Mathf.Abs(velocity) >= 7f && elapsedTimeForward >= waitingTimeToMove) {
-				elapsedTimeForward -= 0f;
+			if (Mathf.Abs(velocity) >= 3f && elapsedTimeForward >= waitingTimeToMove) {
+				elapsedTimeForward = 0f;
 				MoveForward();
 			}
 
