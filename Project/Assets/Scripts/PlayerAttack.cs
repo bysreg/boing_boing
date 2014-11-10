@@ -41,7 +41,7 @@ public class PlayerAttack : MonoBehaviour {
 		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z;
 		soundController = gameController.gameObject.GetComponent<SoundController>();
 
-		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[index].Connected;
+		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[index-1].Connected;
 	}
 
 	void Update()

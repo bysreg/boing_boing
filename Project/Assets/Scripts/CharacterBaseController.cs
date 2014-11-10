@@ -13,7 +13,7 @@ public class CharacterBaseController : MonoBehaviour {
 	protected float maxHeight = 0.75f;
 	
 	protected float rotationSpeed = 3f;
-	protected float forwardSpeed = 45f;
+	protected float forwardSpeed = 60f;
 
 	// parabolic
 	protected float g = 15f;
