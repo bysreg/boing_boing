@@ -41,9 +41,8 @@ public class PlayerAttack : MonoBehaviour {
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 		moleController = gameController.gameObject.GetComponent<MoleController>();
 		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z;
-		soundController = gameController.gameObject.GetComponent<SoundController>();
-
-		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[index-1].Connected;
+		soundController = gameController.gameObject.GetComponent<SoundController>();		
+		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
 	}
 
 	void Update()
@@ -83,7 +82,7 @@ public class PlayerAttack : MonoBehaviour {
 					(index == 3 && Input.GetKeyDown(KeyCode.S)) ||
 					(index == 4 && Input.GetKeyDown(KeyCode.D)) ||
 
-				   	(psMoveAvailable && PSMoveInput.MoveControllers[index].Data.ValueT > 0))
+				   	(psMoveAvailable && PSMoveInput.MoveControllers[playerController.psMoveIndex].Data.ValueT > 0))
 				{
 					float sqrDistance = Mathf.Pow(mole.transform.position.x - transform.position.x, 2) + Mathf.Pow(mole.transform.position.z - transform.position.z, 2);
 					
@@ -128,8 +127,6 @@ public class PlayerAttack : MonoBehaviour {
 	{
 		freezeTime = MAX_FREEZE_TIME;
 
-		soundController.PlaySound("whoosh");
-
 		if(playersInsideHitArea.Count == 0)
 		{
 			return;
@@ -149,12 +146,15 @@ public class PlayerAttack : MonoBehaviour {
 
 		if(sqrMinDistance > sqrAttackDistance)
 		{
+			// miss sound
+			soundController.PlaySound("whoosh");
 			return;
 		}
 
 		//play toet sound
 		soundController.PlaySound("punch Sound");
 		AnimateFist ();
+
         nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
     }
 
