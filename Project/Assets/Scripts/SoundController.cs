@@ -8,7 +8,7 @@ public class SoundController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		PlaySound ("Bgm_new",1f	, true);
+		PlaySound ("Bgm_new",0.5f	, true);
 		//PlaySound ("dig",1f	, true);
 	}
 	
@@ -31,10 +31,13 @@ public class SoundController : MonoBehaviour {
 	}
 
 	AudioClip Load(string s) {
-		if(!Resources.Load ("SoundTrack/" + s)) {
-			return Resources.Load ("SoundTrack/" + s + Random.Range(0,6)) as AudioClip;
+		string path = "SoundTrack/" + s;
+		if (!Resources.Load (path)) {
+			string path_new = "SoundTrack/" + s + "/" + s + Random.Range (0, 6);
+			return Resources.Load (path_new) as AudioClip;
+		} else {
+			return Resources.Load ("SoundTrack/" + s) as AudioClip;
 		}
-		return Resources.Load ("SoundTrack/" + s) as AudioClip;
 	}
 
 	AudioSource GetAS(GameObject go) {

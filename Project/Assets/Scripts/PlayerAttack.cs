@@ -6,6 +6,8 @@ public class PlayerAttack : MonoBehaviour {
 
 	//static
 	public static GameObject playerPullingMole;
+	//public GameObject fist;
+	public GameObject punchEffect;
 
 	bool psMoveAvailable;
 	float freezeTime; // time until the player can attack
@@ -126,6 +128,8 @@ public class PlayerAttack : MonoBehaviour {
 	{
 		freezeTime = MAX_FREEZE_TIME;
 
+		soundController.PlaySound("whoosh");
+
 		if(playersInsideHitArea.Count == 0)
 		{
 			return;
@@ -149,8 +153,8 @@ public class PlayerAttack : MonoBehaviour {
 		}
 
 		//play toet sound
-		soundController.PlaySound("SFX-Hit");
-        
+		soundController.PlaySound("punch Sound");
+		AnimateFist ();
         nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
     }
 
@@ -195,5 +199,9 @@ public class PlayerAttack : MonoBehaviour {
 		}
 
 		rigidbody.AddForce(direction * forceMagnitude, ForceMode.Impulse);
+	}
+
+	public void AnimateFist() {
+		Instantiate (punchEffect, transform.position, Quaternion.identity);
 	}
 }

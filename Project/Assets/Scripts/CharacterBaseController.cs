@@ -108,7 +108,7 @@ public class CharacterBaseController : MonoBehaviour {
 				NextJump();
 
 				//play toet sound
-				soundController.PlaySound("SFX-Jump");
+				soundController.PlaySound("SFX-Jump", 0.3f, false);
 			}
 			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
 
