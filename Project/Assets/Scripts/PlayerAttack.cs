@@ -8,6 +8,8 @@ public class PlayerAttack : MonoBehaviour {
 	public static GameObject playerPullingMole;
 	//public GameObject fist;
 	public GameObject punchEffect;
+	public GameObject missEffect;
+
 
 	bool psMoveAvailable;
 	float freezeTime; // time until the player can attack
@@ -129,6 +131,9 @@ public class PlayerAttack : MonoBehaviour {
 
 		if(playersInsideHitArea.Count == 0)
 		{
+			soundController.PlaySound("whoosh");
+			AnimateMiss();
+
 			return;
 		}
 
@@ -148,6 +153,7 @@ public class PlayerAttack : MonoBehaviour {
 		{
 			// miss sound
 			soundController.PlaySound("whoosh");
+			AnimateMiss();
 			return;
 		}
 
@@ -202,6 +208,12 @@ public class PlayerAttack : MonoBehaviour {
 	}
 
 	public void AnimateFist() {
-		Instantiate (punchEffect, transform.position, Quaternion.identity);
+		GameObject tmp = Instantiate (punchEffect, transform.position, Quaternion.identity) as GameObject;
+		Destroy(tmp, 1f);
 	}
+	public void AnimateMiss() {
+		GameObject tmp =  Instantiate (missEffect, transform.position, Quaternion.identity) as GameObject;
+		Destroy(tmp, 1f);
+    }
+
 }
