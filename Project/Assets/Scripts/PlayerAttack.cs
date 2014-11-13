@@ -24,30 +24,18 @@ public class PlayerAttack : MonoBehaviour {
 	Vector3 fistTargetPos;
 	Vector3 fistOriPos;
     float fistOffset;
-
-	//pulling mole
-	bool isPulling;
-	GameObject mole;
-	float sqrMoleCatchingDistance = 4.5f;
-	float pullMoleTime;
-	float MAX_PULL_MOLE_TIME = 5f;
+	int killCount;
 
 	PlayerController playerController;
-	CharacterBaseController characterBaseController;
 	GameController gameController;
-	MoleController moleController;
 	SoundController soundController;
-    
-	bool initialized;
 
 	void Awake()
 	{
 		playerController = GetComponent<PlayerController>();
 		playersInsideHitArea = new List<GameObject>();
 		index = GetComponent<CharacterBaseController>().index;
-		mole = GameObject.Find("Mole");
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
-		moleController = gameController.gameObject.GetComponent<MoleController>();
 		attackDistance = GetComponent<BoxCollider>().size.z;
 		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z;
 		soundController = gameController.gameObject.GetComponent<SoundController>();		
@@ -62,32 +50,12 @@ public class PlayerAttack : MonoBehaviour {
 		foreach(Transform child in transform) {
 			if(child.name == "cd") {
 				cd = child;
-	}
+			}
 		}
 	}
 
 	void Update()
 	{
-		if(!initialized)
-		{
-			characterBaseController = GetComponent<CharacterBaseController>();
-			initialized = true;
-		}
-
-		if(isPulling)
-		{
-			pullMoleTime -= Time.deltaTime;
-			if(pullMoleTime <= 0)
-			{
-				pullMoleTime = 0;
-				isPulling = false;
-				characterBaseController.StopPullMoleFreeze();
-				//this player wins the game
-				gameController.FinishGame(index);
-			}
-			return;
-		}
-
 		if(freezeTime == 0)
 		{
 			if(playerController != null)
@@ -178,47 +146,14 @@ public class PlayerAttack : MonoBehaviour {
 
         nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
     }
-
-	void PullMole()
-	{
-		if(!isPulling)
-		{
-			pullMoleTime = MAX_PULL_MOLE_TIME;
-			isPulling = true;
-			characterBaseController.PullMoleFreeze();
-			playerPullingMole = this.gameObject;
-		}
-	}
     
     public float GetFreezeTime()
 	{
 		return freezeTime;
 	}
 
-	public bool IsPulling()
-	{
-		return isPulling;
-	}
-	
-	public float GetPullMoleTime()
-	{
-		return pullMoleTime;
-	}
-
 	public void KnockedDown(Vector3 direction)
 	{
-		//disrupt if the player is pulling mole
-		if(isPulling)
-		{
-			playerPullingMole = null;
-			characterBaseController.StopPullMoleFreeze();
-			isPulling = false;
-			pullMoleTime = 0f;
-
-			//mole starts to run around
-			moleController.MoleRunAround();
-		}
-
 		rigidbody.AddForce(direction * forceMagnitude, ForceMode.Impulse);
 	}
 
@@ -273,6 +208,11 @@ public class PlayerAttack : MonoBehaviour {
 			} else {
 				yield break;
 			}
+	}
+
+	public int GetKillCount()
+	{
+		return killCount;
 	}
 
 }
