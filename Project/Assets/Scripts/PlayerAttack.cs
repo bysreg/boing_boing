@@ -126,10 +126,6 @@ public class PlayerAttack : MonoBehaviour {
 		if(other.tag == "Player" && !other.isTrigger)
 		{
 			playersInsideHitArea.Add(other.gameObject);
-            if(index == 1)
-            {
-                print(playersInsideHitArea.Count + " " + other.gameObject.name);
-            }
 		}
 	}
 
@@ -138,10 +134,6 @@ public class PlayerAttack : MonoBehaviour {
 		if(other.tag == "Player" && !other.isTrigger)
 		{
 			playersInsideHitArea.Remove(other.gameObject);
-            if(index == 1)
-            {
-                print(playersInsideHitArea.Count + " " + other.gameObject.name );
-            }
 		}
 	}
 
