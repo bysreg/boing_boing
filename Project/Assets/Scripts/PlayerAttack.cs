@@ -30,6 +30,11 @@ public class PlayerAttack : MonoBehaviour {
 	GameController gameController;
 	SoundController soundController;
 
+	//killing system
+	GameObject lastHitFrom; // record who lands the last hit on this player, will reset back to null if lastHitExpireTime hits zero
+	float lastHitExpireTime;
+	float HIT_EXPIRE_TIME = 2f;
+
 	void Awake()
 	{
 		playerController = GetComponent<PlayerController>();
@@ -80,6 +85,16 @@ public class PlayerAttack : MonoBehaviour {
 			{
 				freezeTime = 0;
                 fist.SetActive(false);
+			}
+		}
+
+		if(lastHitExpireTime > 0)
+		{
+			lastHitExpireTime -= Time.deltaTime;
+
+			if(lastHitExpireTime <= 0)
+			{
+				lastHitFrom = null;
 			}
 		}
 	}
@@ -144,7 +159,7 @@ public class PlayerAttack : MonoBehaviour {
 		AnimateHit ();
 		AnimateCd();
 
-        nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
+        nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized, this.gameObject);
     }
     
     public float GetFreezeTime()
@@ -152,8 +167,10 @@ public class PlayerAttack : MonoBehaviour {
 		return freezeTime;
 	}
 
-	public void KnockedDown(Vector3 direction)
+	public void KnockedDown(Vector3 direction, GameObject from)
 	{
+		lastHitFrom = from;
+		lastHitExpireTime = HIT_EXPIRE_TIME;
 		rigidbody.AddForce(direction * forceMagnitude, ForceMode.Impulse);
 	}
 
@@ -215,4 +232,21 @@ public class PlayerAttack : MonoBehaviour {
 		return killCount;
 	}
 
+	public void Killed()
+	{
+		if(lastHitFrom != null)
+		{
+			lastHitFrom.GetComponent<PlayerAttack>().IncKillCount();
+		}
+	}
+
+	public void IncKillCount()
+	{
+		killCount++;
+	}
+
+	public GameObject GetLastHitFrom()
+	{
+		return lastHitFrom;
+	}
 }
