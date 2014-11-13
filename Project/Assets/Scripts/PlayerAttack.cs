@@ -15,7 +15,7 @@ public class PlayerAttack : MonoBehaviour {
 	bool iscd = false;
 	bool psMoveAvailable;
 	float freezeTime; // time until the player can attack
-	const float MAX_FREEZE_TIME = 1f;
+	const float MAX_FREEZE_TIME = 0.5f;
 	float forceMagnitude = 14f;
 	List<GameObject> playersInsideHitArea;
 	float attackDistance;
@@ -68,12 +68,6 @@ public class PlayerAttack : MonoBehaviour {
 
 	void Update()
 	{
-//		if(index == 1)
-//		{
-//			print (transform.position.x + " " + transform.position.z);
-//			print(Mathf.Pow(mole.transform.position.x - transform.position.x, 2) + Mathf.Pow(mole.transform.position.z - transform.position.z, 2));
-//		}
-
 		if(!initialized)
 		{
 			characterBaseController = GetComponent<CharacterBaseController>();
@@ -105,16 +99,7 @@ public class PlayerAttack : MonoBehaviour {
 
 				   	(psMoveAvailable && PSMoveInput.MoveControllers[playerController.psMoveIndex].Data.ValueT > 0))
 				{
-//					float sqrDistance = Mathf.Pow(mole.transform.position.x - transform.position.x, 2) + Mathf.Pow(mole.transform.position.z - transform.position.z, 2);
-//					
-//					if(playerPullingMole == null && sqrDistance <= sqrMoleCatchingDistance)
-//					{
-//						PullMole();
-//					}
-//					else
-//					{
-						Attack();
-//					}
+					Attack();
 				}
 			}
 		}
@@ -220,7 +205,7 @@ public class PlayerAttack : MonoBehaviour {
 		return pullMoleTime;
 	}
 
-	public void KnockedDown(Vector2 direction)
+	public void KnockedDown(Vector3 direction)
 	{
 		//disrupt if the player is pulling mole
 		if(isPulling)
@@ -263,10 +248,10 @@ public class PlayerAttack : MonoBehaviour {
         fist.SetActive(true);
         Vector3 dir = (to - from).normalized;
         dir.y = 0;
-        fistTargetPos = transform.InverseTransformPoint(to + dir * fistOffset);
+        fistTargetPos = transform.InverseTransformPoint(to);
         fistOriPos = transform.InverseTransformPoint(from + dir * fistOffset);
         fist.transform.localPosition = fistOriPos;
-        fist.transform.LookAt(from + dir);
+        fist.transform.LookAt(from + dir * fistOffset * 2);
     }
 
 	public void AnimateMiss() {
