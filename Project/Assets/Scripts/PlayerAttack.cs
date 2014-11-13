@@ -6,18 +6,21 @@ public class PlayerAttack : MonoBehaviour {
 
 	//static
 	public static GameObject playerPullingMole;
-	//public GameObject fist;
+
+	public GameObject fist;
 	public GameObject punchEffect;
 	public GameObject missEffect;
 
-
 	bool psMoveAvailable;
 	float freezeTime; // time until the player can attack
-	const float MAX_FREEZE_TIME = 2f;
+	const float MAX_FREEZE_TIME = 1f;
 	float forceMagnitude = 14f;
 	List<GameObject> playersInsideHitArea;
+	float attackDistance;
 	float sqrAttackDistance;
 	int index;
+	Vector3 fistTargetPos;
+	Vector3 fistOriPos;
 
 	//pulling mole
 	bool isPulling;
@@ -42,9 +45,12 @@ public class PlayerAttack : MonoBehaviour {
 		mole = GameObject.Find("Mole");
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 		moleController = gameController.gameObject.GetComponent<MoleController>();
+		attackDistance = GetComponent<BoxCollider>().size.z;
 		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z;
 		soundController = gameController.gameObject.GetComponent<SoundController>();		
 		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
+		fist = transform.Find ("Fist").gameObject;
+		fistOriPos = fist.transform.localPosition;
 	}
 
 	void Update()
@@ -86,21 +92,23 @@ public class PlayerAttack : MonoBehaviour {
 
 				   	(psMoveAvailable && PSMoveInput.MoveControllers[playerController.psMoveIndex].Data.ValueT > 0))
 				{
-					float sqrDistance = Mathf.Pow(mole.transform.position.x - transform.position.x, 2) + Mathf.Pow(mole.transform.position.z - transform.position.z, 2);
-					
-					if(playerPullingMole == null && sqrDistance <= sqrMoleCatchingDistance)
-					{
-						PullMole();
-					}
-					else
-					{
+//					float sqrDistance = Mathf.Pow(mole.transform.position.x - transform.position.x, 2) + Mathf.Pow(mole.transform.position.z - transform.position.z, 2);
+//					
+//					if(playerPullingMole == null && sqrDistance <= sqrMoleCatchingDistance)
+//					{
+//						PullMole();
+//					}
+//					else
+//					{
 						Attack();
-					}
+//					}
 				}
 			}
 		}
 		else
 		{
+			AnimateFist();
+
 			freezeTime -= Time.deltaTime;
 			if(freezeTime <= 0)
 			{
@@ -157,9 +165,11 @@ public class PlayerAttack : MonoBehaviour {
 			return;
 		}
 
+		fistTargetPos = transform.InverseTransformPoint(nearestPlayer.transform.position);
+
 		//play toet sound
 		soundController.PlaySound("punch Sound");
-		AnimateFist ();
+		AnimateHit ();
 
         nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
     }
@@ -207,10 +217,27 @@ public class PlayerAttack : MonoBehaviour {
 		rigidbody.AddForce(direction * forceMagnitude, ForceMode.Impulse);
 	}
 
-	public void AnimateFist() {
+	public void AnimateHit() {
 		GameObject tmp = Instantiate (punchEffect, transform.position, Quaternion.identity) as GameObject;
 		Destroy(tmp, 1f);
 	}
+
+	void AnimateFist()
+	{
+		if(freezeTime > 0)
+		{
+			//print (fistOriPos + " " + fistTargetPos + " " + freezeTime);
+			if(freezeTime > MAX_FREEZE_TIME * 0.5f)
+			{
+				fist.transform.localPosition = Vector3.Lerp(fistOriPos, fistTargetPos, 1 - (freezeTime / MAX_FREEZE_TIME));
+			}
+			else
+			{
+				fist.transform.localPosition = Vector3.Lerp(fistOriPos, fistTargetPos, freezeTime / MAX_FREEZE_TIME);
+			}
+		}
+	}
+
 	public void AnimateMiss() {
 		GameObject tmp =  Instantiate (missEffect, transform.position, Quaternion.identity) as GameObject;
 		Destroy(tmp, 1f);
