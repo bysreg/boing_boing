@@ -21,6 +21,7 @@ public class PlayerAttack : MonoBehaviour {
 	int index;
 	Vector3 fistTargetPos;
 	Vector3 fistOriPos;
+    float fistOffset;
 
 	//pulling mole
 	bool isPulling;
@@ -51,6 +52,8 @@ public class PlayerAttack : MonoBehaviour {
 		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
 		fist = transform.Find ("Fist").gameObject;
 		fistOriPos = fist.transform.localPosition;
+        fistOffset = (fist.transform.position - transform.position).magnitude;
+        fist.SetActive(false);
 	}
 
 	void Update()
@@ -113,23 +116,32 @@ public class PlayerAttack : MonoBehaviour {
 			if(freezeTime <= 0)
 			{
 				freezeTime = 0;
+                fist.SetActive(false);
 			}
 		}
 	}
 
 	void OnTriggerEnter(Collider other)
 	{
-		if(other.tag == "Player")
+		if(other.tag == "Player" && !other.isTrigger)
 		{
 			playersInsideHitArea.Add(other.gameObject);
+            if(index == 1)
+            {
+                print(playersInsideHitArea.Count + " " + other.gameObject.name);
+            }
 		}
 	}
 
 	void OnTriggerExit(Collider other)
 	{
-		if(other.tag == "Player")
+		if(other.tag == "Player" && !other.isTrigger)
 		{
 			playersInsideHitArea.Remove(other.gameObject);
+            if(index == 1)
+            {
+                print(playersInsideHitArea.Count + " " + other.gameObject.name );
+            }
 		}
 	}
 
@@ -141,6 +153,7 @@ public class PlayerAttack : MonoBehaviour {
 		{
 			soundController.PlaySound("whoosh");
 			AnimateMiss();
+            SetupFist(transform.position, transform.position + transform.forward * attackDistance);
 
 			return;
 		}
@@ -162,10 +175,12 @@ public class PlayerAttack : MonoBehaviour {
 			// miss sound
 			soundController.PlaySound("whoosh");
 			AnimateMiss();
+            SetupFist(transform.position, transform.position + transform.forward * attackDistance);
+
 			return;
 		}
 
-		fistTargetPos = transform.InverseTransformPoint(nearestPlayer.transform.position);
+        SetupFist(transform.position, nearestPlayer.transform.position);
 
 		//play toet sound
 		soundController.PlaySound("punch Sound");
@@ -237,6 +252,17 @@ public class PlayerAttack : MonoBehaviour {
 			}
 		}
 	}
+
+    void SetupFist(Vector3 from, Vector3 to)
+    {
+        fist.SetActive(true);
+        Vector3 dir = (to - from).normalized;
+        dir.y = 0;
+        fistTargetPos = transform.InverseTransformPoint(to + dir * fistOffset);
+        fistOriPos = transform.InverseTransformPoint(from + dir * fistOffset);
+        fist.transform.localPosition = fistOriPos;
+        fist.transform.LookAt(from + dir);
+    }
 
 	public void AnimateMiss() {
 		GameObject tmp =  Instantiate (missEffect, transform.position, Quaternion.identity) as GameObject;
