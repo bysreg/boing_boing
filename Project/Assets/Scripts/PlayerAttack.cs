@@ -10,7 +10,9 @@ public class PlayerAttack : MonoBehaviour {
 	public GameObject fist;
 	public GameObject punchEffect;
 	public GameObject missEffect;
+	private Transform cd;
 
+	bool iscd = false;
 	bool psMoveAvailable;
 	float freezeTime; // time until the player can attack
 	const float MAX_FREEZE_TIME = 1f;
@@ -51,6 +53,14 @@ public class PlayerAttack : MonoBehaviour {
 		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
 		fist = transform.Find ("Fist").gameObject;
 		fistOriPos = fist.transform.localPosition;
+
+		//find cd animator
+		//gameObject.GetComponentsInChildren<Animator> ().SetValue ();
+		foreach(Transform child in transform) {
+			if(child.name == "cd") {
+				cd = child;
+			}
+		}
 	}
 
 	void Update()
@@ -141,7 +151,7 @@ public class PlayerAttack : MonoBehaviour {
 		{
 			soundController.PlaySound("whoosh");
 			AnimateMiss();
-
+			AnimateCd();
 			return;
 		}
 
@@ -162,6 +172,7 @@ public class PlayerAttack : MonoBehaviour {
 			// miss sound
 			soundController.PlaySound("whoosh");
 			AnimateMiss();
+			AnimateCd();
 			return;
 		}
 
@@ -170,6 +181,7 @@ public class PlayerAttack : MonoBehaviour {
 		//play toet sound
 		soundController.PlaySound("punch Sound");
 		AnimateHit ();
+		AnimateCd();
 
         nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized);
     }
@@ -242,5 +254,21 @@ public class PlayerAttack : MonoBehaviour {
 		GameObject tmp =  Instantiate (missEffect, transform.position, Quaternion.identity) as GameObject;
 		Destroy(tmp, 1f);
     }
+
+	public void AnimateCd(){
+		StartCoroutine (AnimateCd_Routine());
+	}
+
+	IEnumerator AnimateCd_Routine() {
+		if (!iscd) {
+					iscd = true;
+					cd.GetComponent<Animator> ().SetBool ("cd", true);
+					yield return new WaitForSeconds (1f);
+					iscd = false;
+					cd.GetComponent<Animator> ().SetBool ("cd", false);
+			} else {
+				yield break;
+			}
+	}
 
 }
