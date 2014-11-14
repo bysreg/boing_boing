@@ -13,9 +13,12 @@ public class TileMovement : MonoBehaviour {
 	float shakeSpeed = 10f;
 	float MAX_SHAKE_TIME = Mathf.PI;
 
+	BoxCollider collider;
+
 	void Awake()
 	{
 		normalY = transform.position.y;
+		collider = GetComponent<BoxCollider>();
 	}
 
 	void Start()
@@ -67,6 +70,9 @@ public class TileMovement : MonoBehaviour {
 				shakingTime = 0;
 			}
 			transform.position = normalPos + new Vector3(0, -Mathf.Sin(shakingTime) * 0.2f, 0);
+
+			//tile might shake, but collider stay still
+			collider.center = new Vector3(collider.center.x, -transform.position.y * (1 / transform.localScale.y), collider.center.z);
 		}
 	}
 
