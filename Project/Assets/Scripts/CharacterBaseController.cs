@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CharacterBaseController : MonoBehaviour {
 
+	public bool isCharacterSelection = false;
+
 	// AI
 	public bool isComputer = false;
 	public int index; //player's number
@@ -49,10 +51,13 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
-		soundController = gameController.gameObject.GetComponent<SoundController>();
 		capsuleCollRadius = new Vector3(GetComponent<CapsuleCollider>().bounds.extents.x, 0, 0);
-		tileController = gameController.gameObject.GetComponent<TileController>();
 		playerAttack = gameObject.GetComponent<PlayerAttack>();
+		soundController = GameObject.Find("GameController").GetComponent<SoundController>();
+
+		if (!isCharacterSelection) {
+			tileController = gameController.gameObject.GetComponent<TileController>();
+		}
 	}
 	
 	// Use this for initialization
@@ -104,7 +109,9 @@ public class CharacterBaseController : MonoBehaviour {
 
 				isParabolicAnimating = false;
 				 
-				CheckGroundBelow();
+				if (!isCharacterSelection) {
+					CheckGroundBelow();
+				}
 
 				// next jump
 				NextJump();

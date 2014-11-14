@@ -43,7 +43,7 @@ public class PlayerAttack : MonoBehaviour {
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 		attackDistance = GetComponent<BoxCollider>().size.z;
 		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z;
-		soundController = gameController.gameObject.GetComponent<SoundController>();		
+		soundController = GameObject.Find("GameController").GetComponent<SoundController>();		
 		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
 		fist = transform.Find ("Fist").gameObject;
 		fistOriPos = fist.transform.localPosition;
