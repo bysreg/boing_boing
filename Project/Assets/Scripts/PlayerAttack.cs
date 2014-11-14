@@ -213,9 +213,10 @@ public class PlayerAttack : MonoBehaviour {
         Vector3 dir = (to - from).normalized;
         dir.y = 0;
         fistTargetPos = transform.InverseTransformPoint(to);
-        fistOriPos = transform.InverseTransformPoint(from + dir * fistOffset);
         fist.transform.localPosition = fistOriPos;
-        fist.transform.LookAt(from + dir * fistOffset * 2);
+		fistTargetPos.x = 0;
+		fistTargetPos.y = 0;
+		fistTargetPos.z = Mathf.Max(fistTargetPos.z, fistOriPos.z);
     }
 
 	public void AnimateMiss() {
