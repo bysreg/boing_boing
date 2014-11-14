@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour {
 
 	bool initialized;
 	float spawnYPos;
+	float remainingGameTime;
+	float MAX_GAME_TIME = 90f; // in seconds
 
 	void Awake()
 	{
@@ -37,6 +39,7 @@ public class GameController : MonoBehaviour {
 	void Init()
 	{
 		SetupPlayers();
+		remainingGameTime = MAX_GAME_TIME;
 		
 		initialized = true;
 	}
@@ -90,11 +93,31 @@ public class GameController : MonoBehaviour {
 		{
 			Init();
 		}
+
+		if(remainingGameTime > 0)
+		{
+			remainingGameTime -= Time.deltaTime;
+			if(remainingGameTime <= 0f)
+			{
+				remainingGameTime = 0;
+				FinishGame();
+			}
+		}
 	}
 
-	public void FinishGame(int winner)
+	public void FinishGame()
 	{
-		print ("the winner is " + winner);
+		//search for player with highest kill
+		int maxKillCount = players[0].GetComponent<PlayerAttack>().GetKillCount();
+		for(int i=1; i<activePlayersCount; i++)
+		{
+			//if(maxKillCount <
+		}
+	}
+
+	public float GetRemainingGameTime()
+	{
+		return remainingGameTime;
 	}
 
 	// 1 - based

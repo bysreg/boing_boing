@@ -22,6 +22,8 @@ public class HDebug : MonoBehaviour {
 	GUIText p4KillCountText;
 	GUIText p4LastHitFromText;
 
+	GUIText gameTimeText;
+
 	PlayerAttack p1Attack;
 	PlayerAttack p2Attack;
 	PlayerAttack p3Attack;
@@ -50,6 +52,8 @@ public class HDebug : MonoBehaviour {
 		p4KillCountText = transform.Find("P4KillCount").GetComponent<GUIText>();
 		p4LastHitFromText = transform.Find("P4LastHitFrom").GetComponent<GUIText>();
 
+		gameTimeText = transform.Find("GameTime").GetComponent<GUIText>();
+
 		p1 = GameObject.Find("P1").transform;
 		p1Attack = p1.GetComponent<PlayerAttack>();
 		p2 = GameObject.Find("P2").transform;
@@ -69,6 +73,8 @@ public class HDebug : MonoBehaviour {
 
 	void Update()
 	{
+		gameTimeText.text = "Remaining Game Time : " + gameController.GetRemainingGameTime();
+
 		p1FreezeTimeText.text = "P1 FreezeTime : " + p1Attack.GetFreezeTime();
 		p1KillCountText.text = "P1 Kill Count : " + p1Attack.GetKillCount();
 		p1LastHitFromText.text = "P1 Last Hit From : " + (p1Attack.GetLastHitFrom() != null ? p1Attack.GetLastHitFrom().name : "");
