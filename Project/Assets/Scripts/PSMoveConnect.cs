@@ -23,10 +23,17 @@ public class PSMoveConnect : MonoBehaviour {
 	string rumbleStr = "0";
 	#endregion
 	
-	
+	private Color[] sphereColor;
 	
 	// Use this for initialization
 	void Start () {
+		sphereColor = new Color[4] {
+			Color.red,
+			Color.blue,
+			Color.green,
+			Color.yellow
+		};
+
 		// disable all character
 		for (int i = 0; i < playerList.Length; i++) {
 			playerList[i].SetActive(false);		
@@ -47,6 +54,16 @@ public class PSMoveConnect : MonoBehaviour {
 				}
 			}
 		}		
+
+		//move controller information
+		for(int i=0; i<PSMoveInput.MAX_MOVE_NUM; i++)
+		{
+			MoveController moveController = PSMoveInput.MoveControllers[i];
+			if(moveController.Connected) {
+				// set color
+				moveController.SetColorAndTrack(sphereColor[i]);
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -81,7 +98,6 @@ public class PSMoveConnect : MonoBehaviour {
 				temp.x = -moveData.QOrientation.x;
 				temp.y = -moveData.QOrientation.y;
 				handle.transform.localRotation = temp;
-				
 			}
 		}
 	}
@@ -102,14 +118,12 @@ public class PSMoveConnect : MonoBehaviour {
 			
 		}
 		else {
-			
-			
 			if(GUI.Button(new Rect(20, 40, 100, 35), "Disconnect"))  {
 				PSMoveInput.Disconnect();
 				Reset();
 			}
 			
-			
+			/*
 			GUI.Label(new Rect(10, 10, 150, 100),  "PS Move count : " + PSMoveInput.MoveCount);
 			GUI.Label(new Rect(140, 10, 150, 100),  "PS Nav count : " + PSMoveInput.NavCount);
 			
@@ -200,9 +214,8 @@ public class PSMoveConnect : MonoBehaviour {
 					GUI.Label(new Rect(400, 100 + 95 * j, 150, 95),   navDisplay);
 				}
 			}
+		*/
 		}
-		
-		
 	}
 	
 	private void Reset() {
