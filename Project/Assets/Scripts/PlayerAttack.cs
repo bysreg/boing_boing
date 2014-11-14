@@ -48,7 +48,7 @@ public class PlayerAttack : MonoBehaviour {
 		fist = transform.Find ("Fist").gameObject;
 		fistOriPos = fist.transform.localPosition;
         fistOffset = (fist.transform.position - transform.position).magnitude;
-        fist.SetActive(false);
+        //fist.SetActive(false);
 
 		//find cd animator
 		//gameObject.GetComponentsInChildren<Animator> ().SetValue ();
@@ -84,7 +84,7 @@ public class PlayerAttack : MonoBehaviour {
 			if(freezeTime <= 0)
 			{
 				freezeTime = 0;
-                fist.SetActive(false);
+                //fist.SetActive(false);
 			}
 		}
 
@@ -197,7 +197,7 @@ public class PlayerAttack : MonoBehaviour {
 
     void SetupFist(Vector3 from, Vector3 to)
     {
-        fist.SetActive(true);
+        //fist.SetActive(true);
         Vector3 dir = (to - from).normalized;
         dir.y = 0;
         fistTargetPos = transform.InverseTransformPoint(to);

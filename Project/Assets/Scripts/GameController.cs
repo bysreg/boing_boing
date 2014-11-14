@@ -97,9 +97,10 @@ public class GameController : MonoBehaviour {
 		print ("the winner is " + winner);
 	}
 
+	// 1 - based
     public GameObject GetPlayer(int index)
     {
-        if(index < players.Length)
+        if(index <= players.Length)
         {
             return players[index-1].gameObject;
         }

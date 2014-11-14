@@ -24,7 +24,10 @@ public class TileController : MonoBehaviour {
 		tilesLayer = GameObject.Find("Tiles");
 
 		InitializeTiles();
-		CreateBoundaryCollider();
+		//CreateBoundaryCollider();
+
+		//FIXME : untested
+		InitializeBoundaryTiles();
 	}
 
 	void InitializeTiles()
@@ -74,12 +77,60 @@ public class TileController : MonoBehaviour {
 		}
 	}
 
+	void InitializeBoundaryTiles()
+	{
+		float width = tileWidth;
+		float height = tileHeight;
+		float left = GetWorldPos(0, 0).x - tileWidth * 0.5f - width * 0.5f;
+		float right = GetWorldPos(boardWidth - 1, 0).x + tileWidth * 0.5f + width * 0.5f;
+		float front = GetWorldPos(0, boardHeight - 1).z + tileHeight * 0.5f + height * 0.5f;
+		float back = GetWorldPos(0, 0).z - tileHeight * 0.5f - height * 0.5f;
+		float y = placeHolderTile.transform.position.y + tileHeight - 0.1f; // the last number is offset
+		//int type = (int)(boardHeight * 0.5f) % tileTypes.Length;
+		int type = 4;
+
+		GameObject parent = new GameObject();
+		parent.name = "Bounds";
+
+		//left
+		for(int i=0; i<boardHeight; i++)
+		{
+			CreateBoundaryTile(left, y, i * height, type, parent);
+		}
+
+		//right
+		for(int i=0; i<boardHeight; i++)
+		{
+			CreateBoundaryTile(right, y, i * height, type, parent);
+		}
+
+		//front 
+		for(int i=-1; i<boardWidth + 1; i++)
+		{
+			CreateBoundaryTile(i * width, y, front, type, parent);
+		}
+
+		//back
+		for(int i=-1; i<boardWidth + 1; i++)
+		{
+			CreateBoundaryTile(i * width, y, back, type, parent);
+		}
+	}
+
 	void CreateTile(int x, int y, int type)
 	{
 		Transform t = Instantiate(tileTypes[type], new Vector3(x*tileWidth, placeHolderTile.transform.position.y, y*tileDepth), Quaternion.identity) as Transform;
 		t.name = tile.name + (y*boardHeight + x);
 		t.parent = tilesLayer.transform;
 		tilesObj[y, x] = t.gameObject;
+	}
+
+	void CreateBoundaryTile(float world_x, float world_y, float world_z, int type, GameObject parent)
+	{
+		Transform t = Instantiate(tileTypes[type], new Vector3(world_x, world_y, world_z), Quaternion.identity) as Transform;
+		t.name = "Boundary";
+		t.parent = parent.transform;
+
 	}
 
 	void CreateBoundaryCollider()
