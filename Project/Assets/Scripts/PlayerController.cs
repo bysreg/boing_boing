@@ -106,7 +106,7 @@ public class PlayerController : CharacterBaseController
 
 			// V.3
 			float orientation = GetRotationValue (Mathf.Rad2Deg * Mathf.Atan2 (2 * moveData.QOrientation.y * moveData.QOrientation.w - 2 * moveData.QOrientation.x * moveData.QOrientation.z, 1 - 2 * moveData.QOrientation.y * moveData.QOrientation.y - 2 * moveData.QOrientation.z * moveData.QOrientation.z));
-			Debug.Log (orientation);						
+			//Debug.Log (orientation);						
 			float playerRotation = transform.localRotation.eulerAngles.y;
 
 			float deadRange = 60f;
