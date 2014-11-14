@@ -3,7 +3,8 @@ using System.Collections;
 using System;
 
 public class PSMoveConnect : MonoBehaviour {
-	
+
+	public GameObject[] playerList;
 	
 	public string ipAddress = "128.2.239.254";
 	public string port = "7899";
@@ -26,12 +27,26 @@ public class PSMoveConnect : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		
+		// disable all character
+		for (int i = 0; i < playerList.Length; i++) {
+			playerList[i].SetActive(false);		
+		}
 	}
 	
 	
 	void Update() {
-		
+		if(PSMoveInput.IsConnected) {
+			//move controller information
+			for(int i=0; i<playerList.Length; i++)
+			{
+				MoveController moveController = PSMoveInput.MoveControllers[i];
+				if (moveController.Connected) {
+					playerList[i].SetActive(true);
+				} else {
+					playerList[i].SetActive(false);
+				}
+			}
+		}		
 	}
 	
 	// Update is called once per frame
