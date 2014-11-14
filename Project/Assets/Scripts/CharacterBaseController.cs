@@ -34,6 +34,7 @@ public class CharacterBaseController : MonoBehaviour {
 	GameController gameController;
 	SoundController soundController;
 	TileController tileController;
+	PlayerAttack playerAttack;
 
 	float yTime;
 
@@ -51,6 +52,7 @@ public class CharacterBaseController : MonoBehaviour {
 		soundController = gameController.gameObject.GetComponent<SoundController>();
 		capsuleCollRadius = new Vector3(GetComponent<CapsuleCollider>().bounds.extents.x, 0, 0);
 		tileController = gameController.gameObject.GetComponent<TileController>();
+		playerAttack = gameObject.GetComponent<PlayerAttack>();
 	}
 	
 	// Use this for initialization
@@ -131,6 +133,8 @@ public class CharacterBaseController : MonoBehaviour {
 				// there is no tile below, so player falls down
 				fallDown = true;
 				respawnTime = MAX_RESPAWN_TIME;
+
+				playerAttack.Killed();
 			}
 		}
 		else
