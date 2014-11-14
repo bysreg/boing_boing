@@ -3,7 +3,11 @@ using System.Collections;
 
 public class CharacterBaseController : MonoBehaviour {
 
+	// Character Selection
 	public bool isCharacterSelection = false;
+	protected float a = 0.3f;
+	protected float velocity0 = 0f;
+	protected float elapsedTimeSelection = 0f;
 
 	// AI
 	public bool isComputer = false;
@@ -92,14 +96,31 @@ public class CharacterBaseController : MonoBehaviour {
 		//transform.position = new Vector3 (transform.position.x, firstPosition.y + (((Mathf.Sin (Time.time * floatingSpeed) + 1) / 2f) * maxHeight), transform.position.z);
 		//transform.position = new Vector3 (transform.position.x, firstPosition.y + (Mathf.Abs (Mathf.Sin (Time.time * floatingSpeed)) * maxHeight), transform.position.z);
 
+		if (isCharacterSelection) {
+			elapsedTimeSelection += Time.deltaTime;
+			velocity0 -= a * elapsedTimeSelection;
+
+			if (velocity0 <= 0f) {
+				velocity0 = 0f;
+				elapsedTimeSelection = 0f;
+			}
+		}
+
 		if (isParabolicAnimating) {
 			elapsedTimeParabolic += Time.deltaTime;
 			//float y = (v0 * elapsedTimeParabolic) - (0.5f * g * Mathf.Pow(elapsedTimeParabolic, 2));
 
 			Vector2 v = new Vector2(rigidbody.velocity.x, rigidbody.velocity.z);
+			float vMagnitude;
+
+			if (isCharacterSelection) {
+				vMagnitude = velocity0;
+			} else {
+				vMagnitude = v.sqrMagnitude;
+			}
 
 			//yTime += Time.deltaTime * Mathf.Clamp(v.sqrMagnitude, 6, 10);
-			yTime += Time.deltaTime * GetValue(new Vector2(7,17), new Vector2(0,50), v.sqrMagnitude);
+			yTime += Time.deltaTime * GetValue(new Vector2(7,17), new Vector2(0,50), vMagnitude);
 //			if (index == 1) {
 //				Debug.Log("velocity : " + v.sqrMagnitude);
 //			}
@@ -174,10 +195,14 @@ public class CharacterBaseController : MonoBehaviour {
 	}
 
 	protected void MoveForward() {
-		rigidbody.AddForce (transform.forward * forwardSpeed);
-		//if (transform.position.y <= 1.1f) {
-		//	rigidbody.AddForce (transform.up * 5.5f * forwardSpeed);
-		//}
+		if (isCharacterSelection) {
+			velocity0 += 5f;
+		} else {
+			rigidbody.AddForce (transform.forward * forwardSpeed);
+			//if (transform.position.y <= 1.1f) {
+			//	rigidbody.AddForce (transform.up * 5.5f * forwardSpeed);
+			//}
+		}
 	}
 
 	public static float GetValue(Vector2 firstVector, Vector2 secondVector, float secondValue) {
