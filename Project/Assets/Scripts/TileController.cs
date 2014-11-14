@@ -88,6 +88,7 @@ public class TileController : MonoBehaviour {
 		float y = placeHolderTile.transform.position.y + tileHeight - 0.1f; // the last number is offset
 		//int type = (int)(boardHeight * 0.5f) % tileTypes.Length;
 		int type = 4;
+		int count = 0;
 
 		GameObject parent = new GameObject();
 		parent.name = "Bounds";
@@ -95,25 +96,25 @@ public class TileController : MonoBehaviour {
 		//left
 		for(int i=0; i<boardHeight; i++)
 		{
-			CreateBoundaryTile(left, y, i * height, type, parent);
+			CreateBoundaryTile(left, y, i * height, type, parent, count++);
 		}
 
 		//right
 		for(int i=0; i<boardHeight; i++)
 		{
-			CreateBoundaryTile(right, y, i * height, type, parent);
+			CreateBoundaryTile(right, y, i * height, type, parent, count++);
 		}
 
 		//front 
 		for(int i=-1; i<boardWidth + 1; i++)
 		{
-			CreateBoundaryTile(i * width, y, front, type, parent);
+			CreateBoundaryTile(i * width, y, front, type, parent, count++);
 		}
 
 		//back
 		for(int i=-1; i<boardWidth + 1; i++)
 		{
-			CreateBoundaryTile(i * width, y, back, type, parent);
+			CreateBoundaryTile(i * width, y, back, type, parent, count++);
 		}
 	}
 
@@ -125,12 +126,12 @@ public class TileController : MonoBehaviour {
 		tilesObj[y, x] = t.gameObject;
 	}
 
-	void CreateBoundaryTile(float world_x, float world_y, float world_z, int type, GameObject parent)
+	void CreateBoundaryTile(float world_x, float world_y, float world_z, int type, GameObject parent, int number)
 	{
 		Transform t = Instantiate(tileTypes[type], new Vector3(world_x, world_y, world_z), Quaternion.identity) as Transform;
-		t.name = "Boundary";
+		t.name = "Boundary" + number;
 		t.parent = parent.transform;
-
+		t.tag = "Boundary";
 	}
 
 	void CreateBoundaryCollider()
