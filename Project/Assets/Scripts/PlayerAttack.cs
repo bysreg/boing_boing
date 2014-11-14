@@ -41,14 +41,14 @@ public class PlayerAttack : MonoBehaviour {
 		playersInsideHitArea = new List<GameObject>();
 		index = GetComponent<CharacterBaseController>().index;
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
-		attackDistance = GetComponent<BoxCollider>().size.z;
-		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z;
+		attackDistance = GetComponent<BoxCollider>().size.z * transform.localScale.z;
+		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z * transform.localScale.z;
 		soundController = GameObject.Find("GameController").GetComponent<SoundController>();		
 		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
 		fist = transform.Find ("Fist").gameObject;
 		fistOriPos = fist.transform.localPosition;
         fistOffset = (fist.transform.position - transform.position).magnitude;
-        fist.SetActive(false);
+        //fist.SetActive(false);
 
 		//find cd animator
 		//gameObject.GetComponentsInChildren<Animator> ().SetValue ();
@@ -84,7 +84,7 @@ public class PlayerAttack : MonoBehaviour {
 			if(freezeTime <= 0)
 			{
 				freezeTime = 0;
-                fist.SetActive(false);
+                //fist.SetActive(false);
 			}
 		}
 
@@ -101,21 +101,27 @@ public class PlayerAttack : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		if(other.tag == "Player" && !other.isTrigger)
+		if(other.isTrigger)
+			return;
+
+		if(other.tag == "Player" || other.tag == "Boundary")
 		{
 			playersInsideHitArea.Add(other.gameObject);
-		}
+        }
 	}
 
 	void OnTriggerExit(Collider other)
 	{
-		if(other.tag == "Player" && !other.isTrigger)
+		if(other.isTrigger)
+			return;
+
+		if(other.tag == "Player" || other.tag == "Boundary")
 		{
 			playersInsideHitArea.Remove(other.gameObject);
-		}
-	}
-
-	void Attack()
+        }
+    }
+    
+    void Attack()
 	{
 		freezeTime = MAX_FREEZE_TIME;
 
@@ -123,7 +129,7 @@ public class PlayerAttack : MonoBehaviour {
 		{
 			soundController.PlaySound("whoosh");
 			AnimateMiss();
-            SetupFist(transform.position, transform.position + transform.forward * attackDistance);
+            SetupFist(transform.position, transform.position + transform.forward * (attackDistance));
 
 			AnimateCd();
 			return;
@@ -159,7 +165,13 @@ public class PlayerAttack : MonoBehaviour {
 		AnimateHit ();
 		AnimateCd();
 
-        nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized, this.gameObject);
+		if(nearestPlayer.tag == "Player")
+        	nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized, this.gameObject);
+		else if(nearestPlayer.tag == "Boundary")
+		{
+			playersInsideHitArea.Remove(nearestPlayer);
+			Destroy(nearestPlayer);
+		}
     }
     
     public float GetFreezeTime()
@@ -186,18 +198,18 @@ public class PlayerAttack : MonoBehaviour {
 			//print (fistOriPos + " " + fistTargetPos + " " + freezeTime);
 			if(freezeTime > MAX_FREEZE_TIME * 0.5f)
 			{
-				fist.transform.localPosition = Vector3.Lerp(fistOriPos, fistTargetPos, 1 - (freezeTime / MAX_FREEZE_TIME));
+				fist.transform.localPosition = Vector3.Lerp(fistOriPos, fistTargetPos, 2 * (1 - (freezeTime / MAX_FREEZE_TIME)));
 			}
 			else
 			{
-				fist.transform.localPosition = Vector3.Lerp(fistOriPos, fistTargetPos, freezeTime / MAX_FREEZE_TIME);
+				fist.transform.localPosition = Vector3.Lerp(fistOriPos, fistTargetPos, 2 * (freezeTime / MAX_FREEZE_TIME));
 			}
 		}
 	}
 
     void SetupFist(Vector3 from, Vector3 to)
     {
-        fist.SetActive(true);
+        //fist.SetActive(true);
         Vector3 dir = (to - from).normalized;
         dir.y = 0;
         fistTargetPos = transform.InverseTransformPoint(to);
@@ -213,7 +225,7 @@ public class PlayerAttack : MonoBehaviour {
 
 	public void AnimateCd(){
 		StartCoroutine (AnimateCd_Routine());
-}
+	}
 
 	IEnumerator AnimateCd_Routine() {
 		if (!iscd) {
