@@ -23,7 +23,6 @@ public class PlayerAttack : MonoBehaviour {
 	int index;
 	Vector3 fistTargetPos;
 	Vector3 fistOriPos;
-    float fistOffset;
 	int killCount;
 
 	PlayerController playerController;
@@ -47,7 +46,6 @@ public class PlayerAttack : MonoBehaviour {
 		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
 		fist = transform.Find ("Fist").gameObject;
 		fistOriPos = fist.transform.localPosition;
-        fistOffset = (fist.transform.position - transform.position).magnitude;
         //fist.SetActive(false);
 
 		//find cd animator
