@@ -68,7 +68,7 @@ public class PSMoveConnect : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		
+		/*
 		if(PSMoveInput.IsConnected && PSMoveInput.MoveControllers[0].Connected) {
 			
 			Vector3 gemPos, handlePos;
@@ -88,11 +88,10 @@ public class PSMoveConnect : MonoBehaviour {
 				handle.transform.localRotation = Quaternion.LookRotation(gemPos - handlePos);
 				handle.transform.Rotate(new Vector3(0,0,moveData.Orientation.z));
 				
-				/* using quaternion rotation directly
-			 * the rotations on the x and y axes are inverted - i.e. left shows up as right, and right shows up as left. This code fixes this in case 
-			 * the object you are using is facing away from the screen. Comment out this code if you do want an inversion along these axes
-			 * 
-			 * Add by Karthik Krishnamurthy*/
+				//using quaternion rotation directly
+				//the rotations on the x and y axes are inverted - i.e. left shows up as right, and right shows up as left. This code fixes this in case 
+				//the object you are using is facing away from the screen. Comment out this code if you do want an inversion along these axes
+				//Add by Karthik Krishnamurthy
 				
 				temp = moveData.QOrientation;
 				temp.x = -moveData.QOrientation.x;
@@ -100,6 +99,7 @@ public class PSMoveConnect : MonoBehaviour {
 				handle.transform.localRotation = temp;
 			}
 		}
+		*/
 	}
 	
 	void OnGUI() {
