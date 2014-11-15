@@ -35,8 +35,7 @@ public class CameraMovement : MonoBehaviour {
 	void LateUpdate()
 	{
 		CalcDelta();
-
-		print (deltaX + " " + deltaZ);
+		//print (deltaX + " " + deltaZ);
 
 		Vector3 newPos = new Vector3(deltaX, transform.position.y, transform.position.z);
 		transform.position = Vector3.Lerp(transform.position, newPos, translateSpeed * Time.deltaTime);
