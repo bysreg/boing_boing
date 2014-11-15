@@ -109,6 +109,10 @@ public class GameController : MonoBehaviour {
 				FinishGame();
 			}
 		}
+
+		if (Input.GetKeyDown (KeyCode.R)) {
+			Application.LoadLevel(0);		
+		}
 	}
 
 	public void FinishGame()
