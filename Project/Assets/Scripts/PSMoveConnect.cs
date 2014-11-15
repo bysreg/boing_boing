@@ -122,7 +122,10 @@ public class PSMoveConnect : MonoBehaviour {
 				PSMoveInput.Disconnect();
 				Reset();
 			}
-			
+			if(GUI.Button(new Rect(20, 80, 100, 35), "Start"))  {
+				Application.LoadLevel(Application.loadedLevel + 1);
+			}
+
 			/*
 			GUI.Label(new Rect(10, 10, 150, 100),  "PS Move count : " + PSMoveInput.MoveCount);
 			GUI.Label(new Rect(140, 10, 150, 100),  "PS Nav count : " + PSMoveInput.NavCount);
