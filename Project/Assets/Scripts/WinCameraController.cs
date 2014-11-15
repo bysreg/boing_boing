@@ -47,11 +47,12 @@ public class WinCameraController : MonoBehaviour {
 
 	void PlayAnimation(GameObject p) {
 		win = false;
-		Vector3 pFacing = p.transform.forward;
-		Vector3 pPos = p.transform.position;
-		Vector3 cFacing = -pFacing;
+		winPlayer = p;
+		//pFacing = p.transform.forward;
+		pPos = p.transform.position;
+		//cFacing = -pFacing;
 		c.transform.position = pPos + offset;
-		c.transform.forward = cFacing;
+		//c.transform.forward = cFacing;
 		c.transform.LookAt (pPos);
 	}
 
