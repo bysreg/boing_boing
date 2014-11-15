@@ -233,6 +233,8 @@ public class CharacterBaseController : MonoBehaviour {
 	public void Reset()
 	{
 		fallDown = false;
+		rigidbody.velocity = Vector3.zero;
+		rigidbody.angularVelocity = Vector3.zero;
 	}
 
 	public int GetIndex()

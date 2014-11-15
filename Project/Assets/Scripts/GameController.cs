@@ -16,10 +16,12 @@ public class GameController : MonoBehaviour {
 
 	bool initialized;
 	float spawnYPos;
+	float OFFSET_SPAWN_Y_POS = 5f;
 	float remainingGameTime;
-	float MAX_GAME_TIME = 90f; // in seconds
-
+	const float MAX_GAME_TIME = 90f; // in seconds
+	
 	WinCameraController winCameraController;
+
 
 	void Awake()
 	{
@@ -44,22 +46,14 @@ public class GameController : MonoBehaviour {
 
 	void Init()
 	{
-		SetupPlayers();
 		remainingGameTime = MAX_GAME_TIME;
-		
+		spawnYPos = p1.transform.position.y + OFFSET_SPAWN_Y_POS;
+
+		for(int i=1; i<=4; i++)
+		{
+			SpawnPlayer(i);
+		}
 		initialized = true;
-	}
-
-	void SetupPlayers()
-	{
-		int boardWidth = tileController.boardWidth;
-		int boardHeight = tileController.boardHeight;
-		spawnYPos = p1.transform.position.y;
-
-		p1.transform.position = tileController.GetWorldPos(0, 0) + new Vector3(0, spawnYPos, 0);
-		p2.transform.position = tileController.GetWorldPos(boardWidth - 1, 0) + new Vector3(0, spawnYPos, 0);
-		p3.transform.position = tileController.GetWorldPos(boardWidth - 1, boardHeight - 1) + new Vector3(0, spawnYPos, 0);
-		p4.transform.position = tileController.GetWorldPos(0, boardHeight - 1) + new Vector3(0, spawnYPos, 0);
 	}
 
 	public void SpawnPlayer(int playerIndex)
@@ -73,23 +67,22 @@ public class GameController : MonoBehaviour {
 		switch(playerIndex)
 		{
 		case 1 :
-			pos = tileController.GetWorldPos(0, 0) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
+			pos = tileController.GetWorldPos(2, 2) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
 			break;
 		case 2:
-			pos = tileController.GetWorldPos(boardWidth - 1, 0) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
+			pos = tileController.GetWorldPos(boardWidth - 1 - 2, 2) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
 			break;
 		case 3:
-			pos = tileController.GetWorldPos(boardWidth - 1, boardHeight - 1) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
+			pos = tileController.GetWorldPos(boardWidth - 1 - 2, boardHeight - 1 - 2) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
 			break;
 		case 4:
 		default:
-			pos = tileController.GetWorldPos(0, boardHeight - 1) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
+			pos = tileController.GetWorldPos(2, boardHeight - 1 - 2) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
 			break;
 		}
 
 		player.transform.position = pos;
-		player.rigidbody.velocity = Vector3.zero;
-		player.rigidbody.angularVelocity = Vector3.zero;
+		player.transform.rotation = Quaternion.identity;
 		player.GetComponent<CharacterBaseController>().Reset();
 	}
 
