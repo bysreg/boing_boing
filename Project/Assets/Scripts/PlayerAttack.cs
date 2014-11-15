@@ -7,13 +7,13 @@ public class PlayerAttack : MonoBehaviour {
 	//static
 	public static GameObject firstKillPlayer; // the player who kills first in the game
 
-	public GameObject fist;
 	public GameObject punchEffect;
 	public GameObject missEffect;
 	private Transform cd;
 
 	bool iscd = false;
 	bool psMoveAvailable;
+	GameObject fist;
 	float freezeTime; // time until the player can attack
 	const float MAX_FREEZE_TIME = 0.5f;
 	float forceMagnitude = 14f;
@@ -51,11 +51,11 @@ public class PlayerAttack : MonoBehaviour {
 
 		//find cd animator
 		//gameObject.GetComponentsInChildren<Animator> ().SetValue ();
-		foreach(Transform child in transform) {
-			if(child.name == "cd") {
-				cd = child;
-			}
-		}
+//		foreach(Transform child in transform) {
+//			if(child.name == "cd") {
+//				cd = child;
+//			}
+//		}
 	}
 
 	void Update()
@@ -130,7 +130,7 @@ public class PlayerAttack : MonoBehaviour {
 			AnimateMiss();
             SetupFist(transform.position, transform.position + transform.forward * (attackDistance));
 
-			AnimateCd();
+			//AnimateCd();
 			return;
 		}
 
@@ -153,7 +153,7 @@ public class PlayerAttack : MonoBehaviour {
 			AnimateMiss();
             SetupFist(transform.position, transform.position + transform.forward * attackDistance);
 
-			AnimateCd();
+			//AnimateCd();
 			return;
 		}
 
@@ -162,7 +162,7 @@ public class PlayerAttack : MonoBehaviour {
 		//play toet sound
 		soundController.PlaySound("punch Sound");
 		AnimateHit ();
-		AnimateCd();
+		//AnimateCd();
 
 		if(nearestPlayer.tag == "Player")
         	nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized, this.gameObject);

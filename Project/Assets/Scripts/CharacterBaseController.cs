@@ -42,6 +42,7 @@ public class CharacterBaseController : MonoBehaviour {
 	bool isFlying;
 	float flyTime;
 	const float MAX_FLY_TIME = 10f;
+	TextMesh flyTimeText;
 
 	GameController gameController;
 	SoundController soundController;
@@ -68,6 +69,8 @@ public class CharacterBaseController : MonoBehaviour {
 		if (!isCharacterSelection) {
 			tileController = gameController.gameObject.GetComponent<TileController>();
 		}
+
+		flyTimeText = transform.Find("FlyTimeText").GetComponent<TextMesh>();
 	}
 	
 	// Use this for initialization
@@ -104,6 +107,7 @@ public class CharacterBaseController : MonoBehaviour {
 				flyTime = 0;
 				StopFlying();
 			}
+			flyTimeText.text = "" + flyTime;
 		}
 	}
 
