@@ -51,6 +51,20 @@ public class CharacterBaseController : MonoBehaviour {
 
 	float yTime;
 
+	//Bomb
+	public bool hasBomb = false;
+	public GameObject bomb;
+	public Vector3 bombOffset;
+	public GameObject bombFrom;
+
+	private int bombTime = 5;
+	private GameObject bombinst;
+	private float bombPassInterve = 2f;
+	private float bombGetTimeRecord= 0f;
+
+	public GameObject explosion;
+	private GameObject sf;
+
 	protected virtual void Awake() {
 		if (isComputer) {
 			AIController aicomp = gameObject.AddComponent<AIController>();
@@ -163,7 +177,7 @@ public class CharacterBaseController : MonoBehaviour {
 				NextJump();
 
 				//play toet sound
-				soundController.PlaySound("SFX-Jump", 0.3f, false);
+				soundController.PlaySound("SFX-Jump", 0.1f, false);
 			}
 			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
 
@@ -262,5 +276,69 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		isFlying = false;
 		flyTimeText.gameObject.SetActive(false);
+	}
+
+	//bomb controller
+
+	void PassBomb(int bombT ,GameObject passedBy) {
+		bombTime = bombT;
+		bombinst = Instantiate (bomb,transform.position + bombOffset, Quaternion.identity) as GameObject;
+		bombinst.transform.parent = gameObject.transform;
+		this.bombFrom = passedBy;
+		StartCoroutine(CountDown(bombT));
+	}
+
+	GameObject Explode() {
+		Vector3 explodeForce = new Vector3 (Random.Range(-2,3), Random.Range(4,10), Random.Range(-2,3));
+		this.gameObject.rigidbody.AddForce (explodeForce * 900);
+		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
+		soundController.PlaySound ("explode");
+		Destroy (explosioninst, 3f);
+		print (bombFrom.name);
+		return bombFrom;
+	}
+
+	public void AttachBomb(GameObject go) {
+		this.hasBomb = true;
+		PassBomb (bombTime, go);
+	}
+
+	IEnumerator CountDown(int bombT) {
+		sf = soundController.PlaySound("clock_long");
+		while(true) {
+			if(bombT >= 0 && hasBomb){
+				yield return new WaitForSeconds (1);
+				print( bombT+ "remaining");
+				bombT--;
+				bombTime--;
+			}else {
+				if(hasBomb){
+					Explode();
+					//Destroy(sf);
+					sf.GetComponent<AudioSource>().Stop();
+					this.hasBomb = false;
+				}
+				Destroy(bombinst);
+				bombTime = 5;
+				break;
+			}
+		}
+	}
+
+	void OnTriggerEnter(Collider c) { // Trigger Enter of Collision Enter
+		if(c.gameObject.tag == "Player" && hasBomb && !c.gameObject.GetComponent<CharacterBaseController>().hasBomb) {
+			if(bombPassInterve + bombGetTimeRecord < Time.time) {
+				bombGetTimeRecord = Time.time;
+				c.gameObject.GetComponent<CharacterBaseController>().bombGetTimeRecord = Time.time;
+				this.hasBomb = false;
+				sf.GetComponent<AudioSource>().Stop();
+				soundController.PlaySound("passbomb", 0.2f, false);
+				c.gameObject.GetComponent<CharacterBaseController>().hasBomb = true;
+				c.gameObject.GetComponent<CharacterBaseController>().PassBomb(bombTime, gameObject);
+				Destroy(this.bombinst);
+			}else {
+				return;
+			}
+		}
 	}
 }
