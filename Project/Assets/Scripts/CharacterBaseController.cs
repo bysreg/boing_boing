@@ -71,6 +71,7 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 
 		flyTimeText = transform.Find("FlyTimeText").GetComponent<TextMesh>();
+		flyTimeText.gameObject.SetActive(false);
 	}
 	
 	// Use this for initialization
@@ -254,10 +255,12 @@ public class CharacterBaseController : MonoBehaviour {
 	void StartFlying()
 	{
 		isFlying = true;
+		flyTimeText.gameObject.SetActive(true);
 	}
 
 	void StopFlying()
 	{
 		isFlying = false;
+		flyTimeText.gameObject.SetActive(false);
 	}
 }

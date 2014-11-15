@@ -39,8 +39,8 @@ public class ItemGenerator : MonoBehaviour {
 	IEnumerator Drop() {
 		while(true) {
 			float interve_imp = Random.Range(5f, 5+interve);
-			DropItem();
 			yield return new WaitForSeconds(interve_imp);
+			DropItem();
 		}
 	}
 }

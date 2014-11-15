@@ -8,6 +8,7 @@ public class TileController : MonoBehaviour {
 	public Transform tile;
 	public Transform[] tileTypes;
 	public BoxCollider boundary;
+	public PhysicMaterial boundaryPhysicMaterial;
 
 	GameObject tilesLayer;
 	GameObject[,] tilesObj;
@@ -131,6 +132,7 @@ public class TileController : MonoBehaviour {
 		t.name = "Boundary" + number;
 		t.parent = parent.transform;
 		t.tag = "Boundary";
+		t.GetComponent<BoxCollider>().material = boundaryPhysicMaterial;
 	}
 
 	void CreateBoundaryCollider()
