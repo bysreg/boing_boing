@@ -4,11 +4,16 @@ using System.Collections;
 public class CameraMovement : MonoBehaviour {
 
 	float panTime = 1f;
+	float rotateSpeed = 1.5f; // relative speed
+	float translateSpeed = 1.5f;
 	Vector3 oriPos;
 	float minZoom;
 	float maxZoom;
 	float deltaX;
 	float deltaZ;
+	const float MIN_DELTA_X = 0;
+	const float MAX_DELTA_X = 0;
+	float playerSpawnYPos;
 
 	int activePlayerCount;
 
@@ -19,6 +24,7 @@ public class CameraMovement : MonoBehaviour {
 		oriPos = transform.position;
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 		activePlayerCount = gameController.activePlayersCount;
+		playerSpawnYPos = gameController.GetSpawnYPos();
 	}
 
 	public void PanTo(Vector3 target)
@@ -26,16 +32,18 @@ public class CameraMovement : MonoBehaviour {
 		iTween.MoveTo(this.gameObject, iTween.Hash("position", target, "easeType", "easeInOutExpo", "time", panTime));
 	}
 	
-	void Update()
+	void LateUpdate()
 	{
-		if(Input.GetKeyDown(KeyCode.Q))
-		{
-			PanTo(oriPos + new Vector3(-5, -2, 2));
-		}
-
 		CalcDelta();
 
-		Debug.DrawRay(transform.position, transform.forward * 15, Color.yellow);
+		print (deltaX + " " + deltaZ);
+
+		Vector3 newPos = new Vector3(deltaX, transform.position.y, transform.position.z);
+		transform.position = Vector3.Lerp(transform.position, newPos, translateSpeed * Time.deltaTime);
+		Quaternion lookAtRotation = Quaternion.LookRotation(new Vector3(deltaX - transform.position.x, playerSpawnYPos - transform.position.y, deltaZ - transform.position.z), Vector3.up);
+		transform.rotation = Quaternion.Lerp (transform.rotation, lookAtRotation, rotateSpeed * Time.deltaTime);
+
+		//Debug.DrawRay(transform.position, transform.forward * 15, Color.yellow);
 	}
 
 	void CalcDelta()
@@ -50,7 +58,7 @@ public class CameraMovement : MonoBehaviour {
 			maxZ = Mathf.Max(maxZ, gameController.GetPlayer(i + 1).transform.position.z);
 		}
 
-		deltaX = (minX + maxX) * 0.5f;
-		deltaZ = (minZ + maxZ) * 0.5f;
+		deltaX = Mathf.Clamp((minX + maxX) * 0.5f, 6f, 10f);
+		deltaZ = Mathf.Clamp((minZ + maxZ) * 0.5f, 4f, 7f);
 	}
 }

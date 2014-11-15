@@ -169,7 +169,8 @@ public class PlayerAttack : MonoBehaviour {
 		else if(nearestPlayer.tag == "Boundary")
 		{
 			playersInsideHitArea.Remove(nearestPlayer);
-			Destroy(nearestPlayer);
+			//Destroy(nearestPlayer);
+			nearestPlayer.SetActive(false);
 		}
     }
     

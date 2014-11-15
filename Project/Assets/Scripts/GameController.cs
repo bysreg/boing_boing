@@ -22,7 +22,6 @@ public class GameController : MonoBehaviour {
 	
 	WinCameraController winCameraController;
 
-
 	void Awake()
 	{
 		p1 = GameObject.Find("P1").transform;
@@ -172,5 +171,10 @@ public class GameController : MonoBehaviour {
 		{
 			return 1;
 		}
+	}
+
+	public float GetSpawnYPos()
+	{
+		return spawnYPos;
 	}
 }
