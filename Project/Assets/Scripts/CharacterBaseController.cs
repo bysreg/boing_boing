@@ -152,10 +152,6 @@ public class CharacterBaseController : MonoBehaviour {
 		RaycastHit hitInfo;
 		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 2f, layerMask))
 		{
-			if(index == 1)
-			{
-				print ("nothing below");
-			}
 			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 1f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 1f, layerMask))
 			{
 				// there is no tile below, so player falls down

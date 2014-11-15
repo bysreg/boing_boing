@@ -22,9 +22,10 @@ public class ItemController : ItemGenerator {
 	void OnTriggerEnter(Collider c) {
 		GameObject.Find ("GameController").GetComponent<SoundController>().PlaySound("itempickup",1, false);
 		if(c.tag == "Player" || !c.collider.isTrigger) {
-			switch(itc) {
-			case ItemType.Freeze:
-				Freeze();
+			switch(itc) 
+			{
+			case ItemType.Wings:
+				ActivateWings();
 				break;
 			case ItemType.SpeedUp:
 				SpeedUp(c);
@@ -33,7 +34,7 @@ public class ItemController : ItemGenerator {
 		}
 	}
 
-	void Freeze(){
+	void ActivateWings(){
 		//print ("Freeze all");
 		Destroy (gameObject, 0f);
 	}

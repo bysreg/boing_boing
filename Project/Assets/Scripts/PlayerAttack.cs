@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class PlayerAttack : MonoBehaviour {
 
 	//static
-	public static GameObject playerPullingMole;
+	public static GameObject firstKillPlayer; // the player who kills first in the game
 
 	public GameObject fist;
 	public GameObject punchEffect;
@@ -24,6 +24,7 @@ public class PlayerAttack : MonoBehaviour {
 	Vector3 fistTargetPos;
 	Vector3 fistOriPos;
 	int killCount;
+	int deathCount;
 
 	PlayerController playerController;
 	GameController gameController;
@@ -248,7 +249,13 @@ public class PlayerAttack : MonoBehaviour {
 		if(lastHitFrom != null)
 		{
 			lastHitFrom.GetComponent<PlayerAttack>().IncKillCount();
+			if(firstKillPlayer == null)
+			{
+				firstKillPlayer = lastHitFrom;
+			}
 		}
+
+		deathCount++;
 	}
 
 	public void IncKillCount()
@@ -259,5 +266,15 @@ public class PlayerAttack : MonoBehaviour {
 	public GameObject GetLastHitFrom()
 	{
 		return lastHitFrom;
+	}
+
+	public int GetDeathCount()
+	{
+		return deathCount;
+	}
+
+	public bool IsFirstKill()
+	{
+		return firstKillPlayer == this.gameObject;
 	}
 }

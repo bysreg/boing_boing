@@ -12,7 +12,7 @@ public class ItemGenerator : MonoBehaviour {
 
 	public enum ItemType {
 		SpeedUp = 0,
-		Freeze,
+		Wings,
 		NumberOfTypes
 	};
 
