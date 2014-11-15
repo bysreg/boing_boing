@@ -4,13 +4,12 @@ using System.Collections;
 public class ItemController : ItemGenerator {
 	ItemType itc;
 	float existTime = 5f;
-	// Use this for initialization
+
 	void Start () {
 		collider.isTrigger = true;
 		StartCoroutine (BlinkToDestroy());
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		transform.Rotate (transform.up);
 	}
@@ -25,7 +24,7 @@ public class ItemController : ItemGenerator {
 			switch(itc) 
 			{
 			case ItemType.Wings:
-				ActivateWings();
+				ActivateWings(c);
 				break;
 			case ItemType.SpeedUp:
 				SpeedUp(c);
@@ -34,8 +33,9 @@ public class ItemController : ItemGenerator {
 		}
 	}
 
-	void ActivateWings(){
-		//print ("Freeze all");
+	void ActivateWings(Collider c){
+		//print ("activate wings on " + c.name);
+		c.gameObject.GetComponent<CharacterBaseController>().ActivateFlying();
 		Destroy (gameObject, 0f);
 	}
 

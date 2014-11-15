@@ -39,6 +39,10 @@ public class CharacterBaseController : MonoBehaviour {
 
 	protected bool isFreezeMovement;
 
+	bool isFlying;
+	float flyTime;
+	const float MAX_FLY_TIME = 10f;
+
 	GameController gameController;
 	SoundController soundController;
 	TileController tileController;
@@ -91,6 +95,16 @@ public class CharacterBaseController : MonoBehaviour {
 				gameController.SpawnPlayer(index);
 			}
 		}
+
+		if(isFlying)
+		{
+			flyTime -= Time.deltaTime;
+			if(flyTime <= 0)
+			{
+				flyTime = 0;
+				StopFlying();
+			}
+		}
 	}
 
 	protected virtual void FixedUpdate() {
@@ -135,7 +149,8 @@ public class CharacterBaseController : MonoBehaviour {
 
 				isParabolicAnimating = false;
 				 
-				if (!isCharacterSelection) {
+				if (!isCharacterSelection && !isFlying)
+				{
 					CheckGroundBelow();
 				}
 
@@ -220,19 +235,25 @@ public class CharacterBaseController : MonoBehaviour {
 		return index;
 	}
 
-	public void PullMoleFreeze()
-	{
-		rigidbody.isKinematic = true;
-	}
-
-	public void StopPullMoleFreeze()
-	{
-		rigidbody.isKinematic = false;
-	}
-
 	public void FreezeMovement()
 	{
 		rigidbody.isKinematic = true;
 		isFreezeMovement = true;
+	}
+
+	public void ActivateFlying()
+	{
+		StartFlying();
+		flyTime = MAX_FLY_TIME;
+	}
+
+	void StartFlying()
+	{
+		isFlying = true;
+	}
+
+	void StopFlying()
+	{
+		isFlying = false;
 	}
 }
