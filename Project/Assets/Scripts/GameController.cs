@@ -1,5 +1,7 @@
 using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
@@ -16,6 +18,8 @@ public class GameController : MonoBehaviour {
 	float spawnYPos;
 	float remainingGameTime;
 	float MAX_GAME_TIME = 90f; // in seconds
+
+	WinCameraController winCameraController;
 
 	void Awake()
 	{
@@ -34,6 +38,8 @@ public class GameController : MonoBehaviour {
 		{
 			players[i].gameObject.SetActive(false);
 		}
+
+		winCameraController = Camera.main.GetComponent<WinCameraController>();
 	}
 
 	void Init()
@@ -107,12 +113,25 @@ public class GameController : MonoBehaviour {
 
 	public void FinishGame()
 	{
-		//search for player with highest kill
-		int maxKillCount = players[0].GetComponent<PlayerAttack>().GetKillCount();
-		for(int i=1; i<activePlayersCount; i++)
+		//copy the players array
+		Transform[] arr = new Transform[4];
+
+		for(int i=0; i<4; i++)
 		{
-			//if(maxKillCount <
+			arr[i] = players[i];
 		}
+
+		//search for player with highest kill, if they have the same kill count then compare the least death count, if it is still the same, compare who has the first kill
+
+		Array.Sort(arr, CompareWinner);
+
+		for(int i=0; i<activePlayersCount; i++)
+		{
+			PlayerAttack pa = arr[i].GetComponent<PlayerAttack>();
+			print (i + " place : " + arr[i].name + " " + pa.GetKillCount() + " " + pa.GetDeathCount() + " " + pa.IsFirstKill());
+		}
+
+		winCameraController.Winneris(players[0].gameObject);
 	}
 
 	public float GetRemainingGameTime()
@@ -132,4 +151,27 @@ public class GameController : MonoBehaviour {
             return null;
         }
     }
+
+	public static int CompareWinner(Transform t1, Transform t2)
+	{
+		PlayerAttack pa1 = t1.GetComponent<PlayerAttack>();
+		PlayerAttack pa2 = t2.GetComponent<PlayerAttack>();
+
+		if(pa1.GetKillCount() != pa2.GetKillCount())
+		{
+			return (pa1.GetKillCount() > pa2.GetKillCount()) ? -1 : 1; // the most kill count
+		}
+		else if(pa1.GetDeathCount() != pa2.GetDeathCount())
+		{
+			return (pa1.GetDeathCount() < pa2.GetDeathCount()) ? -1 : 1; // the lease kill count
+		}
+		else if(pa1.IsFirstKill())
+		{
+			return -1; // the one who kills first
+		}
+		else
+		{
+			return 1;
+		}
+	}
 }

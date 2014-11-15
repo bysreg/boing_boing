@@ -26,7 +26,6 @@ public class TileController : MonoBehaviour {
 		InitializeTiles();
 		//CreateBoundaryCollider();
 
-		//FIXME : untested
 		InitializeBoundaryTiles();
 	}
 
