@@ -126,7 +126,7 @@ public class PlayerAttack : MonoBehaviour {
 
 		if(playersInsideHitArea.Count == 0)
 		{
-			soundController.PlaySound("whoosh");
+			soundController.PlaySound("whoosh", 0.6f, false);
 			AnimateMiss();
             SetupFist(transform.position, transform.position + transform.forward * (attackDistance));
 
@@ -160,7 +160,7 @@ public class PlayerAttack : MonoBehaviour {
         SetupFist(transform.position, nearestPlayer.transform.position);
 
 		//play toet sound
-		soundController.PlaySound("punch Sound");
+		soundController.PlaySound("punch Sound", 0.6f, false);
 		AnimateHit ();
 		AnimateCd();
 

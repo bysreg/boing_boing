@@ -30,8 +30,8 @@ public class WinCameraController : MonoBehaviour {
 			foreach (Transform tf in GameObject.Find("SoundSets").transform) {
 				tf.GetComponent<AudioSource>().volume = 0;
 			}
-			sc.PlaySound("Victory Sound");
-			sc.PlaySound("fireworks", 1f, true);
+			sc.PlaySound("Victory Sound", 0.7f, false);
+			sc.PlaySound("fireworks", 0.7f, true);
 			sc.mute = true;
 		}
 	}
@@ -39,7 +39,7 @@ public class WinCameraController : MonoBehaviour {
 	void LateUpdate() {
 		//Quaternion q = Quaternion.AngleAxis(1 * 3f, Vector3.up);
 		if(startfollow) {
-			offset = Quaternion.AngleAxis ((increase) * 2f, Vector3.up) * offset;
+			offset = Quaternion.AngleAxis ((increase) * 1.5f, Vector3.up) * offset;
 			c.transform.position = pPos + offset;
 			c.transform.LookAt (pPos);
 		}
