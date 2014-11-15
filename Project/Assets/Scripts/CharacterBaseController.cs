@@ -71,6 +71,8 @@ public class CharacterBaseController : MonoBehaviour {
 			PlayerController playercomp = gameObject.GetComponent<PlayerController>();
 
 			aicomp.index = playercomp.index;
+			aicomp.bomb = playercomp.bomb;
+			aicomp.explosion = playercomp.explosion;
 
 			Destroy(playercomp);
 		}
@@ -189,7 +191,7 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
 		RaycastHit hitInfo;
-		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 2f, layerMask))
+		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 6f, layerMask))
 		{
 			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 1f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 1f, layerMask))
 			{
@@ -310,7 +312,7 @@ public class CharacterBaseController : MonoBehaviour {
 		while(true) {
 			if(bombT >= 0 && hasBomb){
 				yield return new WaitForSeconds (1);
-				print( bombT+ "remaining");
+				print( bombT+ " remaining " + name);
 				bombT--;
 				bombTime--;
 			}else {

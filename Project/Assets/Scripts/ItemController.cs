@@ -20,7 +20,7 @@ public class ItemController : ItemGenerator {
 
 	void OnTriggerEnter(Collider c) {
 		GameObject.Find ("GameController").GetComponent<SoundController>().PlaySound("itempickup",0.8f, false);
-		if(c.tag == "Player" || !c.collider.isTrigger) {
+		if(c.tag == "Player" && !c.collider.isTrigger) {
 			switch(itc) 
 			{
 			case ItemType.Wings:
