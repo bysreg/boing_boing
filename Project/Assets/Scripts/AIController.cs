@@ -7,15 +7,22 @@ public class AIController : CharacterBaseController {
 
 	protected Vector3 targetPosition;
 
-	// Use this for initialization
+	PlayerAttack playerAttack;
+
+	protected override void Awake()
+	{
+		base.Awake();
+
+		playerAttack = GetComponent<PlayerAttack>();
+	}
+
 	protected override void Start () {
 		base.Start ();
 
 		// get first target point
 		SetTargetPoint ();
 	}
-	
-	// Update is called once per frame
+
 	protected override void Update () {
 		base.Update ();
 
@@ -36,6 +43,11 @@ public class AIController : CharacterBaseController {
 
 				MoveForward();
 			}
+		}
+
+		if(playerAttack.GetFreezeTime() == 0 && playerAttack.GetHitableCount() > 0)
+		{
+			playerAttack.Attack();
 		}
 	}
 

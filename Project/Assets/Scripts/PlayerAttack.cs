@@ -120,7 +120,7 @@ public class PlayerAttack : MonoBehaviour {
         }
     }
     
-    void Attack()
+    public void Attack()
 	{
 		freezeTime = MAX_FREEZE_TIME;
 
@@ -276,5 +276,10 @@ public class PlayerAttack : MonoBehaviour {
 	public bool IsFirstKill()
 	{
 		return firstKillPlayer == this.gameObject;
+	}
+
+	public int GetHitableCount()
+	{
+		return playersInsideHitArea.Count;
 	}
 }
