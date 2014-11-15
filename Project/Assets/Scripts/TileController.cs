@@ -96,25 +96,25 @@ public class TileController : MonoBehaviour {
 		//left
 		for(int i=0; i<boardHeight; i++)
 		{
-			CreateBoundaryTile(left, y, i * height, type, parent, count++);
+			CreateBoundaryTile(left, y, i * height, type, parent, count++, TileMovement.ShakeType.Left);
 		}
 
 		//right
 		for(int i=0; i<boardHeight; i++)
 		{
-			CreateBoundaryTile(right, y, i * height, type, parent, count++);
+			CreateBoundaryTile(right, y, i * height, type, parent, count++, TileMovement.ShakeType.Right);
 		}
 
 		//front 
 		for(int i=-1; i<boardWidth + 1; i++)
 		{
-			CreateBoundaryTile(i * width, y, front, type, parent, count++);
+			CreateBoundaryTile(i * width, y, front, type, parent, count++, TileMovement.ShakeType.Forward);
 		}
 
 		//back
 		for(int i=-1; i<boardWidth + 1; i++)
 		{
-			CreateBoundaryTile(i * width, y, back, type, parent, count++);
+			CreateBoundaryTile(i * width, y, back, type, parent, count++, TileMovement.ShakeType.Backward);
 		}
 	}
 
@@ -126,13 +126,15 @@ public class TileController : MonoBehaviour {
 		tilesObj[y, x] = t.gameObject;
 	}
 
-	void CreateBoundaryTile(float world_x, float world_y, float world_z, int type, GameObject parent, int number)
+	void CreateBoundaryTile(float world_x, float world_y, float world_z, int type, GameObject parent, int number, TileMovement.ShakeType shakeType)
 	{
 		Transform t = Instantiate(tileTypes[type], new Vector3(world_x, world_y, world_z), Quaternion.identity) as Transform;
 		t.name = "Boundary" + number;
 		t.parent = parent.transform;
 		t.tag = "Boundary";
 		t.GetComponent<BoxCollider>().material = boundaryPhysicMaterial;
+		BoundaryCollider bc = t.gameObject.AddComponent<BoundaryCollider>();
+		bc.shakeType = shakeType;
 	}
 
 	void CreateBoundaryCollider()

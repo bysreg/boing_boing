@@ -188,7 +188,7 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 		else
 		{
-			hitInfo.collider.gameObject.GetComponent<TileMovement>().ShakeTile();
+			hitInfo.collider.gameObject.GetComponent<TileMovement>().ShakeTile(TileMovement.ShakeType.Down);
 		}
     }
     

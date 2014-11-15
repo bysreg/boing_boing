@@ -9,16 +9,29 @@ public class TileMovement : MonoBehaviour {
 	float normalY;
 
 	Vector3 normalPos;
+	Vector3 normalColliderPos;
 	float shakingTime;
 	float shakeSpeed = 10f;
 	float MAX_SHAKE_TIME = Mathf.PI;
 
+	ShakeType shakeType;
+
 	BoxCollider boxCollider;
+
+	public enum ShakeType
+	{
+		Left, 
+		Right, 
+		Forward, 
+		Backward, 
+		Down,
+	}
 
 	void Awake()
 	{
 		normalY = transform.position.y;
 		boxCollider = GetComponent<BoxCollider>();
+		normalColliderPos = boxCollider.center;
 	}
 
 	void Start()
@@ -69,15 +82,38 @@ public class TileMovement : MonoBehaviour {
 			{
 				shakingTime = 0;
 			}
-			transform.position = normalPos + new Vector3(0, -Mathf.Sin(shakingTime) * 0.2f, 0);
+
+			Vector3 deltaPos = Vector3.zero;
+			switch(shakeType)
+			{
+
+			case ShakeType.Left:
+				deltaPos = new Vector3(-Mathf.Sin(shakingTime) * 0.2f, 0, 0);
+				break;
+			case ShakeType.Right:
+				deltaPos = new Vector3(Mathf.Sin(shakingTime) * 0.2f, 0, 0);
+				break;
+			case ShakeType.Forward:
+				deltaPos = new Vector3(0, 0, Mathf.Sin(shakingTime) * 0.2f);
+				break;
+			case ShakeType.Backward:
+				deltaPos = new Vector3(0, 0, -Mathf.Sin(shakingTime) * 0.2f);
+				break;
+			case ShakeType.Down:
+			default:
+				deltaPos = new Vector3(0, -Mathf.Sin(shakingTime) * 0.2f, 0);
+				break;
+			}
 
 			//tile might shake, but collider stay still
-			boxCollider.center = new Vector3(boxCollider.center.x, -transform.position.y * (1 / transform.localScale.y), boxCollider.center.z);
+			transform.position = normalPos + deltaPos;
+			boxCollider.center = normalColliderPos + new Vector3(-deltaPos.x * (1 / transform.localScale.x), -deltaPos.y * (1 / transform.localScale.y), -deltaPos.z* (1 / transform.localScale.z));
 		}
 	}
 
-	public void ShakeTile()
+	public void ShakeTile(ShakeType shakeType)
 	{
 		shakingTime = MAX_SHAKE_TIME;
+		this.shakeType = shakeType;
 	}
 }
