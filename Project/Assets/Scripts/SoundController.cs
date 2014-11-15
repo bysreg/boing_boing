@@ -8,7 +8,7 @@ public class SoundController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		PlaySound ("Bgm_new",0.5f	, true);
+		PlaySound ("Bgm_new",0.2f, true);
 		//PlaySound ("dig",1f	, true);
 	}
 	
@@ -17,9 +17,9 @@ public class SoundController : MonoBehaviour {
 		StartCoroutine (CleanUp());
 	}
 
-	public void PlaySound(string s, float vl = 1f, bool lop = false) { //value vloume
+	public GameObject PlaySound(string s, float vl = 1f, bool lop = false) { //value vloume
 		if (mute) {
-			return;
+			return null;
 				}
 		GameObject soundOutput = Instantiate (soundfx) as GameObject;
 		soundOutput.transform.parent = GameObject.Find ("SoundSets").transform;
@@ -28,6 +28,7 @@ public class SoundController : MonoBehaviour {
 		audioS.volume = vl;
 		audioS.loop = lop;
 		GetAS (soundOutput).Play ();
+		return soundOutput;
 	}
 
 	AudioClip Load(string s) {
