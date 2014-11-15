@@ -19,6 +19,9 @@ public class AIController : CharacterBaseController {
 	protected override void Update () {
 		base.Update ();
 
+		if(isFreezeMovement)
+			return;
+
 		if (GetDistance () <= minDistance) { // find the target point
 			// set new target point
 			SetTargetPoint ();

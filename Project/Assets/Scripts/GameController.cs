@@ -128,10 +128,12 @@ public class GameController : MonoBehaviour {
 		for(int i=0; i<activePlayersCount; i++)
 		{
 			PlayerAttack pa = arr[i].GetComponent<PlayerAttack>();
+			arr[i].GetComponent<CharacterBaseController>().FreezeMovement();
+
 			print (i + " place : " + arr[i].name + " " + pa.GetKillCount() + " " + pa.GetDeathCount() + " " + pa.IsFirstKill());
 		}
 
-		winCameraController.Winneris(players[0].gameObject);
+		winCameraController.Winneris(arr[0].gameObject);
 	}
 
 	public float GetRemainingGameTime()

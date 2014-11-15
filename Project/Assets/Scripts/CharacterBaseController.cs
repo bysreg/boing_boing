@@ -37,6 +37,8 @@ public class CharacterBaseController : MonoBehaviour {
 	const float MAX_RESPAWN_TIME = 3f;
 	Vector3 capsuleCollRadius;
 
+	protected bool isFreezeMovement;
+
 	GameController gameController;
 	SoundController soundController;
 	TileController tileController;
@@ -76,6 +78,9 @@ public class CharacterBaseController : MonoBehaviour {
 		// idle floating
 		if(!fallDown)
 			Floating ();
+
+		if(isFreezeMovement)
+			return;
 
 		if(fallDown)
 		{
@@ -223,5 +228,11 @@ public class CharacterBaseController : MonoBehaviour {
 	public void StopPullMoleFreeze()
 	{
 		rigidbody.isKinematic = false;
+	}
+
+	public void FreezeMovement()
+	{
+		rigidbody.isKinematic = true;
+		isFreezeMovement = true;
 	}
 }
