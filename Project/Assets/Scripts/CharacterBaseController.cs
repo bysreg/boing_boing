@@ -54,7 +54,7 @@ public class CharacterBaseController : MonoBehaviour {
 	//Bomb
 	public bool hasBomb = false;
 	public GameObject bomb;
-	public Vector3 bombOffset;
+	Vector3 bombOffset = new Vector3 (0f, 1.5f, 0f);
 	public GameObject bombFrom;
 
 	private int bombTime = 5;
