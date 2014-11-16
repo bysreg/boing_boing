@@ -2,80 +2,84 @@
 using System.Collections;
 using System;
 
-public class PSMoveConnect : MonoBehaviour {
+public class PSMoveConnect : MonoBehaviour
+{
 
-	public GameObject[] playerList;
-
-	public string ipAddress = "128.2.239.254";
-	public string port = "7899";
+		public GameObject[] playerList;
+		private int indexLight = 0;
+		public string ipAddress = "128.2.239.254";
+		public string port = "7899";
 	
-	public GameObject gem, handle;
+		public GameObject gem, handle;
 	
-	public bool isMirror = true;
+		public bool isMirror = true;
 	
-	public float zOffset = 20;
-	Quaternion temp = new Quaternion(0,0,0,0);
+		public float zOffset = 20;
+		Quaternion temp = new Quaternion (0, 0, 0, 0);
 	
-	private bool[] activePlayers;
+		private bool[] activePlayers;
 
 	#region GUI Variables
-	string cameraStr = "Camera Switch On";
-	string rStr = "0", gStr = "0", bStr = "0";
-	string rumbleStr = "0";
+		string cameraStr = "Camera Switch On";
+		string rStr = "0", gStr = "0", bStr = "0";
+		string rumbleStr = "0";
 	#endregion
 	
-	private Color[] sphereColor;
+		private Color[] sphereColor;
 	
-	// Use this for initialization
-	void Start () {
-		activePlayers = new bool[]{false, false, false, false};
-		GameController.activePlayers = activePlayers;
+		// Use this for initialization
+		void Start ()
+		{
+				activePlayers = new bool[]{false, false, false, false};
+				GameController.activePlayers = activePlayers;
 
-		sphereColor = new Color[4] {
-			Color.red,
-			Color.blue,
-			Color.green,
-			Color.yellow
+				sphereColor = new Color[4] {
+			new Color (1f, 0f, 0f),
+			new Color (0f, 0f, 1f),
+			new Color (0f, 1f, 0f),
+			new Color (255f / 255f, 102f / 255f, 0f)
 		};
 
-		// disable all character
-		for (int i = 0; i < playerList.Length; i++) {
-			playerList[i].SetActive(false);
-			activePlayers[i] = false;
-		}
-	}
-	
-	
-	void Update() {
-		if(PSMoveInput.IsConnected) {
-			//move controller information
-			for(int i=0; i<playerList.Length; i++)
-			{
-				MoveController moveController = PSMoveInput.MoveControllers[i];
-				if (moveController.Connected) {
-					playerList[i].SetActive(true);
-					activePlayers[i] = true;
-				} else {
-					playerList[i].SetActive(false);
-					activePlayers[i] = false;
+				// disable all character
+				for (int i = 0; i < playerList.Length; i++) {
+						playerList [i].SetActive (false);
+						activePlayers [i] = false;
 				}
-			}
-		}		
-
-		//move controller information
-		for(int i=0; i<PSMoveInput.MAX_MOVE_NUM; i++)
-		{
-			MoveController moveController = PSMoveInput.MoveControllers[i];
-			if(moveController.Connected) {
-				// set color
-				moveController.SetColorAndTrack(sphereColor[i]);
-			}
 		}
-	}
 	
-	// Update is called once per frame
-	void FixedUpdate () {
-		/*
+	
+		void Update ()
+		{
+				if (PSMoveInput.IsConnected) {
+						//move controller information
+						for (int i=0; i<playerList.Length; i++) {
+								MoveController moveController = PSMoveInput.MoveControllers [i];
+								if (moveController.Connected) {
+										playerList [i].SetActive (true);
+										activePlayers [i] = true;
+								} else {
+										playerList [i].SetActive (false);
+										activePlayers [i] = false;
+								}
+						}
+				}
+
+				//move controller information
+/*
+				for (int i=0; i<PSMoveInput.MAX_MOVE_NUM; i++) {
+						MoveController moveController = PSMoveInput.MoveControllers [i];
+						if (moveController.Connected) {
+								// set color
+								moveController.SetColorAndTrack (sphereColor [i]);
+						}
+				}
+*/
+		}
+	
+		// Update is called once per frame
+		void FixedUpdate ()
+		{
+				/*
 		if(PSMoveInput.IsConnected && PSMoveInput.MoveControllers[0].Connected) {
 			
 			Vector3 gemPos, handlePos;
@@ -107,34 +111,51 @@ public class PSMoveConnect : MonoBehaviour {
 			}
 		}
 		*/
-	}
-	
-	void OnGUI() {
-		
-		if(!PSMoveInput.IsConnected) {
-			
-			GUI.Label(new Rect(20, 45, 30, 35), "IP:");
-			ipAddress = GUI.TextField(new Rect(60, 45, 120, 25), ipAddress);
-			
-			GUI.Label(new Rect(190, 45, 30, 35), "port:");
-			port = GUI.TextField(new Rect(230, 45, 50, 25), port);
-			
-			if(GUI.Button(new Rect(300, 40, 100, 35), "Connect")) {
-				PSMoveInput.Connect(ipAddress, int.Parse(port));
-			}
-			
 		}
-		else {
-			if(GUI.Button(new Rect(20, 40, 100, 35), "Disconnect"))  {
-				PSMoveInput.Disconnect();
-				Reset();
-			}
-			if(GUI.Button(new Rect(20, 80, 100, 35), "Start"))  {
-				GameController.activePlayers = activePlayers;
-				Application.LoadLevel(Application.loadedLevel + 1);
-			}
+	
+		void OnGUI ()
+		{
+		
+				if (!PSMoveInput.IsConnected) {
+			
+						GUI.Label (new Rect (20, 45, 30, 35), "IP:");
+						ipAddress = GUI.TextField (new Rect (60, 45, 120, 25), ipAddress);
+			
+						GUI.Label (new Rect (190, 45, 30, 35), "port:");
+						port = GUI.TextField (new Rect (230, 45, 50, 25), port);
+			
+						if (GUI.Button (new Rect (300, 40, 100, 35), "Connect")) {
+								PSMoveInput.Connect (ipAddress, int.Parse (port));
+						}
+			
+				} else {
+						if (GUI.Button (new Rect (20, 40, 100, 35), "Disconnect")) {
+								PSMoveInput.Disconnect ();
+								Reset ();
+								ResetCharacter ();
+						}
+						if (GUI.Button (new Rect (20, 80, 100, 35), "Start")) {
+								GameController.activePlayers = activePlayers;
+								Application.LoadLevel (Application.loadedLevel + 1);
+						}
 
-			/*
+						if (GUI.Button (new Rect (20, 120, 100, 35), "SetColor")) {
+								try {
+										if (indexLight >= 4)
+												indexLight = 0;
+										MoveController moveController = PSMoveInput.MoveControllers [indexLight];
+										if (moveController.Connected) {
+												// set color
+												moveController.SetColorAndTrack (sphereColor [indexLight]);
+										}
+								} catch (Exception e) {
+										Debug.Log ("input problem: " + e.Message);
+								}
+								indexLight++;
+						}
+			
+
+						/*
 			GUI.Label(new Rect(10, 10, 150, 100),  "PS Move count : " + PSMoveInput.MoveCount);
 			GUI.Label(new Rect(140, 10, 150, 100),  "PS Nav count : " + PSMoveInput.NavCount);
 			
@@ -226,14 +247,23 @@ public class PSMoveConnect : MonoBehaviour {
 				}
 			}
 		*/
+				}
 		}
-	}
 	
-	private void Reset() {
-		cameraStr = "Camera Switch On";
-		rStr = "0"; 
-		gStr = "0"; 
-		bStr = "0";
-		rumbleStr = "0";
-	}
+		private void Reset ()
+		{
+				cameraStr = "Camera Switch On";
+				rStr = "0"; 
+				gStr = "0"; 
+				bStr = "0";
+				rumbleStr = "0";
+		}
+
+		private void ResetCharacter ()
+		{
+				for (int i=0; i<playerList.Length; i++) {
+						playerList [i].SetActive (false);
+						activePlayers [i] = false;
+				}
+		}
 }
