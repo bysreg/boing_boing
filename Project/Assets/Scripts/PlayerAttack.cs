@@ -27,6 +27,7 @@ public class PlayerAttack : MonoBehaviour {
 	PlayerController playerController;
 	GameController gameController;
 	SoundController soundController;
+	CharacterBaseController characterbaseController;
 
 	//killing system
 	GameObject lastHitFrom; // record who lands the last hit on this player, will reset back to null if lastHitExpireTime hits zero
@@ -134,6 +135,10 @@ public class PlayerAttack : MonoBehaviour {
 	{
 		lastHitFrom = from;
 		lastHitExpireTime = HIT_EXPIRE_TIME;
+
+		//there's a possibility that the player is knocked down while respawn in midair. 
+		characterbaseController.SetHasTouchedTile(true);
+
 		rigidbody.AddForce(direction * forceMagnitude, ForceMode.Impulse);
 	}
 

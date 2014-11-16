@@ -378,4 +378,14 @@ public class CharacterBaseController : MonoBehaviour {
 	void RainbowTrail() {
 		gameObject.GetComponentInChildren<TrailRenderer> ().material.mainTexture = Resources.Load("Texture/rainbow") as Texture; 
 	}
+
+	public bool HasTouchedTile()
+	{
+		return hasTouchedTile;
+	}
+
+	public void SetHasTouchedTile(bool value)
+	{
+		hasTouchedTile = value;
+	}
 }
