@@ -16,7 +16,7 @@ public class PlayerAttack : MonoBehaviour {
 	bool psMoveAvailable;
 	GameObject fist;
 	public GameObject[] additionalFist;
-	float forceMagnitude = 14f;
+	float forceMagnitude = 10f;
 	int index;
 	int killCount;
 	int deathCount;

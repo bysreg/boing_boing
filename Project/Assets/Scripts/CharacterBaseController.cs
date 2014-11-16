@@ -298,7 +298,7 @@ public class CharacterBaseController : MonoBehaviour {
 	}
 
 	GameObject Explode() {
-		Vector3 explodeForce = new Vector3 (Random.Range(-2,3), Random.Range(4,10), Random.Range(-2,3));
+		Vector3 explodeForce = new Vector3 (Random.Range(-1,1f), 9f, Random.Range(-1,1));
 		this.gameObject.rigidbody.AddForce (explodeForce * 900);
 		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
 		soundController.PlaySound ("explode");
