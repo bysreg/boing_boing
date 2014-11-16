@@ -185,4 +185,16 @@ public class PlayerAttack : MonoBehaviour {
 	{
 		return firstKillPlayer == this.gameObject;
 	}
+
+	//-------test
+//	public void SetValue(int killCount, int deathCount, bool isFirstKill)
+//	{
+//		this.killCount = killCount;
+//		this.deathCount = deathCount;
+//		if(isFirstKill)
+//		{
+//			firstKillPlayer = this.gameObject;
+//		}
+//	}
+	//-------test
 }

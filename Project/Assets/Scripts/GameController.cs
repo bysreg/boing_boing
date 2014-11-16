@@ -105,6 +105,34 @@ public class GameController : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.R)) {
 			Application.LoadLevel(0);		
 		}
+
+		//testing code
+//		if(Input.GetKeyDown(KeyCode.Keypad1))
+//		{
+//			Transform[] arr = new Transform[4];
+//			
+//			for(int i=0; i<4; i++)
+//			{
+//				arr[i] = players[i];
+//			}
+//
+//			arr[0].GetComponent<PlayerAttack>().SetValue(4, 4, false);
+//			arr[1].GetComponent<PlayerAttack>().SetValue(4, 4, true);
+//			arr[2].GetComponent<PlayerAttack>().SetValue(4, 3, false);
+//			arr[3].GetComponent<PlayerAttack>().SetValue(4, 4, false);
+//
+//			//search for player with highest kill, if they have the same kill count then compare the least death count, if it is still the same, compare who has the first kill
+//			
+//			Array.Sort(arr, CompareWinner);
+//			
+//			for(int i=0; i<activePlayersCount; i++)
+//			{
+//				PlayerAttack pa = arr[i].GetComponent<PlayerAttack>();
+//				arr[i].GetComponent<CharacterBaseController>().FreezeMovement();
+//                
+//                print (i + " place : " + arr[i].name + " " + pa.GetKillCount() + " " + pa.GetDeathCount() + " " + pa.IsFirstKill());
+//			}
+//		}
 	}
 
 	public void FinishGame()
@@ -163,13 +191,13 @@ public class GameController : MonoBehaviour {
 		{
 			return (pa1.GetDeathCount() < pa2.GetDeathCount()) ? -1 : 1; // the lease kill count
 		}
-		else if(pa1.IsFirstKill())
+		else if(pa1.IsFirstKill() != pa2.IsFirstKill())
 		{
-			return -1; // the one who kills first
+			return pa1.IsFirstKill() ? -1 : 1;
 		}
-		else
+		else 
 		{
-			return 1;
+			return 0;
 		}
 	}
 
