@@ -254,6 +254,9 @@ public class CharacterBaseController : MonoBehaviour {
 		hasTouchedTile = false;
 		hasBomb = false;
 		Destroy (this.bombinst);
+		if(sf){
+			sf.GetComponent<AudioSource> ().Stop ();
+		}
 		rigidbody.velocity = Vector3.zero;
 		rigidbody.angularVelocity = Vector3.zero;
 	}
@@ -298,7 +301,7 @@ public class CharacterBaseController : MonoBehaviour {
 	}
 
 	GameObject Explode() {
-		Vector3 explodeForce = new Vector3 (Random.Range(-1,1f), 9f, Random.Range(-1,1));
+		Vector3 explodeForce = new Vector3 (Random.Range(0f,1f), 9f, Random.Range(0f,1));
 		this.gameObject.rigidbody.AddForce (explodeForce * 900);
 		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
 		soundController.PlaySound ("explode");
@@ -358,5 +361,9 @@ public class CharacterBaseController : MonoBehaviour {
 		{
 			hasTouchedTile = true;
 		}
+	}
+
+	void RainbowTrail() {
+		gameObject.GetComponentInChildren<TrailRenderer> ().material.mainTexture = Resources.Load("Texture/rainbow") as Texture; 
 	}
 }

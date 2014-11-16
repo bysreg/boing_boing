@@ -31,6 +31,7 @@ public class WinCameraController : MonoBehaviour {
 				tf.GetComponent<AudioSource>().volume = 0;
 			}
 			sc.PlaySound("Victory Sound", 0.7f, false);
+			sc.PlaySound("yeah");
 			sc.PlaySound("fireworks", 0.7f, true);
 			sc.mute = true;
 		}
