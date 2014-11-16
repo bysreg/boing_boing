@@ -10,7 +10,7 @@ public class CharacterBaseController : MonoBehaviour {
 	protected float elapsedTimeSelection = 0f;
 
 	// AI
-	public bool isComputer = false;
+	protected bool isComputer = false;
 	public int index; //player's number
 
 	// floating algorithm
@@ -70,15 +70,16 @@ public class CharacterBaseController : MonoBehaviour {
 	public Transform[] characterModels;
 
 	protected virtual void Awake() {
-		if (isComputer) {
+		//if (isComputer) {
+		if (index != 0 && !GameController.activePlayers[index - 1] && !isCharacterSelection) {
 			AIController aicomp = gameObject.AddComponent<AIController>();
 			PlayerController playercomp = gameObject.GetComponent<PlayerController>();
-
+			
 			aicomp.index = playercomp.index;
 			aicomp.bomb = playercomp.bomb;
 			aicomp.explosion = playercomp.explosion;
 			aicomp.characterModels = playercomp.characterModels;
-
+			
 			Destroy(playercomp);
 		}
 
