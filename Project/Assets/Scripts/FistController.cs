@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class FistController : MonoBehaviour {
+	public enum FistDirection {FRONT, RIGHT, BACK, LEFT};
+	public FistDirection fistDirection;
 	public bool isAdditionalFist = false;
 
 	const float MAX_FREEZE_TIME = 0.5f;
@@ -80,7 +82,7 @@ public class FistController : MonoBehaviour {
 		}
 	}
 
-	void Attack(Transform characterTransform) {
+	void Attack() {
 		if (!isMoving) {
 			isMoving = true;
 			isAttacking = true;
@@ -88,7 +90,7 @@ public class FistController : MonoBehaviour {
 			totalTimeMoving = MAX_FREEZE_TIME;
 			flagCheckMissed = true;
 
-			SetupFist(characterTransform.position, characterTransform.position + characterTransform.forward * attackDistance, characterTransform);
+			SetupFist();
 		}
 	}
 	
@@ -104,14 +106,39 @@ public class FistController : MonoBehaviour {
 		}
 	}
 
-	void SetupFist(Vector3 from, Vector3 to, Transform characterTransform)
+	void SetupFist()
 	{
+		Vector3 from, to;
+
+		switch (fistDirection) {
+		case FistDirection.FRONT:
+			from = transform.position;
+			to = characterGameObject.transform.position + characterGameObject.transform.forward * attackDistance;
+			fistTargetPos = characterGameObject.transform.InverseTransformPoint(to);
+			fistTargetPos = new Vector3(0f, 0f, Mathf.Max(fistTargetPos.z, fistOriPos.z));
+			break;
+		case FistDirection.RIGHT:
+			from = transform.position;
+			to = characterGameObject.transform.position + ((characterGameObject.transform.right * attackDistance) / 2f);
+			fistTargetPos = characterGameObject.transform.InverseTransformPoint(to);
+			fistTargetPos = new Vector3(Mathf.Max(fistTargetPos.x, fistOriPos.x), 0f, 0f);
+			break;
+		case FistDirection.BACK:
+			from = transform.position;
+			to = characterGameObject.transform.position + ((-characterGameObject.transform.forward * attackDistance) / 2f);
+			fistTargetPos = characterGameObject.transform.InverseTransformPoint(to);
+			fistTargetPos = new Vector3(Mathf.Min(fistTargetPos.z, fistOriPos.z), 0f, 0f);
+			break;
+		case FistDirection.LEFT:
+			from = transform.position;
+			to = characterGameObject.transform.position + ((-characterGameObject.transform.right * attackDistance) / 2f);
+			fistTargetPos = characterGameObject.transform.InverseTransformPoint(to);
+			fistTargetPos = new Vector3(Mathf.Min(fistTargetPos.x, fistOriPos.x), 0f, 0f);
+			break;
+		}
+
 		Vector3 dir = (to - from).normalized;
 		dir.y = 0;
-		fistTargetPos = characterTransform.InverseTransformPoint(to);
 		transform.localPosition = fistOriPos;
-		fistTargetPos.x = 0;
-		fistTargetPos.y = 0;
-		fistTargetPos.z = Mathf.Max(fistTargetPos.z, fistOriPos.z);
 	}
 }
