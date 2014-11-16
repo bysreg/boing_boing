@@ -66,6 +66,8 @@ public class CharacterBaseController : MonoBehaviour {
 	public GameObject explosion;
 	private GameObject sf;
 
+	public Transform[] characterModels;
+
 	protected virtual void Awake() {
 		if (isComputer) {
 			AIController aicomp = gameObject.AddComponent<AIController>();
@@ -74,6 +76,7 @@ public class CharacterBaseController : MonoBehaviour {
 			aicomp.index = playercomp.index;
 			aicomp.bomb = playercomp.bomb;
 			aicomp.explosion = playercomp.explosion;
+			aicomp.characterModels = playercomp.characterModels;
 
 			Destroy(playercomp);
 		}
@@ -96,12 +99,21 @@ public class CharacterBaseController : MonoBehaviour {
 		firstPosition = transform.position;
 
 		Jump ();
+		InitCharacterModel();
+	}
+
+	void InitCharacterModel()
+	{
+		for(int i=0; i<characterModels.Length; i++)
+		{
+			characterModels[i].gameObject.SetActive(i == index-1);
+		}
 	}
 
 	// Update is called once per frame
 	protected virtual void Update () {
 		// idle floating
-		if(!fallDown && hasTouchedTile)
+		if((!fallDown && hasTouchedTile) || isCharacterSelection)
 			Floating ();
 
 		if(isFreezeMovement)
@@ -379,6 +391,16 @@ public class CharacterBaseController : MonoBehaviour {
 
 	void RainbowTrail() {
 		gameObject.GetComponentInChildren<TrailRenderer> ().material.mainTexture = Resources.Load("Texture/rainbow") as Texture; 
+	}
+
+	public bool HasTouchedTile()
+	{
+		return hasTouchedTile;
+	}
+
+	public void SetHasTouchedTile(bool value)
+	{
+		hasTouchedTile = value;
 	}
 
 	void BombRed() {
