@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
+	public static bool[] activePlayers = new bool[]{false,true,false,false};
+
 	public int activePlayersCount = 4;
 
 	Transform p1;
