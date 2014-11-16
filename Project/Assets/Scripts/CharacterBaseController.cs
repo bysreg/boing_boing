@@ -337,6 +337,7 @@ public class CharacterBaseController : MonoBehaviour {
 		soundController.PlaySound ("falling", 0.2f, false);
 		Destroy (explosioninst, 3f);
 
+		playerAttack.SetLastHitFrom(bombFrom);
 
 		//print (bombFrom.name);
 		return bombFrom;
