@@ -113,7 +113,7 @@ public class CharacterBaseController : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update () {
 		// idle floating
-		if(!fallDown && hasTouchedTile)
+		if((!fallDown && hasTouchedTile) || isCharacterSelection)
 			Floating ();
 
 		if(isFreezeMovement)

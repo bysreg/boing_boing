@@ -36,7 +36,7 @@ public class PSMoveConnect : MonoBehaviour {
 
 		// disable all character
 		for (int i = 0; i < playerList.Length; i++) {
-			playerList[i].SetActive(false);		
+			//playerList[i].SetActive(false);		
 		}
 	}
 	
@@ -48,9 +48,9 @@ public class PSMoveConnect : MonoBehaviour {
 			{
 				MoveController moveController = PSMoveInput.MoveControllers[i];
 				if (moveController.Connected) {
-					playerList[i].SetActive(true);
+					//playerList[i].SetActive(true);
 				} else {
-					playerList[i].SetActive(false);
+					//playerList[i].SetActive(false);
 				}
 			}
 		}		
