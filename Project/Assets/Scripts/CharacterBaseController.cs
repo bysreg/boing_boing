@@ -50,6 +50,7 @@ public class CharacterBaseController : MonoBehaviour {
 	PlayerAttack playerAttack;
 
 	float yTime;
+	bool hasTouchedTile; // true if the player has hit the tile at least one time
 
 	//Bomb
 	public bool hasBomb = false;
@@ -100,7 +101,7 @@ public class CharacterBaseController : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update () {
 		// idle floating
-		if(!fallDown)
+		if(!fallDown && hasTouchedTile)
 			Floating ();
 
 		if(isFreezeMovement)
@@ -191,9 +192,9 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
 		RaycastHit hitInfo;
-		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 6f, layerMask))
+		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 2f, layerMask))
 		{
-			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 1f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 1f, layerMask))
+			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 2f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 2f, layerMask))
 			{
 				// there is no tile below, so player falls down
 				fallDown = true;
@@ -235,7 +236,8 @@ public class CharacterBaseController : MonoBehaviour {
 		if (isCharacterSelection) {
 			velocity0 += 5f;
 		} else {
-			rigidbody.AddForce (transform.forward * forwardSpeed);
+			if(hasTouchedTile)
+				rigidbody.AddForce (transform.forward * forwardSpeed);
 			//if (transform.position.y <= 1.1f) {
 			//	rigidbody.AddForce (transform.up * 5.5f * forwardSpeed);
 			//}
@@ -249,6 +251,7 @@ public class CharacterBaseController : MonoBehaviour {
 	public void Reset()
 	{
 		fallDown = false;
+		hasTouchedTile = false;
 		rigidbody.velocity = Vector3.zero;
 		rigidbody.angularVelocity = Vector3.zero;
 	}
@@ -343,6 +346,14 @@ public class CharacterBaseController : MonoBehaviour {
 			}else {
 				return;
 			}
+		}
+	}
+
+	void OnCollisionEnter(Collision other)
+	{
+		if(other.gameObject.tag == "Tile")
+		{
+			hasTouchedTile = true;
 		}
 	}
 }

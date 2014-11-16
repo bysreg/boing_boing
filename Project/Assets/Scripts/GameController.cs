@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour {
 
 	bool initialized;
 	float spawnYPos;
-	float OFFSET_SPAWN_Y_POS = 5f;
+	float OFFSET_SPAWN_Y_POS = 3f;
 	float remainingGameTime;
 	const float MAX_GAME_TIME = 90f; // in seconds
 	
