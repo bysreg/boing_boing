@@ -55,6 +55,11 @@ public class PlayerAttack : MonoBehaviour {
 //		}
 	}
 
+	void Start()
+	{
+		characterbaseController = GetComponent<CharacterBaseController>();
+	}
+
 	void Update()
 	{
 		// fist
