@@ -202,6 +202,11 @@ public class PlayerAttack : MonoBehaviour {
 		return lastHitFrom;
 	}
 
+	public void SetLastHitFrom(GameObject lastHitFrom)
+	{
+		this.lastHitFrom = lastHitFrom;
+	}
+
 	public int GetDeathCount()
 	{
 		return deathCount;
