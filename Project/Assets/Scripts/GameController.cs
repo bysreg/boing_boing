@@ -21,6 +21,10 @@ public class GameController : MonoBehaviour {
 	const float MAX_GAME_TIME = 90f; // in seconds
 	
 	WinCameraController winCameraController;
+	ItemGenerator itemGenerator;
+
+	bool gameStart;
+	Transform StartCountdown;
 
 	void Awake()
 	{
@@ -41,6 +45,13 @@ public class GameController : MonoBehaviour {
 		}
 
 		winCameraController = Camera.main.GetComponent<WinCameraController>();
+		itemGenerator = GetComponent<ItemGenerator>();
+		StartCountdown = GameObject.Find("StartCountdown");
+
+		for(int i=0; i<StartCountdown.transform.childCount; i++)
+		{
+			StartCountdown.GetChild(i).gameObject.SetActive(false);	
+        }
 	}
 
 	void Init()
@@ -52,6 +63,19 @@ public class GameController : MonoBehaviour {
 		{
 			SpawnPlayer(i);
 		}
+
+		// freeze the players first
+		for(int i=0; i<activePlayersCount; i++)
+		{
+			players[i].GetComponent<CharacterBaseController>().SetFreezeMovement(true);
+		}
+		
+		//freeze the item generator
+		itemGenerator.SetEnabled(false);
+		
+		//freeze the remaining game time timer
+        gameStart = false;
+
 		initialized = true;
 	}
 
@@ -92,7 +116,7 @@ public class GameController : MonoBehaviour {
 			Init();
 		}
 
-		if(remainingGameTime > 0)
+		if(gameStart && remainingGameTime > 0)
 		{
 			remainingGameTime -= Time.deltaTime;
 			if(remainingGameTime <= 0f)
@@ -152,7 +176,7 @@ public class GameController : MonoBehaviour {
 		for(int i=0; i<activePlayersCount; i++)
 		{
 			PlayerAttack pa = arr[i].GetComponent<PlayerAttack>();
-			arr[i].GetComponent<CharacterBaseController>().FreezeMovement();
+			arr[i].GetComponent<CharacterBaseController>().SetFreezeMovement(true);
 
 			print (i + " place : " + arr[i].name + " " + pa.GetKillCount() + " " + pa.GetDeathCount() + " " + pa.IsFirstKill());
 		}
@@ -204,5 +228,15 @@ public class GameController : MonoBehaviour {
 	public float GetSpawnYPos()
 	{
 		return spawnYPos;
+	}
+
+	IEnumerator ShowSign(int value)
+	{
+		for(int i=0; i<StartCountdown.transform.childCount; i++)
+		{
+			StartCountdown.GetChild(i).gameObject.SetActive(false);	
+		}
+
+		StartCountdown.transform.Find("" + value).gameObject.SetActive(true);
 	}
 }

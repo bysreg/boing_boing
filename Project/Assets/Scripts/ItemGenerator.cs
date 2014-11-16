@@ -7,6 +7,7 @@ public class ItemGenerator : MonoBehaviour {
 	public Vector3 offset;
 	public float interve;
 	public int amount_max;
+	public bool enabled;
 
 	GameObject[] tilearr;
 
@@ -28,6 +29,12 @@ public class ItemGenerator : MonoBehaviour {
 
 	void DropItem() {
 		int amount = Random.Range (1,amount_max);
+
+		if(!enabled)
+		{
+			return;
+		}
+
 		for(int i =0 ; i < amount; i++) {
 			int it = Random.Range(0, (int)ItemType.NumberOfTypes);
 			int tilenum = Random.Range(0, tilearr.Length);
@@ -43,5 +50,10 @@ public class ItemGenerator : MonoBehaviour {
 			yield return new WaitForSeconds(interve_imp);
 			DropItem();
 		}
+	}
+
+	public void SetEnabled(bool value)
+	{
+		this.enabled = value;
 	}
 }

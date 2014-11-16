@@ -291,10 +291,10 @@ public class CharacterBaseController : MonoBehaviour {
 		return index;
 	}
 
-	public void FreezeMovement()
+	public void SetFreezeMovement(bool value)
 	{
-		rigidbody.isKinematic = true;
-		isFreezeMovement = true;
+		rigidbody.isKinematic = value;
+		isFreezeMovement = value;
 	}
 
 	public void ActivateFlying()
