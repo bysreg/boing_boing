@@ -8,7 +8,11 @@ public class SoundController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		PlaySound ("Bgm_new",0.2f, true);
+		if(Application.loadedLevel == 1) {
+			PlaySound ("Bgm_new",0.2f, true);
+		}else if(Application.loadedLevel == 0) {
+			PlaySound ("select_bgm",0.5f, true);
+		}
 		//PlaySound ("dig",1f	, true);
 	}
 	
