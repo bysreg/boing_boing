@@ -5,7 +5,7 @@ using System;
 public class PSMoveConnect : MonoBehaviour {
 
 	public GameObject[] playerList;
-	
+
 	public string ipAddress = "128.2.239.254";
 	public string port = "7899";
 	
@@ -16,7 +16,8 @@ public class PSMoveConnect : MonoBehaviour {
 	public float zOffset = 20;
 	Quaternion temp = new Quaternion(0,0,0,0);
 	
-	
+	private bool[] activePlayers;
+
 	#region GUI Variables
 	string cameraStr = "Camera Switch On";
 	string rStr = "0", gStr = "0", bStr = "0";
@@ -27,6 +28,9 @@ public class PSMoveConnect : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		activePlayers = new bool[]{false, false, false, false};
+		GameController.activePlayers = activePlayers;
+
 		sphereColor = new Color[4] {
 			Color.red,
 			Color.blue,
@@ -36,7 +40,8 @@ public class PSMoveConnect : MonoBehaviour {
 
 		// disable all character
 		for (int i = 0; i < playerList.Length; i++) {
-			playerList[i].SetActive(false);		
+			playerList[i].SetActive(false);
+			activePlayers[i] = false;
 		}
 	}
 	
@@ -49,8 +54,10 @@ public class PSMoveConnect : MonoBehaviour {
 				MoveController moveController = PSMoveInput.MoveControllers[i];
 				if (moveController.Connected) {
 					playerList[i].SetActive(true);
+					activePlayers[i] = true;
 				} else {
 					playerList[i].SetActive(false);
+					activePlayers[i] = false;
 				}
 			}
 		}		
@@ -123,6 +130,7 @@ public class PSMoveConnect : MonoBehaviour {
 				Reset();
 			}
 			if(GUI.Button(new Rect(20, 80, 100, 35), "Start"))  {
+				GameController.activePlayers = activePlayers;
 				Application.LoadLevel(Application.loadedLevel + 1);
 			}
 
