@@ -36,7 +36,7 @@ public class PlayerAttack : MonoBehaviour {
 		index = GetComponent<CharacterBaseController>().index;
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 		soundController = GameObject.Find("GameController").GetComponent<SoundController>();		
-		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
+		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.GetPSMoveIndex()].Connected;
 		fist = transform.Find ("Fist").gameObject;
 
 		//ShowMultipleFist ();
@@ -60,7 +60,7 @@ public class PlayerAttack : MonoBehaviour {
 				(index == 3 && Input.GetKeyDown(KeyCode.S)) ||
 				(index == 4 && Input.GetKeyDown(KeyCode.D)) ||
 
-			   	(psMoveAvailable && PSMoveInput.MoveControllers[playerController.psMoveIndex].Data.ValueT > 0))
+			   (psMoveAvailable && PSMoveInput.MoveControllers[playerController.GetPSMoveIndex()].Data.ValueT > 0))
 			{
 				Attack();
 			}

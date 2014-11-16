@@ -298,7 +298,7 @@ public class CharacterBaseController : MonoBehaviour {
 		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
 		soundController.PlaySound ("explode");
 		Destroy (explosioninst, 3f);
-		print (bombFrom.name);
+		//print (bombFrom.name);
 		return bombFrom;
 	}
 
@@ -312,7 +312,7 @@ public class CharacterBaseController : MonoBehaviour {
 		while(true) {
 			if(bombT >= 0 && hasBomb){
 				yield return new WaitForSeconds (1);
-				print( bombT+ " remaining " + name);
+				//print( bombT+ " remaining " + name);
 				bombT--;
 				bombTime--;
 			}else {
