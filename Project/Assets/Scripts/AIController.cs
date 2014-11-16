@@ -4,6 +4,7 @@ using System.Collections;
 public class AIController : CharacterBaseController {
 
 	private float minDistance = 1.5f;
+	private float minDistanceAttack = 3f;
 
 	protected Vector3 targetPosition;
 
@@ -45,9 +46,11 @@ public class AIController : CharacterBaseController {
 			}
 		}
 
-		if(playerAttack.GetFreezeTime() == 0 && playerAttack.GetHitableCount() > 0)
-		{
-			playerAttack.Attack();
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Player");
+		for (int i = 0; i < enemies.Length; i++) {
+			if (enemies[i] != this.gameObject && Vector3.Distance(transform.position, enemies[i].transform.position) <= minDistanceAttack) {
+				playerAttack.Attack();
+			}
 		}
 	}
 

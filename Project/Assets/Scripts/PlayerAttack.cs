@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour {
-
 	//static
 	public static GameObject firstKillPlayer; // the player who kills first in the game
 
@@ -11,18 +10,14 @@ public class PlayerAttack : MonoBehaviour {
 	public GameObject missEffect;
 	private Transform cd;
 
+	bool isMultipleFistExist = false;
+
 	bool iscd = false;
 	bool psMoveAvailable;
 	GameObject fist;
-	float freezeTime; // time until the player can attack
-	const float MAX_FREEZE_TIME = 0.5f;
+	public GameObject[] additionalFist;
 	float forceMagnitude = 14f;
-	List<GameObject> playersInsideHitArea;
-	float attackDistance;
-	float sqrAttackDistance;
 	int index;
-	Vector3 fistTargetPos;
-	Vector3 fistOriPos;
 	int killCount;
 	int deathCount;
 
@@ -38,16 +33,14 @@ public class PlayerAttack : MonoBehaviour {
 	void Awake()
 	{
 		playerController = GetComponent<PlayerController>();
-		playersInsideHitArea = new List<GameObject>();
 		index = GetComponent<CharacterBaseController>().index;
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
-		attackDistance = GetComponent<BoxCollider>().size.z * transform.localScale.z;
-		sqrAttackDistance = GetComponent<BoxCollider>().size.z * GetComponent<BoxCollider>().size.z * transform.localScale.z;
 		soundController = GameObject.Find("GameController").GetComponent<SoundController>();		
-		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
+		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.GetPSMoveIndex()].Connected;
 		fist = transform.Find ("Fist").gameObject;
-		fistOriPos = fist.transform.localPosition;
-        //fist.SetActive(false);
+
+		//ShowMultipleFist ();
+		HideMultipleFist ();
 
 		//find cd animator
 		//gameObject.GetComponentsInChildren<Animator> ().SetValue ();
@@ -60,30 +53,16 @@ public class PlayerAttack : MonoBehaviour {
 
 	void Update()
 	{
-		if(freezeTime == 0)
+		if(playerController != null)
 		{
-			if(playerController != null)
-			{
-				if((index == 1 && Input.GetKeyDown(KeyCode.W)) ||
-					(index == 2 && Input.GetKeyDown(KeyCode.A)) ||
-					(index == 3 && Input.GetKeyDown(KeyCode.S)) ||
-					(index == 4 && Input.GetKeyDown(KeyCode.D)) ||
+			if((index == 1 && Input.GetKeyDown(KeyCode.W)) ||
+				(index == 2 && Input.GetKeyDown(KeyCode.A)) ||
+				(index == 3 && Input.GetKeyDown(KeyCode.S)) ||
+				(index == 4 && Input.GetKeyDown(KeyCode.D)) ||
 
-				   	(psMoveAvailable && PSMoveInput.MoveControllers[playerController.psMoveIndex].Data.ValueT > 0))
-				{
-					Attack();
-				}
-			}
-		}
-		else
-		{
-			AnimateFist();
-
-			freezeTime -= Time.deltaTime;
-			if(freezeTime <= 0)
+			   (psMoveAvailable && PSMoveInput.MoveControllers[playerController.GetPSMoveIndex()].Data.ValueT > 0))
 			{
-				freezeTime = 0;
-                //fist.SetActive(false);
+				Attack();
 			}
 		}
 
@@ -97,85 +76,42 @@ public class PlayerAttack : MonoBehaviour {
 			}
 		}
 	}
-
-	void OnTriggerEnter(Collider other)
-	{
-		if(other.isTrigger)
-			return;
-
-		if(other.tag == "Player" || other.tag == "Boundary")
-		{
-			playersInsideHitArea.Add(other.gameObject);
-        }
+    
+	public void MissAnimation(Vector3 position) {
+		soundController.PlaySound("whoosh", 0.6f, false);
+		AnimateMiss(position);
 	}
 
-	void OnTriggerExit(Collider other)
-	{
-		if(other.isTrigger)
-			return;
-
-		if(other.tag == "Player" || other.tag == "Boundary")
-		{
-			playersInsideHitArea.Remove(other.gameObject);
-        }
-    }
-    
-    public void Attack()
-	{
-		freezeTime = MAX_FREEZE_TIME;
-
-		if(playersInsideHitArea.Count == 0)
-		{
-			soundController.PlaySound("whoosh", 0.6f, false);
-			AnimateMiss();
-            SetupFist(transform.position, transform.position + transform.forward * (attackDistance));
-
-			//AnimateCd();
-			return;
-		}
-
-		float sqrMinDistance = Mathf.Infinity;
-		GameObject nearestPlayer = null;
-		foreach(var player in playersInsideHitArea)
-		{
-			float sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
-			if(sqrDistance < sqrMinDistance)
-			{
-				sqrMinDistance = sqrDistance;
-				nearestPlayer = player;
-			}
-		}
-
-		if(sqrMinDistance > sqrAttackDistance)
-		{
-			// miss sound
-			soundController.PlaySound("whoosh");
-			AnimateMiss();
-            SetupFist(transform.position, transform.position + transform.forward * attackDistance);
-
-			//AnimateCd();
-			return;
-		}
-
-        SetupFist(transform.position, nearestPlayer.transform.position);
-
+	public void HitAnimation(Vector3 position) {
 		//play toet sound
 		soundController.PlaySound("punch Sound", 0.6f, false);
-		AnimateHit ();
-		//AnimateCd();
+		AnimateHit (position);
+	}
 
-		if(nearestPlayer.tag == "Player")
-        	nearestPlayer.GetComponent<PlayerAttack>().KnockedDown((nearestPlayer.transform.position - transform.position).normalized, this.gameObject);
-		else if(nearestPlayer.tag == "Boundary")
-		{
-			playersInsideHitArea.Remove(nearestPlayer);
-			Destroy(nearestPlayer);
+    public void Attack()
+	{
+		fist.SendMessage("Attack", transform);
+
+		// multiple fist
+		if (isMultipleFistExist) {
+			for (int i = 0; i < additionalFist.Length; i++) {
+				additionalFist[i].SendMessage("Attack", transform);
+			}
 		}
     }
-    
-    public float GetFreezeTime()
-	{
-		return freezeTime;
+
+	void ShowMultipleFist() {
+		isMultipleFistExist = true;
+		for (int i = 0; i < additionalFist.Length; i++) {
+			additionalFist[i].SetActive(true);
+		}
+	}
+
+	void HideMultipleFist() {
+		isMultipleFistExist = false;
+		for (int i = 0; i < additionalFist.Length; i++) {
+			additionalFist[i].SetActive(false);
+		}
 	}
 
 	public void KnockedDown(Vector3 direction, GameObject from)
@@ -185,41 +121,13 @@ public class PlayerAttack : MonoBehaviour {
 		rigidbody.AddForce(direction * forceMagnitude, ForceMode.Impulse);
 	}
 
-	public void AnimateHit() {
-		GameObject tmp = Instantiate (punchEffect, transform.position, Quaternion.identity) as GameObject;
+	public void AnimateHit(Vector3 position) {
+		GameObject tmp = Instantiate (punchEffect, position, Quaternion.identity) as GameObject;
 		Destroy(tmp, 1f);
 	}
 
-	void AnimateFist()
-	{
-		if(freezeTime > 0)
-		{
-			//print (fistOriPos + " " + fistTargetPos + " " + freezeTime);
-			if(freezeTime > MAX_FREEZE_TIME * 0.5f)
-			{
-				fist.transform.localPosition = Vector3.Lerp(fistOriPos, fistTargetPos, 2 * (1 - (freezeTime / MAX_FREEZE_TIME)));
-			}
-			else
-			{
-				fist.transform.localPosition = Vector3.Lerp(fistOriPos, fistTargetPos, 2 * (freezeTime / MAX_FREEZE_TIME));
-			}
-		}
-	}
-
-    void SetupFist(Vector3 from, Vector3 to)
-    {
-        //fist.SetActive(true);
-        Vector3 dir = (to - from).normalized;
-        dir.y = 0;
-        fistTargetPos = transform.InverseTransformPoint(to);
-        fist.transform.localPosition = fistOriPos;
-		fistTargetPos.x = 0;
-		fistTargetPos.y = 0;
-		fistTargetPos.z = Mathf.Max(fistTargetPos.z, fistOriPos.z);
-    }
-
-	public void AnimateMiss() {
-		GameObject tmp =  Instantiate (missEffect, transform.position, Quaternion.identity) as GameObject;
+	public void AnimateMiss(Vector3 position) {
+		GameObject tmp =  Instantiate (missEffect, position, Quaternion.identity) as GameObject;
 		Destroy(tmp, 1f);
     }
 
@@ -229,14 +137,14 @@ public class PlayerAttack : MonoBehaviour {
 
 	IEnumerator AnimateCd_Routine() {
 		if (!iscd) {
-					iscd = true;
-					cd.GetComponent<Animator> ().SetBool ("cd", true);
-					yield return new WaitForSeconds (1f);
-					iscd = false;
-					cd.GetComponent<Animator> ().SetBool ("cd", false);
-			} else {
-				yield break;
-			}
+			iscd = true;
+			cd.GetComponent<Animator> ().SetBool ("cd", true);
+			yield return new WaitForSeconds (1f);
+			iscd = false;
+			cd.GetComponent<Animator> ().SetBool ("cd", false);
+		} else {
+			yield break;
+		}
 	}
 
 	public int GetKillCount()
@@ -276,10 +184,5 @@ public class PlayerAttack : MonoBehaviour {
 	public bool IsFirstKill()
 	{
 		return firstKillPlayer == this.gameObject;
-	}
-
-	public int GetHitableCount()
-	{
-		return playersInsideHitArea.Count;
 	}
 }

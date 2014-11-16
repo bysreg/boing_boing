@@ -8,7 +8,7 @@ public class PlayerController : CharacterBaseController
 	//ps move
 	MoveController moveController;
 	Vector3 initialOrientation;
-	public int psMoveIndex = 0;
+	protected int psMoveIndex;
 	protected float psMoveFirstRotation = 180f;
 	protected float playerFirstRotation = 0f;
 	protected float psMoveRange = 45f;
@@ -21,6 +21,8 @@ public class PlayerController : CharacterBaseController
 	protected override void Start ()
 	{
 		base.Start ();
+
+		psMoveIndex = index - 1;
 
 		orientationGameobject = new GameObject ();
 		orientationGameobject.name = "PSMoveOrientation " + psMoveIndex;
@@ -41,6 +43,10 @@ public class PlayerController : CharacterBaseController
 		if (!simulateWithKeyboard) {
 			moveController = PSMoveInput.MoveControllers [psMoveIndex];
 		}
+	}
+
+	public int GetPSMoveIndex() {
+		return psMoveIndex;
 	}
 
 	// Update is called once per frame

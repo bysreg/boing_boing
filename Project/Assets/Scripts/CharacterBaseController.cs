@@ -54,7 +54,7 @@ public class CharacterBaseController : MonoBehaviour {
 	//Bomb
 	public bool hasBomb = false;
 	public GameObject bomb;
-	public Vector3 bombOffset;
+	Vector3 bombOffset = new Vector3 (0f, 1.5f, 0f);
 	public GameObject bombFrom;
 
 	private int bombTime = 5;
@@ -71,6 +71,8 @@ public class CharacterBaseController : MonoBehaviour {
 			PlayerController playercomp = gameObject.GetComponent<PlayerController>();
 
 			aicomp.index = playercomp.index;
+			aicomp.bomb = playercomp.bomb;
+			aicomp.explosion = playercomp.explosion;
 
 			Destroy(playercomp);
 		}
@@ -189,7 +191,7 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
 		RaycastHit hitInfo;
-		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 2f, layerMask))
+		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 6f, layerMask))
 		{
 			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 1f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 1f, layerMask))
 			{
@@ -247,6 +249,8 @@ public class CharacterBaseController : MonoBehaviour {
 	public void Reset()
 	{
 		fallDown = false;
+		rigidbody.velocity = Vector3.zero;
+		rigidbody.angularVelocity = Vector3.zero;
 	}
 
 	public int GetIndex()
@@ -295,7 +299,7 @@ public class CharacterBaseController : MonoBehaviour {
 		soundController.PlaySound ("explode");
 		soundController.PlaySound ("falling", 0.2f, false);
 		Destroy (explosioninst, 3f);
-		print (bombFrom.name);
+		//print (bombFrom.name);
 		return bombFrom;
 	}
 
@@ -309,7 +313,7 @@ public class CharacterBaseController : MonoBehaviour {
 		while(true) {
 			if(bombT >= 0 && hasBomb){
 				yield return new WaitForSeconds (1);
-				print( bombT+ "remaining");
+				//print( bombT+ " remaining " + name);
 				bombT--;
 				bombTime--;
 			}else {
