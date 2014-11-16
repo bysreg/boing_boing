@@ -252,6 +252,8 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		fallDown = false;
 		hasTouchedTile = false;
+		hasBomb = false;
+		Destroy (this.bombinst);
 		rigidbody.velocity = Vector3.zero;
 		rigidbody.angularVelocity = Vector3.zero;
 	}
@@ -300,6 +302,7 @@ public class CharacterBaseController : MonoBehaviour {
 		this.gameObject.rigidbody.AddForce (explodeForce * 900);
 		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
 		soundController.PlaySound ("explode");
+		soundController.PlaySound ("falling", 0.2f, false);
 		Destroy (explosioninst, 3f);
 		//print (bombFrom.name);
 		return bombFrom;

@@ -90,7 +90,7 @@ public class PlayerAttack : MonoBehaviour {
 
     public void Attack()
 	{
-		fist.SendMessage("Attack", transform);
+		fist.SendMessage("Attack");
 
 		// multiple fist
 		if (isMultipleFistExist) {
