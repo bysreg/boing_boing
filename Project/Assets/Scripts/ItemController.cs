@@ -62,9 +62,15 @@ public class ItemController : ItemGenerator {
 
 	IEnumerator Blink() {
 		for(int i = 0; i < 5; i++) {
-			gameObject.GetComponent<MeshRenderer>().enabled = false;
+			//gameObject.GetComponentsInChildren<MeshRenderer>().enabled = false;
+			foreach(MeshRenderer mr in gameObject.GetComponentsInChildren<MeshRenderer>()) {
+				mr.enabled = false;
+			}
 			yield return new WaitForSeconds(0.1f);
-			gameObject.GetComponent<MeshRenderer>().enabled = true;
+			//gameObject.GetComponentsInChildren<MeshRenderer>().enabled = true;
+			foreach(MeshRenderer mr in gameObject.GetComponentsInChildren<MeshRenderer>()) {
+				mr.enabled = true;
+			}
 			yield return new WaitForSeconds(0.1f);
 		}
 		Destroy (gameObject);
