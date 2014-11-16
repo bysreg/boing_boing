@@ -114,7 +114,7 @@ public class CharacterBaseController : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update () {
 		// idle floating
-		if(!fallDown && hasTouchedTile)
+		if((!fallDown && hasTouchedTile) || isCharacterSelection)
 			Floating ();
 
 		if(isFreezeMovement)
@@ -317,16 +317,20 @@ public class CharacterBaseController : MonoBehaviour {
 
 	//bomb controller
 
-	void PassBomb(int bombT ,GameObject passedBy) {
+	void PassBomb(int bombT ,GameObject passedBy, Vector3 scale) {
 		bombTime = bombT;
 		bombinst = Instantiate (bomb,transform.position + bombOffset, Quaternion.identity) as GameObject;
+		if(bombT <= 2) {
+			bombinst.transform.localScale = scale - new Vector3(100,100,100);
+			BombRed();
+		}
 		bombinst.transform.parent = gameObject.transform;
 		this.bombFrom = passedBy;
 		StartCoroutine(CountDown(bombT));
 	}
 
 	GameObject Explode() {
-		Vector3 explodeForce = new Vector3 ((int)Random.Range(-2,2), 9f, (int)Random.Range(-2,2));
+		Vector3 explodeForce = new Vector3 (1, 9, 1);
 		this.gameObject.rigidbody.AddForce (explodeForce * 900);
 		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
 		soundController.PlaySound ("explode");
@@ -340,17 +344,27 @@ public class CharacterBaseController : MonoBehaviour {
 
 	public void AttachBomb(GameObject go) {
 		this.hasBomb = true;
-		PassBomb (bombTime, go);
+		if (bombinst) {
+						PassBomb (bombTime, go, this.bombinst.transform.localScale);
+				} else {
+						PassBomb (bombTime, go, new Vector3(0,0,0));
+				}
 	}
 
 	IEnumerator CountDown(int bombT) {
 		sf = soundController.PlaySound("clock_long");
 		while(true) {
-			if(bombT >= 0 && hasBomb){
+			if(bombT > 0 && hasBomb){
 				yield return new WaitForSeconds (1);
 				//print( bombT+ " remaining " + name);
 				bombT--;
 				bombTime--;
+				if(bombT <= 2) {
+					BombRed();
+					if(this.bombinst) {
+						this.bombinst.gameObject.transform.localScale += new Vector3(100,100,100);
+					}
+				}
 			}else {
 				if(hasBomb){
 					Explode();
@@ -374,7 +388,7 @@ public class CharacterBaseController : MonoBehaviour {
 				sf.GetComponent<AudioSource>().Stop();
 				soundController.PlaySound("passbomb", 0.2f, false);
 				c.gameObject.GetComponent<CharacterBaseController>().hasBomb = true;
-				c.gameObject.GetComponent<CharacterBaseController>().PassBomb(bombTime, gameObject);
+				c.gameObject.GetComponent<CharacterBaseController>().PassBomb(bombTime, gameObject, bombinst.transform.localScale);
 				Destroy(this.bombinst);
 			}else {
 				return;
@@ -403,4 +417,18 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		hasTouchedTile = value;
 	}
+
+	void BombRed() {
+				if (bombinst) {
+						foreach (Transform ft in bombinst.transform) {
+								if (!ft.gameObject.renderer) {
+										foreach (Transform tf in ft.transform) {
+												if (tf.gameObject.renderer) {
+														tf.gameObject.renderer.material.mainTexture = (Resources.Load ("Texture/red")) as Texture;
+												}
+										}
+								}
+						}
+				}
+		}
 }
