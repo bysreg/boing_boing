@@ -11,7 +11,7 @@ public class ItemGenerator : MonoBehaviour {
 	GameObject[] tilearr;
 
 	public enum ItemType {
-		SpeedUp = 0,
+		Fist,
 		Wings,
 		Bombs,
 		NumberOfTypes

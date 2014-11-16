@@ -26,8 +26,8 @@ public class ItemController : ItemGenerator {
 			case ItemType.Wings:
 				ActivateWings(c);
 				break;
-			case ItemType.SpeedUp:
-				SpeedUp(c);
+			case ItemType.Fist:
+				Fist(c);
 				break;
 			case ItemType.Bombs:
 				AttachBomb(c);
@@ -49,9 +49,8 @@ public class ItemController : ItemGenerator {
 		}
 	}
 
-	void SpeedUp(Collider c){
-		//print ("speedup name" + c.name);
-		Destroy (gameObject, 0f);
+	void Fist(Collider c){
+		c.gameObject.GetComponent<PlayerAttack>().ShowMultipleFist();
 	}
 
 	IEnumerator BlinkToDestroy() {
