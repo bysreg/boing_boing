@@ -6,6 +6,9 @@ public class PlayerAttack : MonoBehaviour {
 	//static
 	public static GameObject firstKillPlayer; // the player who kills first in the game
 
+	const float MAX_FIST_TIME = 10f;
+	private float fistTime = 0f;
+
 	public GameObject punchEffect;
 	public GameObject missEffect;
 	private Transform cd;
@@ -16,7 +19,7 @@ public class PlayerAttack : MonoBehaviour {
 	bool psMoveAvailable;
 	GameObject fist;
 	public GameObject[] additionalFist;
-	float forceMagnitude = 14f;
+	float forceMagnitude = 10f;
 	int index;
 	int killCount;
 	int deathCount;
@@ -53,6 +56,15 @@ public class PlayerAttack : MonoBehaviour {
 
 	void Update()
 	{
+		// fist
+		if (isMultipleFistExist) {
+			fistTime -= Time.deltaTime;
+
+			if (fistTime <= 0f) {
+				HideMultipleFist();
+			}
+		}
+
 		if(playerController != null)
 		{
 			if((index == 1 && Input.GetKeyDown(KeyCode.W)) ||
@@ -100,15 +112,19 @@ public class PlayerAttack : MonoBehaviour {
 		}
     }
 
-	void ShowMultipleFist() {
+	public void ShowMultipleFist() {
 		isMultipleFistExist = true;
+		fistTime = MAX_FIST_TIME;
+
 		for (int i = 0; i < additionalFist.Length; i++) {
 			additionalFist[i].SetActive(true);
 		}
 	}
 
-	void HideMultipleFist() {
+	public void HideMultipleFist() {
 		isMultipleFistExist = false;
+		fistTime = 0f;
+
 		for (int i = 0; i < additionalFist.Length; i++) {
 			additionalFist[i].SetActive(false);
 		}
