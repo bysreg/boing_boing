@@ -19,8 +19,8 @@ public class ItemController : ItemGenerator {
 	}
 
 	void OnTriggerEnter(Collider c) {
-		GameObject.Find ("GameController").GetComponent<SoundController>().PlaySound("itempickup",1, false);
-		if(c.tag == "Player" || !c.collider.isTrigger) {
+		GameObject.Find ("GameController").GetComponent<SoundController>().PlaySound("itempickup",0.8f, false);
+		if(c.tag == "Player" && !c.collider.isTrigger) {
 			switch(itc) 
 			{
 			case ItemType.Wings:
@@ -28,6 +28,9 @@ public class ItemController : ItemGenerator {
 				break;
 			case ItemType.SpeedUp:
 				SpeedUp(c);
+				break;
+			case ItemType.Bombs:
+				AttachBomb(c);
 				break;
 			}
 		}
@@ -37,6 +40,13 @@ public class ItemController : ItemGenerator {
 		//print ("activate wings on " + c.name);
 		c.gameObject.GetComponent<CharacterBaseController>().ActivateFlying();
 		Destroy (gameObject, 0f);
+	}
+
+	void AttachBomb(Collider c){
+		if(!c.gameObject.GetComponent<CharacterBaseController>().hasBomb) {
+			c.gameObject.GetComponent<CharacterBaseController>().AttachBomb(c.gameObject);
+			Destroy (gameObject, 0f);
+		}
 	}
 
 	void SpeedUp(Collider c){

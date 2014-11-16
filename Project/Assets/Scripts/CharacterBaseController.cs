@@ -51,12 +51,28 @@ public class CharacterBaseController : MonoBehaviour {
 
 	float yTime;
 
+	//Bomb
+	public bool hasBomb = false;
+	public GameObject bomb;
+	public Vector3 bombOffset;
+	public GameObject bombFrom;
+
+	private int bombTime = 5;
+	private GameObject bombinst;
+	private float bombPassInterve = 2f;
+	private float bombGetTimeRecord= 0f;
+
+	public GameObject explosion;
+	private GameObject sf;
+
 	protected virtual void Awake() {
 		if (isComputer) {
 			AIController aicomp = gameObject.AddComponent<AIController>();
 			PlayerController playercomp = gameObject.GetComponent<PlayerController>();
 
 			aicomp.index = playercomp.index;
+			aicomp.bomb = playercomp.bomb;
+			aicomp.explosion = playercomp.explosion;
 
 			Destroy(playercomp);
 		}
@@ -71,6 +87,7 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 
 		flyTimeText = transform.Find("FlyTimeText").GetComponent<TextMesh>();
+		flyTimeText.gameObject.SetActive(false);
 	}
 	
 	// Use this for initialization
@@ -162,7 +179,7 @@ public class CharacterBaseController : MonoBehaviour {
 				NextJump();
 
 				//play toet sound
-				soundController.PlaySound("SFX-Jump", 0.3f, false);
+				soundController.PlaySound("SFX-Jump", 0.1f, false);
 			}
 			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
 
@@ -174,7 +191,7 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
 		RaycastHit hitInfo;
-		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 2f, layerMask))
+		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 6f, layerMask))
 		{
 			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 1f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 1f, layerMask))
 			{
@@ -187,7 +204,7 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 		else
 		{
-			hitInfo.collider.gameObject.GetComponent<TileMovement>().ShakeTile();
+			hitInfo.collider.gameObject.GetComponent<TileMovement>().ShakeTile(TileMovement.ShakeType.Down);
 		}
     }
     
@@ -232,6 +249,8 @@ public class CharacterBaseController : MonoBehaviour {
 	public void Reset()
 	{
 		fallDown = false;
+		rigidbody.velocity = Vector3.zero;
+		rigidbody.angularVelocity = Vector3.zero;
 	}
 
 	public int GetIndex()
@@ -254,10 +273,76 @@ public class CharacterBaseController : MonoBehaviour {
 	void StartFlying()
 	{
 		isFlying = true;
+		flyTimeText.gameObject.SetActive(true);
 	}
 
 	void StopFlying()
 	{
 		isFlying = false;
+		flyTimeText.gameObject.SetActive(false);
+	}
+
+	//bomb controller
+
+	void PassBomb(int bombT ,GameObject passedBy) {
+		bombTime = bombT;
+		bombinst = Instantiate (bomb,transform.position + bombOffset, Quaternion.identity) as GameObject;
+		bombinst.transform.parent = gameObject.transform;
+		this.bombFrom = passedBy;
+		StartCoroutine(CountDown(bombT));
+	}
+
+	GameObject Explode() {
+		Vector3 explodeForce = new Vector3 (Random.Range(-2,3), Random.Range(4,10), Random.Range(-2,3));
+		this.gameObject.rigidbody.AddForce (explodeForce * 900);
+		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
+		soundController.PlaySound ("explode");
+		Destroy (explosioninst, 3f);
+		print (bombFrom.name);
+		return bombFrom;
+	}
+
+	public void AttachBomb(GameObject go) {
+		this.hasBomb = true;
+		PassBomb (bombTime, go);
+	}
+
+	IEnumerator CountDown(int bombT) {
+		sf = soundController.PlaySound("clock_long");
+		while(true) {
+			if(bombT >= 0 && hasBomb){
+				yield return new WaitForSeconds (1);
+				print( bombT+ " remaining " + name);
+				bombT--;
+				bombTime--;
+			}else {
+				if(hasBomb){
+					Explode();
+					//Destroy(sf);
+					sf.GetComponent<AudioSource>().Stop();
+					this.hasBomb = false;
+				}
+				Destroy(bombinst);
+				bombTime = 5;
+				break;
+			}
+		}
+	}
+
+	void OnTriggerEnter(Collider c) { // Trigger Enter of Collision Enter
+		if(c.gameObject.tag == "Player" && hasBomb && !c.gameObject.GetComponent<CharacterBaseController>().hasBomb) {
+			if(bombPassInterve + bombGetTimeRecord < Time.time) {
+				bombGetTimeRecord = Time.time;
+				c.gameObject.GetComponent<CharacterBaseController>().bombGetTimeRecord = Time.time;
+				this.hasBomb = false;
+				sf.GetComponent<AudioSource>().Stop();
+				soundController.PlaySound("passbomb", 0.2f, false);
+				c.gameObject.GetComponent<CharacterBaseController>().hasBomb = true;
+				c.gameObject.GetComponent<CharacterBaseController>().PassBomb(bombTime, gameObject);
+				Destroy(this.bombinst);
+			}else {
+				return;
+			}
+		}
 	}
 }

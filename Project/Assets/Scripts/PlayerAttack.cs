@@ -39,7 +39,8 @@ public class PlayerAttack : MonoBehaviour {
 		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.psMoveIndex].Connected;
 		fist = transform.Find ("Fist").gameObject;
 
-		ShowMultipleFist ();
+		//ShowMultipleFist ();
+		HideMultipleFist ();
 
 		//find cd animator
 		//gameObject.GetComponentsInChildren<Animator> ().SetValue ();
@@ -77,17 +78,17 @@ public class PlayerAttack : MonoBehaviour {
 	}
     
 	public void MissAnimation(Vector3 position) {
-		soundController.PlaySound("whoosh");
+		soundController.PlaySound("whoosh", 0.6f, false);
 		AnimateMiss(position);
 	}
 
 	public void HitAnimation(Vector3 position) {
 		//play toet sound
-		soundController.PlaySound("punch Sound");
+		soundController.PlaySound("punch Sound", 0.6f, false);
 		AnimateHit (position);
 	}
 
-    void Attack()
+    public void Attack()
 	{
 		fist.SendMessage("Attack", transform);
 

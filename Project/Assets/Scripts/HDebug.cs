@@ -86,7 +86,7 @@ public class HDebug : MonoBehaviour {
 		if(activePlayerCount >= 3)
 		{
 			p3KillCountText.text = "P3 Kill Count : " + p3Attack.GetKillCount();
-			p3LastHitFromText.text = "P1 Last Hit From : " + (p3Attack.GetLastHitFrom() != null ? p3Attack.GetLastHitFrom().name : "");
+			p3LastHitFromText.text = "P3 Last Hit From : " + (p3Attack.GetLastHitFrom() != null ? p3Attack.GetLastHitFrom().name : "");
 		}
 
 		if(activePlayerCount >= 4)

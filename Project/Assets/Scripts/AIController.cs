@@ -4,18 +4,26 @@ using System.Collections;
 public class AIController : CharacterBaseController {
 
 	private float minDistance = 1.5f;
+	private float minDistanceAttack = 3f;
 
 	protected Vector3 targetPosition;
 
-	// Use this for initialization
+	PlayerAttack playerAttack;
+
+	protected override void Awake()
+	{
+		base.Awake();
+
+		playerAttack = GetComponent<PlayerAttack>();
+	}
+
 	protected override void Start () {
 		base.Start ();
 
 		// get first target point
 		SetTargetPoint ();
 	}
-	
-	// Update is called once per frame
+
 	protected override void Update () {
 		base.Update ();
 
@@ -35,6 +43,13 @@ public class AIController : CharacterBaseController {
 				elapsedTimeForward -= waitingTimeToMove;
 
 				MoveForward();
+			}
+		}
+
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Player");
+		for (int i = 0; i < enemies.Length; i++) {
+			if (enemies[i] != this.gameObject && Vector3.Distance(transform.position, enemies[i].transform.position) <= minDistanceAttack) {
+				playerAttack.Attack();
 			}
 		}
 	}
