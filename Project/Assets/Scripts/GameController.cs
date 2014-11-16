@@ -23,6 +23,10 @@ public class GameController : MonoBehaviour {
 	const float MAX_GAME_TIME = 90f; // in seconds
 	
 	WinCameraController winCameraController;
+	ItemGenerator itemGenerator;
+
+	bool gameStart;
+	GameObject StartCountdown;
 
 	void Awake()
 	{
@@ -43,6 +47,15 @@ public class GameController : MonoBehaviour {
 		}
 
 		winCameraController = Camera.main.GetComponent<WinCameraController>();
+		itemGenerator = GetComponent<ItemGenerator>();
+		StartCountdown = GameObject.Find("StartCountdown");
+
+		for(int i=0; i<StartCountdown.transform.childCount; i++)
+		{
+			StartCountdown.transform.GetChild(i).gameObject.SetActive(false);	
+        }
+
+		StartCoroutine(ShowSign(3));
 	}
 
 	void Init()
@@ -54,7 +67,36 @@ public class GameController : MonoBehaviour {
 		{
 			SpawnPlayer(i);
 		}
+
+		// freeze the players first
+		for(int i=0; i<activePlayersCount; i++)
+		{
+			players[i].GetComponent<CharacterBaseController>().SetFreezeMovement(true);
+		}
+		
+		//freeze the item generator
+		itemGenerator.SetEnabled(false);
+		
+		//freeze the remaining game time timer
+        gameStart = false;
+
 		initialized = true;
+	}
+
+	void StartGame()
+	{
+		// unfreeze the players first
+		for(int i=0; i<activePlayersCount; i++)
+		{
+			players[i].GetComponent<CharacterBaseController>().SetFreezeMovement(false);
+		}
+
+		
+		//unfreeze the item generator
+		itemGenerator.SetEnabled(true);
+		
+		//unfreeze the remaining game time timer
+		gameStart = true;
 	}
 
 	public void SpawnPlayer(int playerIndex)
@@ -94,7 +136,7 @@ public class GameController : MonoBehaviour {
 			Init();
 		}
 
-		if(remainingGameTime > 0)
+		if(gameStart && remainingGameTime > 0)
 		{
 			remainingGameTime -= Time.deltaTime;
 			if(remainingGameTime <= 0f)
@@ -154,7 +196,7 @@ public class GameController : MonoBehaviour {
 		for(int i=0; i<activePlayersCount; i++)
 		{
 			PlayerAttack pa = arr[i].GetComponent<PlayerAttack>();
-			arr[i].GetComponent<CharacterBaseController>().FreezeMovement();
+			arr[i].GetComponent<CharacterBaseController>().SetFreezeMovement(true);
 
 			print (i + " place : " + arr[i].name + " " + pa.GetKillCount() + " " + pa.GetDeathCount() + " " + pa.IsFirstKill());
 		}
@@ -206,5 +248,27 @@ public class GameController : MonoBehaviour {
 	public float GetSpawnYPos()
 	{
 		return spawnYPos;
+	}
+
+	IEnumerator ShowSign(int value)
+	{
+		yield return new WaitForSeconds(1f);
+
+		while(value >= 0)
+		{
+			for(int i=0; i<StartCountdown.transform.childCount; i++)
+			{
+				StartCountdown.transform.GetChild(i).gameObject.SetActive(false);	
+			}
+
+			StartCountdown.transform.Find("" + value).gameObject.SetActive(true);
+			value--;
+			yield return new WaitForSeconds(1f);
+		}
+
+		StartGame();
+
+		yield return new WaitForSeconds(1f);
+		StartCountdown.transform.Find("0").gameObject.SetActive(false);
 	}
 }

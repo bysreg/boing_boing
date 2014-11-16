@@ -7,6 +7,7 @@ public class ItemGenerator : MonoBehaviour {
 	public Vector3 offset;
 	public float interve;
 	public int amount_max;
+	public bool enabled;
 
 	struct tilestruct{
 		public bool has_item;
@@ -40,6 +41,12 @@ public class ItemGenerator : MonoBehaviour {
 
 	void DropItem() {
 		int amount = Random.Range (3,amount_max);
+
+		if(!enabled)
+		{
+			return;
+		}
+
 		for(int i =0 ; i < amount; i++) {
 			int it = Random.Range(0, (int)ItemType.NumberOfTypes);
 			int tilenum = Random.Range(0, tilearr.Length);
@@ -63,7 +70,14 @@ public class ItemGenerator : MonoBehaviour {
 			yield return new WaitForSeconds(interve_imp + 5f); //item exist time
 		}
 	}
-	void Clean() {
+
+	public void SetEnabled(bool value)
+	{
+		this.enabled = value;
+	}
+
+	void Clean() 
+	{
 		for(int i = 0; i < tilearr.Length; i++) {
 			tilearr[i].has_item = false;
 		}
