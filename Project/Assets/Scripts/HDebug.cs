@@ -75,11 +75,11 @@ public class HDebug : MonoBehaviour {
 	{
 		gameTimeText.text = "Remaining Game Time : " + gameController.GetRemainingGameTime();
 
-		p1FreezeTimeText.text = "P1 FreezeTime : " + p1Attack.GetFreezeTime();
+		//p1FreezeTimeText.text = "P1 FreezeTime : " + p1Attack.GetFreezeTime();
 		p1KillCountText.text = "P1 Kill Count : " + p1Attack.GetKillCount();
 		p1LastHitFromText.text = "P1 Last Hit From : " + (p1Attack.GetLastHitFrom() != null ? p1Attack.GetLastHitFrom().name : "");
 
-		p2FreezeTimeText.text = "P2 FreezeTime : " + p2Attack.GetFreezeTime();
+		//p2FreezeTimeText.text = "P2 FreezeTime : " + p2Attack.GetFreezeTime();
 		p2KillCountText.text = "P2 Kill Count : " + p2Attack.GetKillCount();
 		p2LastHitFromText.text = "P2 Last Hit From : " + (p2Attack.GetLastHitFrom() != null ? p2Attack.GetLastHitFrom().name : "");
 
