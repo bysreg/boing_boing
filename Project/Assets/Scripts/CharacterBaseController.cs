@@ -66,6 +66,8 @@ public class CharacterBaseController : MonoBehaviour {
 	public GameObject explosion;
 	private GameObject sf;
 
+	public Transform[] characterModels;
+
 	protected virtual void Awake() {
 		if (isComputer) {
 			AIController aicomp = gameObject.AddComponent<AIController>();
@@ -74,6 +76,7 @@ public class CharacterBaseController : MonoBehaviour {
 			aicomp.index = playercomp.index;
 			aicomp.bomb = playercomp.bomb;
 			aicomp.explosion = playercomp.explosion;
+			aicomp.characterModels = playercomp.characterModels;
 
 			Destroy(playercomp);
 		}
@@ -96,6 +99,15 @@ public class CharacterBaseController : MonoBehaviour {
 		firstPosition = transform.position;
 
 		Jump ();
+		InitCharacterModel();
+	}
+
+	void InitCharacterModel()
+	{
+		for(int i=0; i<characterModels.Length; i++)
+		{
+			characterModels[i].gameObject.SetActive(i == index-1);
+		}
 	}
 
 	// Update is called once per frame
