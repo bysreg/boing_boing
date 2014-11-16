@@ -31,7 +31,9 @@ public class ItemController : ItemGenerator {
 				Fist(c);
 				break;
 			case ItemType.Bombs:
-				AttachBomb(c);
+				if(!c.GetComponent<CharacterBaseController>().hasBomb) {
+					AttachBomb(c);
+				}
 				break;
 			}
 		}

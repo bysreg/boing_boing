@@ -8,7 +8,12 @@ public class ItemGenerator : MonoBehaviour {
 	public float interve;
 	public int amount_max;
 
-	GameObject[] tilearr;
+	struct tilestruct{
+		public bool has_item;
+		public GameObject tile;
+	};
+
+	tilestruct[] tilearr;
 
 	public enum ItemType {
 		Fist,
@@ -18,7 +23,14 @@ public class ItemGenerator : MonoBehaviour {
 	};
 
 	void Start() {
-		tilearr = GameObject.FindGameObjectsWithTag ("Tile");
+		//tilearr = GameObject.FindGameObjectsWithTag ("Tile");
+		int i = 0;
+		int length = GameObject.FindGameObjectsWithTag ("Tile").Length;
+		tilearr = new tilestruct[length];
+		foreach (GameObject go in GameObject.FindGameObjectsWithTag ("Tile")) {
+			tilearr[i++].tile = go;
+		}
+		i = 0;
 		StartCoroutine (Drop());
 	}
 
@@ -27,11 +39,16 @@ public class ItemGenerator : MonoBehaviour {
 	}
 
 	void DropItem() {
-		int amount = Random.Range (1,amount_max);
+		int amount = Random.Range (3,amount_max);
 		for(int i =0 ; i < amount; i++) {
 			int it = Random.Range(0, (int)ItemType.NumberOfTypes);
 			int tilenum = Random.Range(0, tilearr.Length);
-			GameObject item = Instantiate(itemPrefab[it], tilearr[tilenum].transform.position + offset, Quaternion.identity) as GameObject;
+			if(tilearr[i].has_item) {
+				return;
+			}
+			GameObject item = Instantiate(itemPrefab[it], tilearr[tilenum].tile.transform.position + offset, Quaternion.identity) as GameObject;
+			tilearr[i].has_item = true;
+			iTween.MoveTo(item, tilearr[tilenum].tile.transform.position + new Vector3(0,1,0), 2);
 			item.AddComponent("ItemController");
 			item.SendMessage("SetType", it);  // item type can send int directly
 		}
@@ -40,8 +57,15 @@ public class ItemGenerator : MonoBehaviour {
 	IEnumerator Drop() {
 		while(true) {
 			float interve_imp = Random.Range(5f, 5+interve);
-			yield return new WaitForSeconds(interve_imp);
 			DropItem();
+			yield return new WaitForSeconds(1f);
+			Clean();
+			yield return new WaitForSeconds(interve_imp + 5f); //item exist time
+		}
+	}
+	void Clean() {
+		for(int i = 0; i < tilearr.Length; i++) {
+			tilearr[i].has_item = false;
 		}
 	}
 }
