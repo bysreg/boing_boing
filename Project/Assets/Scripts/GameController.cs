@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour {
 	ItemGenerator itemGenerator;
 
 	bool gameStart;
-	Transform StartCountdown;
+	GameObject StartCountdown;
 
 	void Awake()
 	{
@@ -52,8 +52,10 @@ public class GameController : MonoBehaviour {
 
 		for(int i=0; i<StartCountdown.transform.childCount; i++)
 		{
-			StartCountdown.GetChild(i).gameObject.SetActive(false);	
+			StartCountdown.transform.GetChild(i).gameObject.SetActive(false);	
         }
+
+		StartCoroutine(ShowSign(3));
 	}
 
 	void Init()
@@ -79,6 +81,22 @@ public class GameController : MonoBehaviour {
         gameStart = false;
 
 		initialized = true;
+	}
+
+	void StartGame()
+	{
+		// unfreeze the players first
+		for(int i=0; i<activePlayersCount; i++)
+		{
+			players[i].GetComponent<CharacterBaseController>().SetFreezeMovement(false);
+		}
+
+		
+		//unfreeze the item generator
+		itemGenerator.SetEnabled(true);
+		
+		//unfreeze the remaining game time timer
+		gameStart = true;
 	}
 
 	public void SpawnPlayer(int playerIndex)
@@ -234,11 +252,23 @@ public class GameController : MonoBehaviour {
 
 	IEnumerator ShowSign(int value)
 	{
-		for(int i=0; i<StartCountdown.transform.childCount; i++)
+		yield return new WaitForSeconds(1f);
+
+		while(value >= 0)
 		{
-			StartCountdown.GetChild(i).gameObject.SetActive(false);	
+			for(int i=0; i<StartCountdown.transform.childCount; i++)
+			{
+				StartCountdown.transform.GetChild(i).gameObject.SetActive(false);	
+			}
+
+			StartCountdown.transform.Find("" + value).gameObject.SetActive(true);
+			value--;
+			yield return new WaitForSeconds(1f);
 		}
 
-		StartCountdown.transform.Find("" + value).gameObject.SetActive(true);
+		StartGame();
+
+		yield return new WaitForSeconds(1f);
+		StartCountdown.transform.Find("0").gameObject.SetActive(false);
 	}
 }

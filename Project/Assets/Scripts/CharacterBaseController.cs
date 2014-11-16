@@ -69,6 +69,8 @@ public class CharacterBaseController : MonoBehaviour {
 
 	public Transform[] characterModels;
 
+	GameObject wing;
+
 	protected virtual void Awake() {
 		//if (isComputer) {
 		if (index != 0 && !GameController.activePlayers[index - 1] && !isCharacterSelection) {
@@ -94,6 +96,9 @@ public class CharacterBaseController : MonoBehaviour {
 
 		flyTimeText = transform.Find("FlyTimeText").GetComponent<TextMesh>();
 		flyTimeText.gameObject.SetActive(false);
+
+		wing = transform.Find("wing-move").gameObject;
+		wing.SetActive(false);
 	}
 	
 	// Use this for initialization
@@ -307,13 +312,15 @@ public class CharacterBaseController : MonoBehaviour {
 	void StartFlying()
 	{
 		isFlying = true;
-		flyTimeText.gameObject.SetActive(true);
+		//flyTimeText.gameObject.SetActive(true);
+		wing.SetActive(true);
 	}
 
 	void StopFlying()
 	{
 		isFlying = false;
-		flyTimeText.gameObject.SetActive(false);
+		//flyTimeText.gameObject.SetActive(false);
+		wing.SetActive(false);
 	}
 
 	//bomb controller

@@ -75,8 +75,11 @@ public class ItemGenerator : MonoBehaviour {
 	{
 		this.enabled = value;
 	}
-	void Clean() {
+
+	void Clean() 
+	{
 		for(int i = 0; i < tilearr.Length; i++) {
 			tilearr[i].has_item = false;
 		}
+	}
 }
