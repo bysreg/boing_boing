@@ -36,6 +36,7 @@ public class CharacterBaseController : MonoBehaviour {
 	float respawnTime;
 	const float MAX_RESPAWN_TIME = 3f;
 	Vector3 capsuleCollRadius;
+	const float DEATH_DEPTH = -100f; // safe net in case somehow the game does not respawn the character properly
 
 	protected bool isFreezeMovement;
 
@@ -139,6 +140,12 @@ public class CharacterBaseController : MonoBehaviour {
 			}
 			flyTimeText.text = "" + flyTime;
 		}
+
+		//safe net just in case somehow the game does not respawn the character even if the player is falling deep
+		if(!fallDown && transform.position.y <= DEATH_DEPTH)
+		{
+			PlayerFalls();
+		}
 	}
 
 	protected virtual void FixedUpdate() {
@@ -183,7 +190,7 @@ public class CharacterBaseController : MonoBehaviour {
 
 				isParabolicAnimating = false;
 				 
-				if (!isCharacterSelection && !isFlying)
+				if (!isCharacterSelection)
 				{
 					CheckGroundBelow();
 				}
@@ -204,23 +211,29 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		int layerMask = (1 << LayerMask.NameToLayer("Tile"));
 		RaycastHit hitInfo;
-		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 2f, layerMask))
+
+		//only check tile below if we are not flying, check flying is intentionally on the rightso that we got the hit info to shake the tile
+		if(!Physics.Raycast(transform.position, - transform.up, out hitInfo, 2f, layerMask) && !isFlying)
 		{
 			if(!Physics.Raycast(transform.position - capsuleCollRadius, - transform.up, 2f, layerMask) && !Physics.Raycast(transform.position + capsuleCollRadius, - transform.up, 2f, layerMask))
 			{
 				// there is no tile below, so player falls down
-				fallDown = true;
-				respawnTime = MAX_RESPAWN_TIME;
-
-				playerAttack.Killed();
+				PlayerFalls();
 			}
 		}
-		else
+		else if(hitInfo.collider != null)
 		{
 			hitInfo.collider.gameObject.GetComponent<TileMovement>().ShakeTile(TileMovement.ShakeType.Down);
 		}
     }
     
+	void PlayerFalls()
+	{
+		fallDown = true;
+		respawnTime = MAX_RESPAWN_TIME;
+		playerAttack.Killed();
+	}
+
 	protected void NextJump () {
 		float speed = Vector2.SqrMagnitude (new Vector2 (rigidbody.velocity.x, rigidbody.velocity.z));
 		Vector2 speedRange = new Vector2 (v0default, v0default / 2f);
@@ -319,6 +332,8 @@ public class CharacterBaseController : MonoBehaviour {
 		soundController.PlaySound ("explode");
 		soundController.PlaySound ("falling", 0.2f, false);
 		Destroy (explosioninst, 3f);
+
+
 		//print (bombFrom.name);
 		return bombFrom;
 	}
