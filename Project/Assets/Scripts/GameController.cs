@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour {
 	WinCameraController winCameraController;
 	ItemGenerator itemGenerator;
 	SoundController soundController;
+	SceneFader sceneFader;
 
 	bool gameStart;
 	GameObject StartCountdown;
@@ -33,6 +34,7 @@ public class GameController : MonoBehaviour {
 
 	void Awake()
 	{
+		sceneFader = GameObject.Find("SceneFader").GetComponent<SceneFader>();
 		p1 = GameObject.Find("P1").transform;
 		p2 = GameObject.Find("P2").transform;
 		p3 = GameObject.Find("P3").transform;
@@ -92,6 +94,8 @@ public class GameController : MonoBehaviour {
 		
 		//freeze the remaining game time timer
         gameStart = false;
+
+		sceneFader.FadeInScene();
 
 		initialized = true;
 	}
@@ -297,7 +301,7 @@ public class GameController : MonoBehaviour {
 
 	IEnumerator ShowStartCountdown(int value)
 	{
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(2f);
 
 		while(value >= 0)
 		{
