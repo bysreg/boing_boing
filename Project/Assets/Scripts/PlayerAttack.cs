@@ -17,7 +17,6 @@ public class PlayerAttack : MonoBehaviour {
 	bool hasHighScore = false;
 
 	bool iscd = false;
-	bool psMoveAvailable;
 	GameObject fist;
 	GameObject HighScorePlayer;
 	Texture tRecord;
@@ -42,8 +41,7 @@ public class PlayerAttack : MonoBehaviour {
 		playerController = GetComponent<PlayerController>();
 		index = GetComponent<CharacterBaseController>().index;
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
-		soundController = GameObject.Find("GameController").GetComponent<SoundController>();		
-		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[index - 1].Connected;
+		soundController = GameObject.Find("GameController").GetComponent<SoundController>();
 		fist = transform.Find ("Fist").gameObject;
 		//ShowMultipleFist ();
 		HideMultipleFist ();
@@ -56,6 +54,7 @@ public class PlayerAttack : MonoBehaviour {
 //				cd = child;
 //			}
 //		}
+		
 	}
 
 	void Start()
@@ -81,7 +80,7 @@ public class PlayerAttack : MonoBehaviour {
 				(index == 3 && Input.GetKeyDown(KeyCode.S)) ||
 				(index == 4 && Input.GetKeyDown(KeyCode.D)) ||
 
-			   (psMoveAvailable && PSMoveInput.MoveControllers[playerController.GetPSMoveIndex()].Data.ValueT > 0))
+			   (PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.GetPSMoveIndex()].Data.ValueT > 0))
 			{
 				Attack();
 			}
