@@ -232,22 +232,25 @@ public class PlayerAttack : MonoBehaviour {
 	}
 
 	bool GetHighScore() {
-		foreach(GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
-			if(GetScore(go) >= GetScore(gameObject)) {
-				return false;
-			}else {
-				//refHighScorePlayer = gameObject;
-				foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player")){
-					if(player != gameObject) {
-						player.GetComponent<PlayerAttack>().hasHighScore = false;
-					}
+				foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
+						if (go != gameObject) {
+				print(go.name + "Score is :" + GetScore(go));
+				print(gameObject.name + "Score is :" + GetScore(gameObject));
+				if (GetScore (go) >= GetScore (gameObject)) {
+					return false;
+				}else {
+					continue;
 				}
-				return true;
 			}
 		}
-		return false;
+		foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
+			if (player != gameObject) {
+				player.GetComponent<PlayerAttack> ().hasHighScore = false;
+			}
+		}
+		return true;
 	}
-		public bool IsMultipleFistExist()
+	public bool IsMultipleFistExist()
 		{
 			return isMultipleFistExist;
 		}
@@ -267,7 +270,7 @@ public class PlayerAttack : MonoBehaviour {
 		int GetScore(GameObject P) {
 			int k = P.GetComponent<PlayerAttack>().GetKillCount();
 			int d = P.GetComponent<PlayerAttack> ().GetDeathCount();
-			return k * 100 - d * 10;
+			return k * 1000 - d * 10;
 		}
 
 		void GetCrown(GameObject go , bool b) {

@@ -12,7 +12,7 @@ public class SoundController : MonoBehaviour {
 			//PlaySound ("Bgm_new",0.2f, true);
 			StartCoroutine(PlayWithDely(4f, "Bgm_new"));
 		}else if(Application.loadedLevel == 0) {
-			PlaySound ("select_bgm",0.5f, true);
+			PlaySound ("new_select_bgm",0.8f, true);
 		}
 		//PlaySound ("dig",1f	, true);
 	}
