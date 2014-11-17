@@ -134,8 +134,8 @@ public class PlayerController : CharacterBaseController
 			if (Mathf.Abs (velocity) >= 3f && elapsedTimeForward >= waitingTimeToMove) {
 				elapsedTimeForward = 0f;
 				MoveForward ();
-
-				transform.localRotation = Quaternion.Euler(0, transform.localRotation.y + deltaRotation, 0);
+				Debug.Log(orientation + "; " + deltaRotation);
+				transform.localRotation = Quaternion.Euler(0, transform.localRotation.eulerAngles.y - deltaRotation, 0);
 			}
 		}
 	}
