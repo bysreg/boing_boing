@@ -249,6 +249,12 @@ public class GameController : MonoBehaviour {
 			print (i + " place : " + arr[i].name + " " + pa.GetKillCount() + " " + pa.GetDeathCount() + " " + pa.IsFirstKill());
 		}
 
+		//disable time's up text
+		finishCountdown.transform.Find("0").gameObject.SetActive(false);
+
+		//freeze the item generator
+		itemGenerator.SetEnabled(false);
+
 		winCameraController.Winneris(arr[0].gameObject);
 		yield return null;
 	}
