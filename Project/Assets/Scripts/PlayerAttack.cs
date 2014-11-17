@@ -217,6 +217,11 @@ public class PlayerAttack : MonoBehaviour {
 		return firstKillPlayer == this.gameObject;
 	}
 
+	public bool IsMultipleFistExist()
+	{
+		return isMultipleFistExist;
+	}
+
 	//-------test
 //	public void SetValue(int killCount, int deathCount, bool isFirstKill)
 //	{

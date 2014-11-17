@@ -72,7 +72,6 @@ public class CharacterBaseController : MonoBehaviour {
 	GameObject wing;
 
 	protected virtual void Awake() {
-		//if (isComputer) {
 		if (index != 0 && !GameController.activePlayers[index - 1] && !isCharacterSelection) {
 			AIController aicomp = gameObject.AddComponent<AIController>();
 			PlayerController playercomp = gameObject.GetComponent<PlayerController>();
@@ -321,6 +320,11 @@ public class CharacterBaseController : MonoBehaviour {
 		isFlying = false;
 		//flyTimeText.gameObject.SetActive(false);
 		wing.SetActive(false);
+	}
+
+	public bool IsFlying()
+	{
+		return isFlying;
 	}
 
 	//bomb controller
