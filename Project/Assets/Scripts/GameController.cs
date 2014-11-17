@@ -165,6 +165,10 @@ public class GameController : MonoBehaviour {
 					{
 						finishCountdownObjects[number + 1].SetActive(false);
 					}
+					if(number == 0)
+					{
+						soundController.PlaySound("whistle");
+					}
 					finishCountdownObjects[number].SetActive(true);
 				}
 			}
@@ -333,15 +337,5 @@ public class GameController : MonoBehaviour {
 
 		yield return new WaitForSeconds(1f);
 		StartCountdown.transform.Find("0").gameObject.SetActive(false);
-	}
-
-	void ShowFinishCountdown(int value)
-	{
-		for(int i=0; i<finishCountdown.transform.childCount; i++)
-		{
-			finishCountdown.transform.GetChild(i).gameObject.SetActive(false);	
-		}
-
-		finishCountdown.transform.Find("" + value).gameObject.SetActive(true);
 	}
 }
