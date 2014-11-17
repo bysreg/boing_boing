@@ -247,33 +247,37 @@ public class PlayerAttack : MonoBehaviour {
 		}
 		return false;
 	}
+		public bool IsMultipleFistExist()
+		{
+			return isMultipleFistExist;
+		}
 
-	//-------test
-//	public void SetValue(int killCount, int deathCount, bool isFirstKill)
-//	{
-//		this.killCount = killCount;
-//		this.deathCount = deathCount;
-//		if(isFirstKill)
-//		{
-//			firstKillPlayer = this.gameObject;
-//		}
-//	}
-	//-------test
+		//-------test
+		//	public void SetValue(int killCount, int deathCount, bool isFirstKill)
+		//	{
+		//		this.killCount = killCount;
+		//		this.deathCount = deathCount;
+		//		if(isFirstKill)
+		//		{
+		//			firstKillPlayer = this.gameObject;
+		//		}
+		//	}
+		//-------test
 
-	int GetScore(GameObject P) {
-		int k = P.GetComponent<PlayerAttack>().GetKillCount();
-		int d = P.GetComponent<PlayerAttack> ().GetDeathCount();
-		return k * 100 - d * 10;
-	}
+		int GetScore(GameObject P) {
+			int k = P.GetComponent<PlayerAttack>().GetKillCount();
+			int d = P.GetComponent<PlayerAttack> ().GetDeathCount();
+			return k * 100 - d * 10;
+		}
 
-	void GetCrown(GameObject go , bool b) {
-		foreach(Transform tf in go.transform) {
-			if(tf.gameObject.name == "crown") {
-				tf.gameObject.SetActive(b);
+		void GetCrown(GameObject go , bool b) {
+			foreach(Transform tf in go.transform) {
+				if(tf.gameObject.name == "crown") {
+					tf.gameObject.SetActive(b);
+				}
 			}
 		}
-	}
 
-	void ReturnTail() {
+		void ReturnTail() {
+		}
 	}
-}

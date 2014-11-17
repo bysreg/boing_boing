@@ -71,17 +71,7 @@ public class PlayerController : CharacterBaseController
 			}
 			transform.Rotate (0, rotation * rotationSpeed, 0);
 		} else { // ps move
-			// FORWARD
-			float velocity = moveController.Data.Velocity.y;
 			MoveData moveData = moveController.Data;
-
-			// move forward
-			elapsedTimeForward += Time.deltaTime;
-
-			if (Mathf.Abs (velocity) >= 3f && elapsedTimeForward >= waitingTimeToMove) {
-				elapsedTimeForward = 0f;
-				MoveForward ();
-			}
 
 			// STEERING
 			// avoid Gimbal Lock
@@ -92,8 +82,11 @@ public class PlayerController : CharacterBaseController
 			 */
 
 			// V.1
-			//float orientation = GetRotationValue (Mathf.Rad2Deg * Mathf.Atan2 (2 * moveData.QOrientation.y * moveData.QOrientation.w - 2 * moveData.QOrientation.x * moveData.QOrientation.z, 1 - 2 * moveData.QOrientation.y * moveData.QOrientation.y - 2 * moveData.QOrientation.z * moveData.QOrientation.z));
-			//float playerRotation = playerFirstRotation - (orientation - psMoveFirstRotation);
+			/*
+			float orientation = GetRotationValue (Mathf.Rad2Deg * Mathf.Atan2 (2 * moveData.QOrientation.y * moveData.QOrientation.w - 2 * moveData.QOrientation.x * moveData.QOrientation.z, 1 - 2 * moveData.QOrientation.y * moveData.QOrientation.y - 2 * moveData.QOrientation.z * moveData.QOrientation.z));
+			float playerRotation = playerFirstRotation - (orientation - psMoveFirstRotation);
+			transform.localRotation = Quaternion.Euler (0, playerRotation, 0);
+			*/
 
 			// V.2
 			/*
@@ -108,11 +101,12 @@ public class PlayerController : CharacterBaseController
 			if (crossProduct.y < 0) {
 				playerRotation *= -1f;
 			}
+			transform.localRotation = Quaternion.Euler (0, playerRotation, 0);
 			*/
 
 			// V.3
+			/*
 			float orientation = GetRotationValue (Mathf.Rad2Deg * Mathf.Atan2 (2 * moveData.QOrientation.y * moveData.QOrientation.w - 2 * moveData.QOrientation.x * moveData.QOrientation.z, 1 - 2 * moveData.QOrientation.y * moveData.QOrientation.y - 2 * moveData.QOrientation.z * moveData.QOrientation.z));
-			//Debug.Log (orientation);						
 			float playerRotation = transform.localRotation.eulerAngles.y;
 
 			float deadRange = 60f;
@@ -126,8 +120,23 @@ public class PlayerController : CharacterBaseController
 				orientation = 270f + (orientation - 270f) * (90f / (90f - deadRange));
 				playerRotation = psMoveFirstRotation - orientation;
 			}
-
 			transform.localRotation = Quaternion.Euler (0, playerRotation, 0);
+			*/
+
+			// V.4
+			float orientation = GetRotationValue (Mathf.Rad2Deg * Mathf.Atan2 (2 * moveData.QOrientation.y * moveData.QOrientation.w - 2 * moveData.QOrientation.x * moveData.QOrientation.z, 1 - 2 * moveData.QOrientation.y * moveData.QOrientation.y - 2 * moveData.QOrientation.z * moveData.QOrientation.z));
+			float deltaRotation = orientation - psMoveFirstRotation;
+
+			// FORWARD
+			float velocity = moveController.Data.Velocity.y;
+			elapsedTimeForward += Time.deltaTime;
+			
+			if (Mathf.Abs (velocity) >= 3f && elapsedTimeForward >= waitingTimeToMove) {
+				elapsedTimeForward = 0f;
+				MoveForward ();
+
+				transform.localRotation = Quaternion.Euler(0, transform.localRotation.y + deltaRotation, 0);
+			}
 		}
 	}
 
