@@ -28,6 +28,9 @@ public class PSMoveConnect : MonoBehaviour
 
 	private Color[] sphereColor;
 
+	// Tutorial attribute
+	public GameObject tutorialPlane;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -131,10 +134,9 @@ public class PSMoveConnect : MonoBehaviour
 					GameController.activePlayers = activePlayers;
 
 					StartTutorial();
-					//Application.LoadLevel (Application.loadedLevel + 1);
 				}
 				
-				if (GUI.Button (new Rect (20, 120, 100, 35), "SetColor")) {
+				if (GUI.Button (new Rect (20, 120, 100, 35), "Change Color")) {
 					try {
 						if (indexLight >= 4)
 							indexLight = 0;
@@ -248,7 +250,7 @@ public class PSMoveConnect : MonoBehaviour
 	private void StartTutorial() {
 		isHasStarted = true;
 
-
+		tutorialPlane.SendMessage ("ShowTutorial");
 	}
 
 	private void Reset ()
