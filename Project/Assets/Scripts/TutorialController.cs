@@ -7,8 +7,8 @@ public class TutorialController : MonoBehaviour {
 
 	private float distanceTutorial = 0.6f;
 	private float animationTime = 1f;
-	private float showTime = 6f;
-	private float practiceTime = 8f;
+	private float showTime = 3f;
+	private float practiceTime = 4f;
 
 	private int currentIndex = 0;
 
@@ -19,7 +19,9 @@ public class TutorialController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			Application.LoadLevel(Application.loadedLevel + 1);		
+		}
 	}
 
 	void ShowTutorial() {
