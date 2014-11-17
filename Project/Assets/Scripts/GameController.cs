@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour {
 	
 	WinCameraController winCameraController;
 	ItemGenerator itemGenerator;
+	SoundController soundController;
 
 	bool gameStart;
 	GameObject StartCountdown;
@@ -37,6 +38,7 @@ public class GameController : MonoBehaviour {
 		p3 = GameObject.Find("P3").transform;
 		p4 = GameObject.Find("P4").transform;
 		tileController = GetComponent<TileController>();
+		soundController = GetComponent<SoundController>();
 		players = new Transform[4];
 		players[0] = p1;
 		players[1] = p2;
@@ -304,6 +306,14 @@ public class GameController : MonoBehaviour {
 				StartCountdown.transform.GetChild(i).gameObject.SetActive(false);	
 			}
 
+			if(value > 0)
+			{
+				soundController.PlaySound("b");
+			}
+			else
+			{
+				soundController.PlaySound("go");
+			}
 			StartCountdown.transform.Find("" + value).gameObject.SetActive(true);
 			value--;
 			yield return new WaitForSeconds(1f);
