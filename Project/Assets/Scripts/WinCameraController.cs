@@ -75,5 +75,15 @@ public class WinCameraController : MonoBehaviour {
 	public void Winneris(GameObject go) {
 		winPlayer = go;
 		win = true;
+		GetCrown(go);
 	}
+
+	void GetCrown(GameObject go) {
+		foreach(Transform tf in go.transform) {
+			if(tf.gameObject.name == "crown") {
+				tf.gameObject.SetActive(true);
+			}
+		}
+	}
+
 }
