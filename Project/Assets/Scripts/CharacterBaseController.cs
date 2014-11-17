@@ -384,7 +384,9 @@ public class CharacterBaseController : MonoBehaviour {
 				if(hasBomb){
 					Explode();
 					//Destroy(sf);
-					sf.GetComponent<AudioSource>().Stop();
+					if(sf) {
+						sf.GetComponent<AudioSource>().Stop();
+					}
 					this.hasBomb = false;
 				}
 				Destroy(bombinst);

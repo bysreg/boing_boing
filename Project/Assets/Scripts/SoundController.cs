@@ -9,7 +9,8 @@ public class SoundController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if(Application.loadedLevel == 1) {
-			PlaySound ("Bgm_new",0.2f, true);
+			//PlaySound ("Bgm_new",0.2f, true);
+			StartCoroutine(PlayWithDely(4f, "Bgm_new"));
 		}else if(Application.loadedLevel == 0) {
 			PlaySound ("select_bgm",0.5f, true);
 		}
@@ -56,5 +57,10 @@ public class SoundController : MonoBehaviour {
 				Destroy(tf.gameObject,1f);
 			}
 		}
+	}
+
+	IEnumerator PlayWithDely(float delay_time, string name) {
+		yield return new WaitForSeconds(delay_time);
+		PlaySound(name, 0.2f,true);
 	}
 }
