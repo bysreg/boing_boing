@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
-	public static bool[] activePlayers = new bool[]{true,false,false,false};
+	public static bool[] activePlayers = new bool[]{false,false,false,false};
 
 	public int activePlayersCount = 4;
 
@@ -20,13 +20,15 @@ public class GameController : MonoBehaviour {
 	float spawnYPos;
 	float OFFSET_SPAWN_Y_POS = 3f;
 	float remainingGameTime;
-	const float MAX_GAME_TIME = 90f; // in seconds
+	const float MAX_GAME_TIME = 8f; // in seconds
 	
 	WinCameraController winCameraController;
 	ItemGenerator itemGenerator;
 
 	bool gameStart;
 	GameObject StartCountdown;
+	GameObject finishCountdown;
+	GameObject[] finishCountdownObjects;
 
 	void Awake()
 	{
@@ -49,13 +51,22 @@ public class GameController : MonoBehaviour {
 		winCameraController = Camera.main.GetComponent<WinCameraController>();
 		itemGenerator = GetComponent<ItemGenerator>();
 		StartCountdown = GameObject.Find("StartCountdown");
+		finishCountdown = GameObject.Find("FinishCountdown");
+		finishCountdownObjects = new GameObject[6];
 
 		for(int i=0; i<StartCountdown.transform.childCount; i++)
 		{
 			StartCountdown.transform.GetChild(i).gameObject.SetActive(false);	
         }
 
-		StartCoroutine(ShowSign(3));
+		for(int i=0; i<finishCountdown.transform.childCount; i++)
+		{
+			GameObject child = finishCountdown.transform.GetChild(i).gameObject;
+			child.SetActive(false);
+			finishCountdownObjects[Int32.Parse(child.name)] = child;
+		}
+
+		StartCoroutine(ShowStartCountdown(3));
 	}
 
 	void Init()
@@ -139,10 +150,23 @@ public class GameController : MonoBehaviour {
 		if(gameStart && remainingGameTime > 0)
 		{
 			remainingGameTime -= Time.deltaTime;
+			if(remainingGameTime >= 0f && remainingGameTime <= 6f)
+			{
+				int number = (int) Mathf.Floor(remainingGameTime);
+				if(!finishCountdownObjects[number].activeSelf)
+				{
+					if(number < 5)
+					{
+						finishCountdownObjects[number + 1].SetActive(false);
+					}
+					finishCountdownObjects[number].SetActive(true);
+				}
+			}
+
 			if(remainingGameTime <= 0f)
 			{
 				remainingGameTime = 0;
-				FinishGame();
+				StartCoroutine(FinishGame());
 			}
 		}
 
@@ -179,8 +203,26 @@ public class GameController : MonoBehaviour {
 //		}
 	}
 
-	public void FinishGame()
+	IEnumerator FinishGame()
 	{
+		Time.timeScale = 0.5f;
+		Time.fixedDeltaTime *= Time.timeScale;
+
+		yield return new WaitForSeconds(1);
+
+		Time.timeScale = 0.3f;
+		Time.fixedDeltaTime *= Time.timeScale;
+
+		yield return new WaitForSeconds(0.3f);
+
+		Time.timeScale = 0.1f;
+		Time.fixedDeltaTime *= Time.timeScale;
+
+		yield return new WaitForSeconds(0.1f);
+
+		Time.timeScale = 1f;
+		Time.fixedDeltaTime *= Time.timeScale;
+
 		//copy the players array
 		Transform[] arr = new Transform[4];
 
@@ -202,6 +244,7 @@ public class GameController : MonoBehaviour {
 		}
 
 		winCameraController.Winneris(arr[0].gameObject);
+		yield return null;
 	}
 
 	public float GetRemainingGameTime()
@@ -250,7 +293,7 @@ public class GameController : MonoBehaviour {
 		return spawnYPos;
 	}
 
-	IEnumerator ShowSign(int value)
+	IEnumerator ShowStartCountdown(int value)
 	{
 		yield return new WaitForSeconds(1f);
 
@@ -270,5 +313,15 @@ public class GameController : MonoBehaviour {
 
 		yield return new WaitForSeconds(1f);
 		StartCountdown.transform.Find("0").gameObject.SetActive(false);
+	}
+
+	void ShowFinishCountdown(int value)
+	{
+		for(int i=0; i<finishCountdown.transform.childCount; i++)
+		{
+			finishCountdown.transform.GetChild(i).gameObject.SetActive(false);	
+		}
+
+		finishCountdown.transform.Find("" + value).gameObject.SetActive(true);
 	}
 }
