@@ -40,7 +40,7 @@ public class PlayerAttack : MonoBehaviour {
 		index = GetComponent<CharacterBaseController>().index;
 		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 		soundController = GameObject.Find("GameController").GetComponent<SoundController>();		
-		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[playerController.GetPSMoveIndex()].Connected;
+		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[index - 1].Connected;
 		fist = transform.Find ("Fist").gameObject;
 
 		//ShowMultipleFist ();
