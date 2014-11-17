@@ -424,7 +424,7 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 	}
 
-	void RainbowTrail() {
+	public void RainbowTrail() {
 		gameObject.GetComponentInChildren<TrailRenderer> ().material.mainTexture = Resources.Load("Texture/rainbow") as Texture; 
 	}
 
