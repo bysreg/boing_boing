@@ -105,6 +105,7 @@ public class PlayerController : CharacterBaseController
 			*/
 
 			// V.3
+			/*
 			float orientation = GetRotationValue (Mathf.Rad2Deg * Mathf.Atan2 (2 * moveData.QOrientation.y * moveData.QOrientation.w - 2 * moveData.QOrientation.x * moveData.QOrientation.z, 1 - 2 * moveData.QOrientation.y * moveData.QOrientation.y - 2 * moveData.QOrientation.z * moveData.QOrientation.z));
 			float playerRotation = transform.localRotation.eulerAngles.y;
 
@@ -120,10 +121,11 @@ public class PlayerController : CharacterBaseController
 				playerRotation = psMoveFirstRotation - orientation;
 			}
 			transform.localRotation = Quaternion.Euler (0, playerRotation, 0);
+			*/
 
 			// V.4
-			//float orientation = GetRotationValue (Mathf.Rad2Deg * Mathf.Atan2 (2 * moveData.QOrientation.y * moveData.QOrientation.w - 2 * moveData.QOrientation.x * moveData.QOrientation.z, 1 - 2 * moveData.QOrientation.y * moveData.QOrientation.y - 2 * moveData.QOrientation.z * moveData.QOrientation.z));
-			//float deltaRotation = orientation - psMoveFirstRotation;
+			float orientation = GetRotationValue (Mathf.Rad2Deg * Mathf.Atan2 (2 * moveData.QOrientation.y * moveData.QOrientation.w - 2 * moveData.QOrientation.x * moveData.QOrientation.z, 1 - 2 * moveData.QOrientation.y * moveData.QOrientation.y - 2 * moveData.QOrientation.z * moveData.QOrientation.z));
+			float deltaRotation = orientation - psMoveFirstRotation;
 
 			// FORWARD
 			float velocity = moveController.Data.Velocity.y;
@@ -132,8 +134,8 @@ public class PlayerController : CharacterBaseController
 			if (Mathf.Abs (velocity) >= 3f && elapsedTimeForward >= waitingTimeToMove) {
 				elapsedTimeForward = 0f;
 				MoveForward ();
-
-				//transform.localRotation = Quaternion.Euler(0, transform.localRotation.y + deltaRotation, 0);
+				Debug.Log(orientation + "; " + deltaRotation);
+				transform.localRotation = Quaternion.Euler(0, transform.localRotation.eulerAngles.y - deltaRotation, 0);
 			}
 		}
 	}

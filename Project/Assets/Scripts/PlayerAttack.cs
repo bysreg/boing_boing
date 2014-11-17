@@ -14,10 +14,13 @@ public class PlayerAttack : MonoBehaviour {
 	private Transform cd;
 
 	bool isMultipleFistExist = false;
+	bool hasHighScore = false;
 
 	bool iscd = false;
 	bool psMoveAvailable;
 	GameObject fist;
+	GameObject HighScorePlayer;
+	Texture tRecord;
 	public GameObject[] additionalFist;
 	float forceMagnitude = 10f;
 	int index;
@@ -42,10 +45,10 @@ public class PlayerAttack : MonoBehaviour {
 		soundController = GameObject.Find("GameController").GetComponent<SoundController>();		
 		psMoveAvailable = PSMoveInput.IsConnected && PSMoveInput.MoveControllers[index - 1].Connected;
 		fist = transform.Find ("Fist").gameObject;
-
 		//ShowMultipleFist ();
 		HideMultipleFist ();
 
+		tRecord = gameObject.GetComponentInChildren<TrailRenderer> ().material.mainTexture;
 		//find cd animator
 		//gameObject.GetComponentsInChildren<Animator> ().SetValue ();
 //		foreach(Transform child in transform) {
@@ -93,6 +96,16 @@ public class PlayerAttack : MonoBehaviour {
 				lastHitFrom = null;
 			}
 		}
+	}
+
+	void FixedUpdate() {
+		if (hasHighScore) {
+			GetCrown (gameObject, true);
+			gameObject.GetComponent<CharacterBaseController>().RainbowTrail();
+			} else {
+			GetCrown(gameObject,false);
+			gameObject.GetComponentInChildren<TrailRenderer> ().material.mainTexture = tRecord;
+			}
 	}
     
 	public void MissAnimation(Vector3 position) {
@@ -195,6 +208,7 @@ public class PlayerAttack : MonoBehaviour {
 	public void IncKillCount()
 	{
 		killCount++;
+		hasHighScore = GetHighScore ();
 	}
 
 	public GameObject GetLastHitFrom()
@@ -217,20 +231,53 @@ public class PlayerAttack : MonoBehaviour {
 		return firstKillPlayer == this.gameObject;
 	}
 
-	public bool IsMultipleFistExist()
-	{
-		return isMultipleFistExist;
+	bool GetHighScore() {
+		foreach(GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
+			if(GetScore(go) >= GetScore(gameObject)) {
+				return false;
+			}else {
+				//refHighScorePlayer = gameObject;
+				foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player")){
+					if(player != gameObject) {
+						player.GetComponent<PlayerAttack>().hasHighScore = false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
 	}
+		public bool IsMultipleFistExist()
+		{
+			return isMultipleFistExist;
+		}
 
-	//-------test
-//	public void SetValue(int killCount, int deathCount, bool isFirstKill)
-//	{
-//		this.killCount = killCount;
-//		this.deathCount = deathCount;
-//		if(isFirstKill)
-//		{
-//			firstKillPlayer = this.gameObject;
-//		}
-//	}
-	//-------test
-}
+		//-------test
+		//	public void SetValue(int killCount, int deathCount, bool isFirstKill)
+		//	{
+		//		this.killCount = killCount;
+		//		this.deathCount = deathCount;
+		//		if(isFirstKill)
+		//		{
+		//			firstKillPlayer = this.gameObject;
+		//		}
+		//	}
+		//-------test
+
+		int GetScore(GameObject P) {
+			int k = P.GetComponent<PlayerAttack>().GetKillCount();
+			int d = P.GetComponent<PlayerAttack> ().GetDeathCount();
+			return k * 100 - d * 10;
+		}
+
+		void GetCrown(GameObject go , bool b) {
+			foreach(Transform tf in go.transform) {
+				if(tf.gameObject.name == "crown") {
+					tf.gameObject.SetActive(b);
+				}
+			}
+		}
+
+		void ReturnTail() {
+		}
+	}

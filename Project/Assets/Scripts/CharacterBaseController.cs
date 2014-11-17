@@ -243,6 +243,7 @@ public class CharacterBaseController : MonoBehaviour {
 		fallDown = true;
 		respawnTime = MAX_RESPAWN_TIME;
 		playerAttack.Killed();
+		soundController.PlaySound("falling", 0.2f);		
 	}
 
 	protected void NextJump () {
@@ -352,7 +353,6 @@ public class CharacterBaseController : MonoBehaviour {
 		this.gameObject.rigidbody.AddForce (explodeForce * 900);
 		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
 		soundController.PlaySound ("explode");
-		soundController.PlaySound ("falling", 0.2f, false);
 		Destroy (explosioninst, 3f);
 
 		if(bombFrom != null)
@@ -428,7 +428,7 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 	}
 
-	void RainbowTrail() {
+	public void RainbowTrail() {
 		gameObject.GetComponentInChildren<TrailRenderer> ().material.mainTexture = Resources.Load("Texture/rainbow") as Texture; 
 	}
 
