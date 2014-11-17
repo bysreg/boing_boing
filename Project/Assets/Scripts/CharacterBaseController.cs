@@ -75,6 +75,12 @@ public class CharacterBaseController : MonoBehaviour {
 		if (index != 0 && !GameController.activePlayers[index - 1] && !isCharacterSelection) {
 			AIController aicomp = gameObject.AddComponent<AIController>();
 			PlayerController playercomp = gameObject.GetComponent<PlayerController>();
+
+			foreach(Transform tf in gameObject.transform) {
+				if(tf.name == "computer") {
+					tf.gameObject.SetActive(true);
+				}
+			}
 			
 			aicomp.index = playercomp.index;
 			aicomp.bomb = playercomp.bomb;
@@ -385,7 +391,9 @@ public class CharacterBaseController : MonoBehaviour {
 				if(hasBomb){
 					Explode();
 					//Destroy(sf);
-					sf.GetComponent<AudioSource>().Stop();
+					if(sf) {
+						sf.GetComponent<AudioSource>().Stop();
+					}
 					this.hasBomb = false;
 				}
 				Destroy(bombinst);
