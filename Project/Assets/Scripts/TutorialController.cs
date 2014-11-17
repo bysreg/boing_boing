@@ -2,25 +2,32 @@
 using System.Collections;
 
 public class TutorialController : MonoBehaviour {
-	
+
+	SceneFader sceneFader;
+
 	public Texture[] tutorialTextures;
 
 	private float distanceTutorial = 0.6f;
 	private float animationTime = 1f;
 	private float showTime = 3f;
-	private float practiceTime = 4f;
+	private float practiceTime = 2f;
 
 	private int currentIndex = 0;
+
+	void Awake() {
+		sceneFader = GameObject.Find("SceneFader").GetComponent<SceneFader>();
+	}
 
 	// Use this for initialization
 	void Start () {
 		InitTutorial ();
+		sceneFader.FadeInScene();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.Space)) {
-			Application.LoadLevel(Application.loadedLevel + 1);		
+			sceneFader.FadeOutScene(1f, delegate() {Application.LoadLevel(Application.loadedLevel + 1);});
 		}
 	}
 
@@ -67,6 +74,6 @@ public class TutorialController : MonoBehaviour {
 
 	IEnumerator GoToNextLevel() {
 		yield return new WaitForSeconds(showTime);
-		Application.LoadLevel (Application.loadedLevel + 1);
+		sceneFader.FadeOutScene(1f, delegate() {Application.LoadLevel(Application.loadedLevel + 1);});
 	}
 }
