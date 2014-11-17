@@ -9,6 +9,7 @@ public class TileController : MonoBehaviour {
 	public Transform[] tileTypes;
 	public BoxCollider boundary;
 	public PhysicMaterial boundaryPhysicMaterial;
+	public GameObject boundaryExplosion;
 
 	GameObject tilesLayer;
 	GameObject[,] tilesObj;
@@ -135,6 +136,13 @@ public class TileController : MonoBehaviour {
 		t.GetComponent<BoxCollider>().material = boundaryPhysicMaterial;
 		BoundaryCollider bc = t.gameObject.AddComponent<BoundaryCollider>();
 		bc.shakeType = shakeType;
+	}
+
+	public void BreakBoundaryTile(GameObject boundaryTile)
+	{
+		GameObject boundaryExplosionInst = Instantiate (boundaryExplosion, boundaryTile.transform.position, Quaternion.identity) as GameObject;
+		Destroy (boundaryExplosionInst, 3f);
+		Destroy(boundaryTile);
 	}
 
 	void CreateBoundaryCollider()

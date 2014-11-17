@@ -21,8 +21,12 @@ public class FistController : MonoBehaviour {
 
 	GameObject characterGameObject;
 
+	TileController tileController;
+
+
 	// Use this for initialization
 	void Start () {
+		tileController = GameObject.Find("GameController").GetComponent<TileController>();
 		attackDistance = 2.4f;
 		sqrAttackDistance = attackDistance * attackDistance;
 		fistOriPos = transform.localPosition;
@@ -76,7 +80,7 @@ public class FistController : MonoBehaviour {
 					other.gameObject.GetComponent<PlayerAttack>().KnockedDown((other.gameObject.transform.position - characterGameObject.transform.position).normalized, characterGameObject);
 				else if(other.tag == "Boundary")
 				{
-					Destroy(other.gameObject);
+					tileController.BreakBoundaryTile(other.gameObject);
 				}
 			}
 		}
