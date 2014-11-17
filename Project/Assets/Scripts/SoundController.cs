@@ -11,7 +11,6 @@ public class SoundController : MonoBehaviour {
 		if(Application.loadedLevel == 1) {
 			//PlaySound ("Bgm_new",0.2f, true);
 			StartCoroutine(PlayWithDely(4f, "Bgm_new"));
-			StartCoroutine(PlayWithDely(1f,"countdown"));
 		}else if(Application.loadedLevel == 0) {
 			PlaySound ("select_bgm",0.5f, true);
 		}
