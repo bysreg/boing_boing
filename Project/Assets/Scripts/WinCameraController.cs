@@ -45,6 +45,9 @@ public class WinCameraController : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Q)) {
 			Application.LoadLevel(0);
 		}
+		if(Input.GetKeyDown(KeyCode.Y)) {
+			Application.LoadLevel(Application.loadedLevel + 1);
+		}
 	}
 
 	void LateUpdate() {
