@@ -186,15 +186,6 @@ public class GameController : MonoBehaviour {
 			}
 		}
 
-//		if (Input.GetKeyDown (KeyCode.R)) {
-//			Application.LoadLevel(0);		
-//		}
-
-		else if(Input.GetKeyDown(KeyCode.T))
-		{
-			Application.LoadLevel(Application.loadedLevel);
-		}
-
 		//testing code
 //		if(Input.GetKeyDown(KeyCode.Keypad1))
 //		{
