@@ -32,8 +32,14 @@ public class GameController : MonoBehaviour {
 	GameObject finishCountdown;
 	GameObject[] finishCountdownObjects;
 
+	float oriFixedDeltaTime;
+
 	void Awake()
 	{
+		//just to make sure the timescale is one
+		Time.timeScale = 1f;
+		oriFixedDeltaTime = Time.fixedDeltaTime;
+
 		sceneFader = GameObject.Find("SceneFader").GetComponent<SceneFader>();
 		p1 = GameObject.Find("P1").transform;
 		p2 = GameObject.Find("P2").transform;
@@ -183,6 +189,10 @@ public class GameController : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.R)) {
 			Application.LoadLevel(0);		
 		}
+		else if(Input.GetKeyDown(KeyCode.T))
+		{
+			Application.LoadLevel(Application.loadedLevel);
+		}
 
 		//testing code
 //		if(Input.GetKeyDown(KeyCode.Keypad1))
@@ -216,22 +226,22 @@ public class GameController : MonoBehaviour {
 	IEnumerator FinishGame()
 	{
 		Time.timeScale = 0.5f;
-		Time.fixedDeltaTime *= Time.timeScale;
+		Time.fixedDeltaTime = oriFixedDeltaTime * Time.timeScale;
 
 		yield return new WaitForSeconds(1);
 
 		Time.timeScale = 0.3f;
-		Time.fixedDeltaTime *= Time.timeScale;
+		Time.fixedDeltaTime = oriFixedDeltaTime *  Time.timeScale;
 
 		yield return new WaitForSeconds(0.3f);
 
 		Time.timeScale = 0.1f;
-		Time.fixedDeltaTime *= Time.timeScale;
+		Time.fixedDeltaTime = oriFixedDeltaTime *  Time.timeScale;
 
 		yield return new WaitForSeconds(0.1f);
 
 		Time.timeScale = 1f;
-		Time.fixedDeltaTime *= Time.timeScale;
+		Time.fixedDeltaTime = oriFixedDeltaTime *  Time.timeScale;
 
 		//copy the players array
 		Transform[] arr = new Transform[4];
