@@ -108,13 +108,13 @@ public class PlayerAttack : MonoBehaviour {
 	}
     
 	public void MissAnimation(Vector3 position) {
-		soundController.PlaySound("whoosh", 0.6f, false);
+		soundController.PlaySound("whoosh", 0.8f, false);
 		AnimateMiss(position);
 	}
 
 	public void HitAnimation(Vector3 position) {
 		//play toet sound
-		soundController.PlaySound("punch Sound", 0.6f, false);
+		soundController.PlaySound("punch Sound", 0.8f, false);
 		AnimateHit (position);
 	}
 

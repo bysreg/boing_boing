@@ -210,7 +210,7 @@ public class CharacterBaseController : MonoBehaviour {
 				NextJump();
 
 				//play toet sound
-				soundController.PlaySound("SFX-Jump", 0.1f, false);
+				soundController.PlaySound("SFX-Jump", 0.3f, false);
 			}
 			float y = Mathf.Abs(Mathf.Sin(yTime) * maxHeight);
 
@@ -352,7 +352,7 @@ public class CharacterBaseController : MonoBehaviour {
 		this.gameObject.rigidbody.AddForce (explodeForce * 900);
 		GameObject explosioninst = Instantiate (explosion, gameObject.transform.position, Quaternion.identity) as GameObject;
 		soundController.PlaySound ("explode");
-		soundController.PlaySound("falling", 0.2f);
+		soundController.PlaySound("falling", 0.7f);
 		Destroy (explosioninst, 3f);
 
 		if(bombFrom != null)
@@ -410,7 +410,7 @@ public class CharacterBaseController : MonoBehaviour {
 				c.gameObject.GetComponent<CharacterBaseController>().bombGetTimeRecord = Time.time;
 				this.hasBomb = false;
 				sf.GetComponent<AudioSource>().Stop();
-				soundController.PlaySound("passbomb", 0.2f, false);
+				soundController.PlaySound("passbomb", 0.5f, false);
 				c.gameObject.GetComponent<CharacterBaseController>().hasBomb = true;
 				c.gameObject.GetComponent<CharacterBaseController>().PassBomb(bombTime, gameObject, bombinst.transform.localScale);
 				Destroy(this.bombinst);

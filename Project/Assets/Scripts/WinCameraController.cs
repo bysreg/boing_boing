@@ -9,6 +9,7 @@ public class WinCameraController : MonoBehaviour {
 	public Camera c;
 	public GameObject[] fireworks;
 	public GameObject restart;
+	public GameObject winner;
 
 	SoundController sc;
 
@@ -31,10 +32,11 @@ public class WinCameraController : MonoBehaviour {
 			foreach (Transform tf in GameObject.Find("SoundSets").transform) {
 				tf.GetComponent<AudioSource>().volume = 0;
 			}
-			sc.PlaySound("Victory Sound", 0.7f, false);
+			sc.PlaySound("Victory Sound", 0.9f, false);
 			sc.PlaySound("yeah");
-			sc.PlaySound("fireworks", 0.7f, true);
+			sc.PlaySound("fireworks", 0.8f, true);
 			sc.mute = true;
+			winner.SetActive(true);
 		}
 
 		if(Input.GetKeyDown(KeyCode.R)) {
@@ -102,7 +104,7 @@ public class WinCameraController : MonoBehaviour {
 
 	IEnumerator ShowRestart() {
 		yield return new WaitForSeconds(4f);
-		iTween.MoveTo(restart, new Vector3(0.48f, 0.2f, 0f),2);
+		iTween.MoveTo(restart, new Vector3(0.47f, 0.2f, 0f),2);
 	}
 
 }

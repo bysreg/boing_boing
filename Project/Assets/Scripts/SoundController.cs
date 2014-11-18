@@ -12,7 +12,7 @@ public class SoundController : MonoBehaviour {
 			//PlaySound ("Bgm_new",0.2f, true);
 			StartCoroutine(PlayWithDely(4f, "Bgm_new"));
 		}else if(Application.loadedLevel == 0) {
-			PlaySound ("new_select_bgm",0.8f, true);
+			PlaySound ("new_select_bgm",1f, true);
 		}
 		//PlaySound ("dig",1f	, true);
 	}
@@ -62,7 +62,7 @@ public class SoundController : MonoBehaviour {
 	IEnumerator PlayWithDely(float delay_time, string name) {
 		yield return new WaitForSeconds(delay_time);
 		if (name == "Bgm_new") {
-						PlaySound (name, 0.2f, true);
+						PlaySound (name, 0.6f, true);
 				} else {
 						PlaySound (name, 1f, false);
 				}
