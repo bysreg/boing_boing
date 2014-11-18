@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour {
 	float spawnYPos;
 	float OFFSET_SPAWN_Y_POS = 3f;
 	float remainingGameTime;
-	const float MAX_GAME_TIME = 10f; // in seconds
+	const float MAX_GAME_TIME = 120f; // in seconds
 	
 	WinCameraController winCameraController;
 	ItemGenerator itemGenerator;
@@ -186,9 +186,10 @@ public class GameController : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown (KeyCode.R)) {
-			Application.LoadLevel(0);		
-		}
+//		if (Input.GetKeyDown (KeyCode.R)) {
+//			Application.LoadLevel(0);		
+//		}
+
 		else if(Input.GetKeyDown(KeyCode.T))
 		{
 			Application.LoadLevel(Application.loadedLevel);

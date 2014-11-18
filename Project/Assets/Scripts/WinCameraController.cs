@@ -35,12 +35,13 @@ public class WinCameraController : MonoBehaviour {
 			sc.PlaySound("yeah");
 			sc.PlaySound("fireworks", 0.7f, true);
 			sc.mute = true;
-			if(Input.GetKeyDown(KeyCode.R)) {
-				Application.LoadLevel(Application.loadedLevel);
-			}
-			if(Input.GetKeyDown(KeyCode.Q)) {
-				//Application.LoadLevel(Application.loadedLevel + 2);
-			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.R)) {
+			Application.LoadLevel(Application.loadedLevel);
+		}
+		if(Input.GetKeyDown(KeyCode.Q)) {
+			Application.LoadLevel(0);
 		}
 	}
 
