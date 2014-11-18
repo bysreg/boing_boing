@@ -8,6 +8,7 @@ public class WinCameraController : MonoBehaviour {
 	public Vector3 offset;
 	public Camera c;
 	public GameObject[] fireworks;
+	public GameObject restart;
 
 	SoundController sc;
 
@@ -34,6 +35,12 @@ public class WinCameraController : MonoBehaviour {
 			sc.PlaySound("yeah");
 			sc.PlaySound("fireworks", 0.7f, true);
 			sc.mute = true;
+			if(Input.GetKeyDown(KeyCode.R)) {
+				Application.LoadLevel(Application.loadedLevel);
+			}
+			if(Input.GetKeyDown(KeyCode.Q)) {
+				//Application.LoadLevel(Application.loadedLevel + 2);
+			}
 		}
 	}
 
@@ -81,6 +88,7 @@ public class WinCameraController : MonoBehaviour {
 				p.SetActive(false);
 			}
 		}
+		StartCoroutine(ShowRestart());
 	}
 
 	void GetCrown(GameObject go) {
@@ -89,6 +97,11 @@ public class WinCameraController : MonoBehaviour {
 				tf.gameObject.SetActive(true);
 			}
 		}
+	}
+
+	IEnumerator ShowRestart() {
+		yield return new WaitForSeconds(4f);
+		iTween.MoveTo(restart, new Vector3(0.48f, 0.2f, 0f),2);
 	}
 
 }

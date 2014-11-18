@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour {
 	float spawnYPos;
 	float OFFSET_SPAWN_Y_POS = 3f;
 	float remainingGameTime;
-	const float MAX_GAME_TIME = 120f; // in seconds
+	const float MAX_GAME_TIME = 10f; // in seconds
 	
 	WinCameraController winCameraController;
 	ItemGenerator itemGenerator;
