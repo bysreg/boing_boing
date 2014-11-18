@@ -79,6 +79,10 @@ public class GameController : MonoBehaviour {
 		StartCoroutine(ShowStartCountdown(3));
 	}
 
+	void Start() {
+		Screen.showCursor = false;
+	}
+
 	void Init()
 	{
 		remainingGameTime = MAX_GAME_TIME;

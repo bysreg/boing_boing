@@ -55,7 +55,7 @@ public class AIController : CharacterBaseController {
 	}
 
 	protected void SetTargetPoint() {
-		targetPosition = new Vector3 (Random.Range(0f, 9f), firstPosition.y, Random.Range(0f, 9f));
+		targetPosition = new Vector3 (Random.Range(1f, 14f), firstPosition.y, Random.Range(1f, 10f));
 	}
 
 	protected float GetDistance() {

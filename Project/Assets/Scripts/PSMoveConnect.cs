@@ -34,6 +34,8 @@ public class PSMoveConnect : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		Screen.showCursor = true;
+
 		activePlayers = new bool[]{false, false, false, false};
 		isHasStarted = false;
 
@@ -251,6 +253,7 @@ public class PSMoveConnect : MonoBehaviour
 		isHasStarted = true;
 
 		tutorialPlane.SendMessage ("ShowTutorial");
+		Screen.showCursor = false;
 	}
 
 	private void Reset ()
