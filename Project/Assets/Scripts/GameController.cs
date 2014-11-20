@@ -40,6 +40,7 @@ public class GameController : MonoBehaviour {
 		Time.timeScale = 1f;
 		oriFixedDeltaTime = Time.fixedDeltaTime;
 
+		remainingGameTime = MAX_GAME_TIME;
 		sceneFader = GameObject.Find("SceneFader").GetComponent<SceneFader>();
 		p1 = GameObject.Find("P1").transform;
 		p2 = GameObject.Find("P2").transform;
@@ -85,7 +86,6 @@ public class GameController : MonoBehaviour {
 
 	void Init()
 	{
-		remainingGameTime = MAX_GAME_TIME;
 		spawnYPos = p1.transform.position.y + OFFSET_SPAWN_Y_POS;
 
 		for(int i=1; i<=4; i++)
@@ -272,6 +272,11 @@ public class GameController : MonoBehaviour {
 	public float GetRemainingGameTime()
 	{
 		return remainingGameTime;
+	}
+
+	public float GetMaximumGameTime()
+	{
+		return MAX_GAME_TIME;
 	}
 
 	// 1 - based
