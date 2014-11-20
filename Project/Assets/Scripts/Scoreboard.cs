@@ -57,8 +57,8 @@ public class Scoreboard : MonoBehaviour {
 		{
 			PlayerAttack pa = playerAttacks[i];
 			CharacterBaseController cb = characterBaseControllers[i];
-			killCountTexts[i].text = "Kills : " + pa.GetKillCount();
-			deathCountTexts[i].text = "Deaths : " + pa.GetDeathCount();
+			killCountTexts[i].text = "Kills:" + pa.GetKillCount();
+			deathCountTexts[i].text = "Deaths:" + pa.GetDeathCount();
 
 			if(pa.IsMultipleFistExist() && !fistIcons[i].activeSelf)
 			{
