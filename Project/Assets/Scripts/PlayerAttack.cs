@@ -15,6 +15,7 @@ public class PlayerAttack : MonoBehaviour {
 
 	bool isMultipleFistExist = false;
 	bool hasHighScore = false;
+	bool isInKS = false;
 
 	bool iscd = false;
 	GameObject fist;
@@ -25,6 +26,7 @@ public class PlayerAttack : MonoBehaviour {
 	int index;
 	int killCount;
 	int deathCount;
+	int ksCount;
 
 	PlayerController playerController;
 	GameController gameController;
@@ -202,12 +204,16 @@ public class PlayerAttack : MonoBehaviour {
 		}
 
 		deathCount++;
+		isInKS = false;
+		ksCount = 0;
 	}
 
 	public void IncKillCount()
 	{
 		killCount++;
 		hasHighScore = GetHighScore ();
+		isInKS = true;
+		CountKillingStrike ();
 	}
 
 	public GameObject GetLastHitFrom()
@@ -233,8 +239,8 @@ public class PlayerAttack : MonoBehaviour {
 	bool GetHighScore() {
 		foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
 			if (go != gameObject) {
-				print(go.name + "Score is :" + GetScore(go));
-				print(gameObject.name + "Score is :" + GetScore(gameObject));
+				//print(go.name + "Score is :" + GetScore(go));
+				//print(gameObject.name + "Score is :" + GetScore(gameObject));
 				if (GetScore (go) >= GetScore (gameObject)) {
 					return false;
 				}else {
@@ -269,22 +275,45 @@ public class PlayerAttack : MonoBehaviour {
 		//	}
 		//-------test
 
-		int GetScore(GameObject P) {
-			PlayerAttack pa = P.GetComponent<PlayerAttack>();
-			int k = pa.GetKillCount();
-			int d = pa.GetDeathCount();
-			int f = pa.IsFirstKill() ? 1 : 0;
-			return k * 1000 - d * 10 + f;
+	int GetScore(GameObject P) {
+		PlayerAttack pa = P.GetComponent<PlayerAttack>();
+		int k = pa.GetKillCount();
+		int d = pa.GetDeathCount();
+		int f = pa.IsFirstKill() ? 1 : 0;
+		return k * 1000 - d * 10 + f;
 		}
 
-		void GetCrown(GameObject go , bool b) {
-			foreach(Transform tf in go.transform) {
-				if(tf.gameObject.name == "crown") {
-					tf.gameObject.SetActive(b);
-				}
+	void GetCrown(GameObject go , bool b) {
+		foreach(Transform tf in go.transform) {
+			if(tf.gameObject.name == "crown") {
+				tf.gameObject.SetActive(b);
 			}
 		}
+	}
 
-		void ReturnTail() {
+	void ReturnTail() {
+	}
+
+	void CountKillingStrike() {
+		if(isInKS) {
+			ksCount ++;
+			switch(ksCount) {
+			case 1 :
+				print(gameObject.name + "first kill");
+				break;
+			case 2 :
+				print(gameObject.name + "double kill");
+				break;
+			case 3:
+				print(gameObject.name + "triple kill");
+				break;
+			case 4:
+				print(gameObject.name + "Q kill");
+				break;
+			case 5:
+				print(gameObject.name + "Rampage");
+				break;
+			}
 		}
 	}
+}
