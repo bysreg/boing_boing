@@ -24,8 +24,8 @@ public class SoundController : MonoBehaviour {
 
 	public GameObject PlaySound(string s, float vl = 1f, bool lop = false) { //value vloume
 		if (mute) {
-			return null;
-				}
+			vl = 0;
+		}
 		GameObject soundOutput = Instantiate (soundfx) as GameObject;
 		soundOutput.transform.parent = GameObject.Find ("SoundSets").transform;
 		AudioSource audioS = GetAS (soundOutput);

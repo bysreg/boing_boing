@@ -34,7 +34,7 @@ public class CharacterBaseController : MonoBehaviour {
 
 	bool fallDown;
 	float respawnTime;
-	const float MAX_RESPAWN_TIME = 3f;
+	const float MAX_RESPAWN_TIME = 1.5f;
 	Vector3 capsuleCollRadius;
 	const float DEATH_DEPTH = -100f; // safe net in case somehow the game does not respawn the character properly
 
@@ -242,6 +242,7 @@ public class CharacterBaseController : MonoBehaviour {
 	{
 		fallDown = true;
 		respawnTime = MAX_RESPAWN_TIME;
+		rigidbody.detectCollisions = false;
 		playerAttack.Killed();
 	}
 
@@ -295,6 +296,7 @@ public class CharacterBaseController : MonoBehaviour {
 		}
 		rigidbody.velocity = Vector3.zero;
 		rigidbody.angularVelocity = Vector3.zero;
+		rigidbody.detectCollisions = true;
 	}
 
 	public int GetIndex()
@@ -355,6 +357,9 @@ public class CharacterBaseController : MonoBehaviour {
 		soundController.PlaySound("falling", 0.7f);
 		Destroy (explosioninst, 3f);
 
+		Vector2 tilePos = tileController.GetTilePos(transform.position);
+		tileController.ExplodeTiles(tilePos);
+
 		if(bombFrom != null)
 		{
 			playerAttack.SetLastHitFrom(bombFrom);
@@ -367,10 +372,10 @@ public class CharacterBaseController : MonoBehaviour {
 	public void AttachBomb(GameObject go) {
 		this.hasBomb = true;
 		if (bombinst) {
-						PassBomb (bombTime, go, this.bombinst.transform.localScale);
-				} else {
-						PassBomb (bombTime, go, new Vector3(0,0,0));
-				}
+			PassBomb (bombTime, go, this.bombinst.transform.localScale);
+		} else {
+			PassBomb (bombTime, go, new Vector3(0,0,0));
+		}
 	}
 
 	IEnumerator CountDown(int bombT) {

@@ -5,6 +5,8 @@ public class ItemController : ItemGenerator {
 	ItemType itc;
 	float existTime = 5f;
 
+	public TileItem tileItem; // tile in which this item exists
+
 	void Start () {
 		collider.isTrigger = true;
 		StartCoroutine (BlinkToDestroy());
@@ -16,6 +18,11 @@ public class ItemController : ItemGenerator {
 
 	void SetType(ItemType it) {
 		itc = it;
+	}
+
+	public void SetTileItem(TileItem value)
+	{
+		tileItem = value;
 	}
 
 	void OnTriggerEnter(Collider c) {
@@ -75,6 +82,8 @@ public class ItemController : ItemGenerator {
 			}
 			yield return new WaitForSeconds(0.1f);
 		}
+
+		tileItem.SetHasItem(false);
 		Destroy (gameObject);
 	}
 }

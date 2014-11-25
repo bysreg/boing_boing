@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TileController : MonoBehaviour {
 
@@ -13,17 +14,22 @@ public class TileController : MonoBehaviour {
 
 	GameObject tilesLayer;
 	GameObject[,] tilesObj;
+	List<GameObject> activeTiles;
+
 	float tileWidth;
 	float tileDepth;
 	float tileHeight;
 
 	GameObject placeHolderTile; // tile used as reference for the others. located on the bottom left of the board
+	GameController gameController;
 
 	float time;
 
 	void Awake()
 	{
 		tilesLayer = GameObject.Find("Tiles");
+		activeTiles = new List<GameObject>();
+		gameController = GameObject.Find("GameController").GetComponent<GameController>();
 
 		InitializeTiles();
 		//CreateBoundaryCollider();
@@ -125,6 +131,7 @@ public class TileController : MonoBehaviour {
 		t.name = tile.name + (y*boardHeight + x);
 		t.parent = tilesLayer.transform;
 		tilesObj[y, x] = t.gameObject;
+		activeTiles.Add(t.gameObject);
 	}
 
 	void CreateBoundaryTile(float world_x, float world_y, float world_z, int type, GameObject parent, int number, TileMovement.ShakeType shakeType)
@@ -191,6 +198,42 @@ public class TileController : MonoBehaviour {
 		{
 			tilesObj[Random.Range(1, boardHeight - 1), Random.Range(1, boardWidth - 1)].GetComponent<TileMovement>().SetTileHeight(height);
 		}
+	}
+
+	public void ExplodeTiles(Vector2 tilePos)
+	{
+		int minX = (int)Mathf.Max(0, tilePos.x - 1);
+		int maxX = (int)Mathf.Min(boardWidth - 1, tilePos.x + 1);
+		int minY = (int)Mathf.Max(0, tilePos.y - 1);
+		int maxY = (int)Mathf.Min(boardHeight - 1, tilePos.y + 1);
+		Point[] spawnPoints = gameController.GetSpawnPoints();
+
+		for(int i=minY; i<=maxY; i++)
+		{
+			for(int j=minX; j<=maxX; j++)
+			{
+				bool forbidden = false;
+				for(int k=0; k<spawnPoints.Length; k++)
+				{
+					if(spawnPoints[k].x == j && spawnPoints[k].y == i)
+					{
+						forbidden = true;
+						break;
+					}
+				}
+
+				if(!forbidden)
+				{
+					tilesObj[i,j].gameObject.SetActive(false);
+					activeTiles.Remove(tilesObj[i,j]);
+				}
+			}
+		}
+	}
+
+	public List<GameObject> GetActiveTiles()
+	{
+		return activeTiles;
 	}
 
 	//return tile pos given a world position

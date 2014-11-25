@@ -3,6 +3,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+public struct Point
+{
+	public int x;
+	public int y;
+	
+	public Point(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+}
+
 public class GameController : MonoBehaviour {
 
 	public static bool[] activePlayers = new bool[]{false,false,false,false};
@@ -18,6 +30,7 @@ public class GameController : MonoBehaviour {
 
 	bool initialized;
 	float spawnYPos;
+	Point[] spawnPoints;
 	float OFFSET_SPAWN_Y_POS = 3f;
 	float remainingGameTime;
 	const float MAX_GAME_TIME = 120f; // in seconds
@@ -87,6 +100,13 @@ public class GameController : MonoBehaviour {
 	void Init()
 	{
 		spawnYPos = p1.transform.position.y + OFFSET_SPAWN_Y_POS;
+		int boardWidth = tileController.boardWidth;
+		int boardHeight = tileController.boardHeight;
+		spawnPoints = new Point[4];
+		spawnPoints[0] = new Point(2, 2);
+		spawnPoints[1] = new Point(boardWidth - 1 - 2, 2);
+		spawnPoints[2] = new Point(boardWidth - 1 - 2, boardHeight - 1 - 2);
+		spawnPoints[3] = new Point(2, boardHeight - 1 - 2);
 
 		for(int i=1; i<=4; i++)
 		{
@@ -189,34 +209,6 @@ public class GameController : MonoBehaviour {
 				StartCoroutine(FinishGame());
 			}
 		}
-
-		//testing code
-//		if(Input.GetKeyDown(KeyCode.Keypad1))
-//		{
-//			Transform[] arr = new Transform[4];
-//			
-//			for(int i=0; i<4; i++)
-//			{
-//				arr[i] = players[i];
-//			}
-//
-//			arr[0].GetComponent<PlayerAttack>().SetValue(4, 4, false);
-//			arr[1].GetComponent<PlayerAttack>().SetValue(4, 4, true);
-//			arr[2].GetComponent<PlayerAttack>().SetValue(4, 3, false);
-//			arr[3].GetComponent<PlayerAttack>().SetValue(4, 4, false);
-//
-//			//search for player with highest kill, if they have the same kill count then compare the least death count, if it is still the same, compare who has the first kill
-//			
-//			Array.Sort(arr, CompareWinner);
-//			
-//			for(int i=0; i<activePlayersCount; i++)
-//			{
-//				PlayerAttack pa = arr[i].GetComponent<PlayerAttack>();
-//				arr[i].GetComponent<CharacterBaseController>().FreezeMovement();
-//                
-//                print (i + " place : " + arr[i].name + " " + pa.GetKillCount() + " " + pa.GetDeathCount() + " " + pa.IsFirstKill());
-//			}
-//		}
 	}
 
 	IEnumerator FinishGame()
@@ -318,6 +310,11 @@ public class GameController : MonoBehaviour {
 	public float GetSpawnYPos()
 	{
 		return spawnYPos;
+	}
+
+	public Point[] GetSpawnPoints()
+	{
+		return spawnPoints;
 	}
 
 	IEnumerator ShowStartCountdown(int value)
