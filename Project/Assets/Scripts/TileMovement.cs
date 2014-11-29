@@ -22,6 +22,8 @@ public class TileMovement : MonoBehaviour {
 
 	BoxCollider boxCollider;
 
+	TileController tileController;
+
 	public enum ShakeType
 	{
 		Left, 
@@ -42,6 +44,7 @@ public class TileMovement : MonoBehaviour {
 	{
 		normalPos = transform.position;
 		oriScale = transform.localScale;
+		tileController = GameObject.Find("GameController").GetComponent<TileController>();
 	}
 
 	public void SetTileHeight(float targetHeight)
@@ -121,6 +124,7 @@ public class TileMovement : MonoBehaviour {
 			if(disappearTime < 0)
 			{
 				this.gameObject.SetActive(false);
+				tileController.RemoveActiveTiles(this.gameObject);
 				disappearTime = 0;
 			}
 

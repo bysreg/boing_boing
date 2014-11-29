@@ -250,6 +250,11 @@ public class TileController : MonoBehaviour {
 		return activeTiles;
 	}
 
+	public void RemoveActiveTiles(GameObject tile)
+	{
+		activeTiles.Remove(tile);
+	}
+
 	//return tile pos given a world position
 	//if it is outside the tile, then this function will return wrong value
 	public Vector2 GetTilePos(Vector3 worldPos)
