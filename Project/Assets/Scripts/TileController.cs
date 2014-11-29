@@ -191,48 +191,33 @@ public class TileController : MonoBehaviour {
 
 	public void MakeTilesDisappear()
 	{
-		int count = Random.Range(10, 14);
+		int count = Random.Range(15, 20);
 		List<GameObject> activeTiles = GetActiveTiles();
 
-		for(int i=0; i<count; i++)
+		for(int i=0;i<count;i++)
 		{
-			int y = Random.Range(0, boardHeight);
-			int x = Random.Range(0, boardWidth);
+			int random = Random.Range(i, activeTiles.Count);
+
+			//swap it to beginning
+			GameObject temp = activeTiles[random];
+			activeTiles[random] = activeTiles[i];
+			activeTiles[i] = temp;
+
 			bool forbidden = false;
+			Vector2 tilePos = GetTilePos(activeTiles[i].transform.position);
 			foreach(var point in gameController.GetSpawnPoints())
 			{
-				if(point.x == x && point.y == y)
+				if(point.x == (int)tilePos.x && point.y == (int)tilePos.y)
 				{
 					forbidden = true;
 					break;
 				}
 			}
 
-			TileMovement tileMovement = tilesObj[y, x].GetComponent<TileMovement>();
-			if(!forbidden && tilesObj[y, x].gameObject.activeSelf && !tileMovement.IsDisappearing())
-				//tileMovement.Disappear();
+			TileMovement tileMovement = activeTiles[i].GetComponent<TileMovement>();
+			if(!forbidden && !tileMovement.IsAboutToFall())
 				tileMovement.ShakeTile(TileMovement.ShakeType.AboutToFall);
 		}
-
-//		for(int i=0;i<count;i++)
-//		{
-//			int random = Random.Range(i, activeTiles.Count);
-//
-//			//swap it to beginning
-//			GameObject temp = activeTiles[random];
-//			activeTiles[random] = activeTiles[i];
-//			activeTiles[i] = temp;
-//
-//			bool forbidden = false;
-//			foreach(var point in gameController.GetSpawnPoints())
-//			{
-//				if(point.x == x && point.y == y)
-//				{
-//					forbidden = true;
-//					break;
-//				}
-//			}
-//		}
 	}
 
 	public void ExplodeTiles(Vector2 tilePos)

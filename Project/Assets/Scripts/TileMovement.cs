@@ -14,6 +14,7 @@ public class TileMovement : MonoBehaviour {
 	float shakingDuration;
 	float shakeSpeed = 10f;
 	const float MAX_SHAKE_TIME = Mathf.PI;
+	bool isAboutToFall;
 
 	ShakeType shakeType;
 
@@ -96,7 +97,7 @@ public class TileMovement : MonoBehaviour {
 
 				if(shakeType == ShakeType.AboutToFall)
 				{
-					SetTileHeight(-20f);
+					SetTileHeight(-40f);
 				}
 			}
 
@@ -153,6 +154,11 @@ public class TileMovement : MonoBehaviour {
 		return disappearTime > 0;
 	}
 
+	public bool IsAboutToFall()
+	{
+		return isAboutToFall;
+	}
+
 	public void ShakeTile(ShakeType shakeType)
 	{
 		shakingTime = MAX_SHAKE_TIME;
@@ -160,6 +166,7 @@ public class TileMovement : MonoBehaviour {
 		if(shakeType == ShakeType.AboutToFall)
 		{
 			shakingTime = 6 * MAX_SHAKE_TIME;
+			isAboutToFall = true;
 		}
 
 		shakingDuration = shakingTime;
