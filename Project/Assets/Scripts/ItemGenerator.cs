@@ -36,8 +36,7 @@ public class ItemGenerator : MonoBehaviour {
 		List<GameObject> activeTiles = tileController.GetActiveTiles();
 
 		for(int i =0 ; i < amount; i++) {
-			//int it = Random.Range(0, (int)ItemType.NumberOfTypes); // item type
-			int it = 2;
+			int it = Random.Range(0, (int)ItemType.NumberOfTypes); // item type
 			int tilenum = Random.Range(0, activeTiles.Count);
 			TileItem tileItem = activeTiles[tilenum].GetComponent<TileItem>();
 			if(tileItem.HasItem())

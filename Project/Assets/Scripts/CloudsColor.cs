@@ -29,7 +29,6 @@ public class CloudsColor : MonoBehaviour {
 		red = maxColor;
 		green = minColor;
 		blue = minColor;
-		print (gameObject.name);
 	}
 
 	void Update()

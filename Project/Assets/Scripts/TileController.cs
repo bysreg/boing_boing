@@ -189,10 +189,10 @@ public class TileController : MonoBehaviour {
 		tile.SetTileHeight(targetHeight);
 	}
 
-	public void SetTileUpAndDown()
+	public void MakeTilesDisappear()
 	{
 		int count = Random.Range(10, 14);
-		float height = -20f;
+		List<GameObject> activeTiles = GetActiveTiles();
 
 		for(int i=0; i<count; i++)
 		{
@@ -208,10 +208,30 @@ public class TileController : MonoBehaviour {
 				}
 			}
 
-			if(!forbidden && tilesObj[y, x].gameObject.activeSelf)
-				//tilesObj[y, x].GetComponent<TileMovement>().SetTileHeight(height);
-				tilesObj[y, x].GetComponent<TileMovement>().Disappear();
+			TileMovement tileMovement = tilesObj[y, x].GetComponent<TileMovement>();
+			if(!forbidden && tilesObj[y, x].gameObject.activeSelf && !tileMovement.IsDisappearing())
+				tileMovement.Disappear();
 		}
+
+//		for(int i=0;i<count;i++)
+//		{
+//			int random = Random.Range(i, activeTiles.Count);
+//
+//			//swap it to beginning
+//			GameObject temp = activeTiles[random];
+//			activeTiles[random] = activeTiles[i];
+//			activeTiles[i] = temp;
+//
+//			bool forbidden = false;
+//			foreach(var point in gameController.GetSpawnPoints())
+//			{
+//				if(point.x == x && point.y == y)
+//				{
+//					forbidden = true;
+//					break;
+//				}
+//			}
+//		}
 	}
 
 	public void ExplodeTiles(Vector2 tilePos)
@@ -277,7 +297,7 @@ public class TileController : MonoBehaviour {
 		//cheat
 		if(Input.GetKeyDown(KeyCode.Space))
 		{
-			SetTileUpAndDown();
+			MakeTilesDisappear();
 		}
 
 		if(Input.GetKeyDown(KeyCode.B))

@@ -133,6 +133,11 @@ public class TileMovement : MonoBehaviour {
 		}
 	}
 
+	public bool IsDisappearing()
+	{
+		return disappearTime > 0;
+	}
+
 	public void ShakeTile(ShakeType shakeType)
 	{
 		shakingTime = MAX_SHAKE_TIME;

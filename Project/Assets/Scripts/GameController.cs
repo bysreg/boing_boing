@@ -45,6 +45,9 @@ public class GameController : MonoBehaviour {
 	GameObject finishCountdown;
 	GameObject[] finishCountdownObjects;
 
+	int[] disappearingTimeCue = new int[] {30, 20, 10, 5}; // in game seconds
+	int disappearingIndex;
+
 	float oriFixedDeltaTime;
 
 	void Awake()
@@ -201,6 +204,12 @@ public class GameController : MonoBehaviour {
 					}
 					finishCountdownObjects[number].SetActive(true);
 				}
+			}
+
+			if(disappearingIndex < disappearingTimeCue.Length && Mathf.FloorToInt(remainingGameTime) == disappearingTimeCue[disappearingIndex])
+			{
+				disappearingIndex++;
+				tileController.MakeTilesDisappear();
 			}
 
 			if(remainingGameTime <= 0f)
