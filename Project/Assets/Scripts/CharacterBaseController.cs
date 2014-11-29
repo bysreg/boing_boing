@@ -358,7 +358,7 @@ public class CharacterBaseController : MonoBehaviour {
 		Destroy (explosioninst, 3f);
 
 		Vector2 tilePos = tileController.GetTilePos(transform.position);
-		tileController.ExplodeTiles(tilePos);
+		//tileController.ExplodeTiles(tilePos);
 
 		if(bombFrom != null)
 		{

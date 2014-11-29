@@ -189,9 +189,9 @@ public class TileController : MonoBehaviour {
 		tile.SetTileHeight(targetHeight);
 	}
 
-	void SetTileUpAndDown()
+	public void SetTileUpAndDown()
 	{
-		int count = 10;
+		int count = Random.Range(10, 14);
 		float height = -20f;
 
 		for(int i=0; i<count; i++)
