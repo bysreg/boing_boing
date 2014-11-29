@@ -210,7 +210,8 @@ public class TileController : MonoBehaviour {
 
 			TileMovement tileMovement = tilesObj[y, x].GetComponent<TileMovement>();
 			if(!forbidden && tilesObj[y, x].gameObject.activeSelf && !tileMovement.IsDisappearing())
-				tileMovement.Disappear();
+				//tileMovement.Disappear();
+				tileMovement.ShakeTile(TileMovement.ShakeType.AboutToFall);
 		}
 
 //		for(int i=0;i<count;i++)

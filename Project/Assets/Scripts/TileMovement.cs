@@ -11,6 +11,7 @@ public class TileMovement : MonoBehaviour {
 	Vector3 normalPos;
 	Vector3 normalColliderPos;
 	float shakingTime;
+	float shakingDuration;
 	float shakeSpeed = 10f;
 	const float MAX_SHAKE_TIME = Mathf.PI;
 
@@ -29,7 +30,8 @@ public class TileMovement : MonoBehaviour {
 		Left, 
 		Right, 
 		Forward, 
-		Backward, 
+		Backward,
+		AboutToFall,
 		Down,
 	}
 
@@ -66,6 +68,8 @@ public class TileMovement : MonoBehaviour {
 	{
 		isMoving = false;
 		this.transform.position = new Vector3(transform.position.x, targetHeight, transform.position.z);
+		this.gameObject.SetActive(false);
+		tileController.RemoveActiveTiles(gameObject);
 	}
 
 	public bool IsWalkable()
@@ -89,6 +93,11 @@ public class TileMovement : MonoBehaviour {
 			if(shakingTime < 0)
 			{
 				shakingTime = 0;
+
+				if(shakeType == ShakeType.AboutToFall)
+				{
+					SetTileHeight(-20f);
+				}
 			}
 
 			Vector3 deltaPos = Vector3.zero;
@@ -106,6 +115,12 @@ public class TileMovement : MonoBehaviour {
 				break;
 			case ShakeType.Backward:
 				deltaPos = new Vector3(0, 0, -Mathf.Sin(shakingTime) * 0.2f);
+				break;
+			case ShakeType.AboutToFall:
+				//float progress = shakingTime / shakingDuration;
+				//float magnitude = progress * progress * 0.25f;
+				float magnitude = 0.08f;
+				deltaPos = new Vector3(Random.value, Random.value, Random.value) * magnitude;
 				break;
 			case ShakeType.Down:
 			default:
@@ -141,6 +156,13 @@ public class TileMovement : MonoBehaviour {
 	public void ShakeTile(ShakeType shakeType)
 	{
 		shakingTime = MAX_SHAKE_TIME;
+
+		if(shakeType == ShakeType.AboutToFall)
+		{
+			shakingTime = 6 * MAX_SHAKE_TIME;
+		}
+
+		shakingDuration = shakingTime;
 		this.shakeType = shakeType;
 	}
 
