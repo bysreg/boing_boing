@@ -12,9 +12,13 @@ public class TileMovement : MonoBehaviour {
 	Vector3 normalColliderPos;
 	float shakingTime;
 	float shakeSpeed = 10f;
-	float MAX_SHAKE_TIME = Mathf.PI;
+	const float MAX_SHAKE_TIME = Mathf.PI;
 
 	ShakeType shakeType;
+
+	float disappearTime;
+	const float MAX_DISAPPEAR_TIME = 2f;
+	Vector3 oriScale;
 
 	BoxCollider boxCollider;
 
@@ -37,6 +41,7 @@ public class TileMovement : MonoBehaviour {
 	void Start()
 	{
 		normalPos = transform.position;
+		oriScale = transform.localScale;
 	}
 
 	public void SetTileHeight(float targetHeight)
@@ -109,11 +114,29 @@ public class TileMovement : MonoBehaviour {
 			transform.position = normalPos + deltaPos;
 			boxCollider.center = normalColliderPos + new Vector3(-deltaPos.x * (1 / transform.localScale.x), -deltaPos.y * (1 / transform.localScale.y), -deltaPos.z* (1 / transform.localScale.z));
 		}
+
+		if(disappearTime > 0)
+		{
+			disappearTime -= Time.deltaTime;
+			if(disappearTime < 0)
+			{
+				this.gameObject.SetActive(false);
+				disappearTime = 0;
+			}
+
+			float progress = disappearTime * 1.0f / MAX_DISAPPEAR_TIME;
+			transform.localScale = oriScale * progress;
+		}
 	}
 
 	public void ShakeTile(ShakeType shakeType)
 	{
 		shakingTime = MAX_SHAKE_TIME;
 		this.shakeType = shakeType;
+	}
+
+	public void Disappear()
+	{
+		disappearTime = MAX_DISAPPEAR_TIME;
 	}
 }

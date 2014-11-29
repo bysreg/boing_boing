@@ -196,7 +196,21 @@ public class TileController : MonoBehaviour {
 
 		for(int i=0; i<count; i++)
 		{
-			tilesObj[Random.Range(1, boardHeight - 1), Random.Range(1, boardWidth - 1)].GetComponent<TileMovement>().SetTileHeight(height);
+			int y = Random.Range(0, boardHeight);
+			int x = Random.Range(0, boardWidth);
+			bool forbidden = false;
+			foreach(var point in gameController.GetSpawnPoints())
+			{
+				if(point.x == x && point.y == y)
+				{
+					forbidden = true;
+					break;
+				}
+			}
+
+			if(!forbidden && tilesObj[y, x].gameObject.activeSelf)
+				//tilesObj[y, x].GetComponent<TileMovement>().SetTileHeight(height);
+				tilesObj[y, x].GetComponent<TileMovement>().Disappear();
 		}
 	}
 
