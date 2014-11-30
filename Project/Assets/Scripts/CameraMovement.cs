@@ -3,9 +3,9 @@ using System.Collections;
 
 public class CameraMovement : MonoBehaviour {
 
-	float panTime = 1f;
-	float rotateSpeed = 1.5f; // relative speed
-	float translateSpeed = 1.5f;
+	const float panTime = 1f;
+	const float rotateSpeed = 1.5f; // relative speed
+	const float translateSpeed = 1.5f;
 	Vector3 oriPos;
 	float minZoom;
 	float maxZoom;

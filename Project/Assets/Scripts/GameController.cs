@@ -214,14 +214,20 @@ public class GameController : MonoBehaviour {
 
 			if(remainingGameTime <= 0f)
 			{
-				remainingGameTime = 0;
 				StartCoroutine(FinishGame());
 			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.P))
+		{
+			StartCoroutine(FinishGame());
 		}
 	}
 
 	IEnumerator FinishGame()
 	{
+		remainingGameTime = 0;
+
 		Time.timeScale = 0.5f;
 		Time.fixedDeltaTime = oriFixedDeltaTime * Time.timeScale;
 
@@ -266,7 +272,11 @@ public class GameController : MonoBehaviour {
 		//freeze the item generator
 		itemGenerator.SetEnabled(false);
 
-		winCameraController.Winneris(arr[0].gameObject);
+		sceneFader.FadeOutScene(1f, ()=> {
+			sceneFader.FadeInScene();
+			winCameraController.Winneris(arr[0].gameObject);});
+
+
 		yield return null;
 	}
 

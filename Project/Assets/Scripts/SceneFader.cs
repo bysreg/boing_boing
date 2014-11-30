@@ -41,12 +41,13 @@ public class SceneFader : MonoBehaviour {
 		}
 	}
 	
-	public void FadeInScene()
+	public void FadeInScene(float time = 1f, Action callback = null)
 	{
+		this.callback = callback;
 		guiTexture.enabled = true;
 		isFading = true;
 		targetAlpha = 0f;
-		fadeTime = 1f;
+		fadeTime = time;
 	}
 	
 	public void FadeOutScene(float time = 1f, Action callback = null)
