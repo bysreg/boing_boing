@@ -274,8 +274,10 @@ public class GameController : MonoBehaviour {
 
 		sceneFader.FadeOutScene(1f, ()=> {
 			sceneFader.FadeInScene();
-			winCameraController.Winneris(arr[0].gameObject);});
-
+			Vector3 tilePos = tileController.GetWorldPos(tileController.boardWidth / 2, tileController.boardHeight / 2);
+			arr[0].gameObject.transform.position = new Vector3(tilePos.x, spawnYPos - OFFSET_SPAWN_Y_POS, tilePos.z);//place the player in the middle of the arena
+			winCameraController.Winneris(arr[0].gameObject);
+		});
 
 		yield return null;
 	}
