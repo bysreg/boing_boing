@@ -62,7 +62,7 @@ public class SoundController : MonoBehaviour {
 	IEnumerator PlayWithDely(float delay_time, string name) {
 		yield return new WaitForSeconds(delay_time);
 		if (name == "Bgm_new") {
-						PlaySound (name, 0.6f, true);
+						PlaySound (name, 0.8f, true);
 				} else {
 						PlaySound (name, 1f, false);
 				}

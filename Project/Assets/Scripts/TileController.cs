@@ -191,7 +191,7 @@ public class TileController : MonoBehaviour {
 
 	public void MakeTilesDisappear()
 	{
-		int count = Random.Range(15, 20);
+		int count = Random.Range(10, 15);
 		List<GameObject> activeTiles = GetActiveTiles();
 
 		for(int i=0;i<count;i++)
