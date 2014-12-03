@@ -25,6 +25,7 @@ public class TileMovement : MonoBehaviour {
 	BoxCollider boxCollider;
 
 	TileController tileController;
+	public int index;
 
 	public enum ShakeType
 	{

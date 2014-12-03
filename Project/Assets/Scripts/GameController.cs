@@ -30,7 +30,9 @@ public class GameController : MonoBehaviour {
 
 	bool initialized;
 	float spawnYPos;
+	int spawnPosOffset = 5;
 	Point[] spawnPoints;
+	int[] spawnTileIndex;
 	float OFFSET_SPAWN_Y_POS = 3f;
 	float remainingGameTime;
 	const float MAX_GAME_TIME = 120f; // in seconds
@@ -106,10 +108,17 @@ public class GameController : MonoBehaviour {
 		int boardWidth = tileController.boardWidth;
 		int boardHeight = tileController.boardHeight;
 		spawnPoints = new Point[4];
-		spawnPoints[0] = new Point(2, 2);
-		spawnPoints[1] = new Point(boardWidth - 1 - 2, 2);
-		spawnPoints[2] = new Point(boardWidth - 1 - 2, boardHeight - 1 - 2);
-		spawnPoints[3] = new Point(2, boardHeight - 1 - 2);
+		spawnPoints[0] = new Point(spawnPosOffset, spawnPosOffset);
+		spawnPoints[1] = new Point(boardWidth - 1 - spawnPosOffset, spawnPosOffset);
+		spawnPoints[2] = new Point(boardWidth - 1 - spawnPosOffset, boardHeight - 1 - spawnPosOffset);
+		spawnPoints[3] = new Point(spawnPosOffset, boardHeight - 1 - spawnPosOffset);
+
+		spawnTileIndex = new int[4];
+		int count_index = 0;
+		foreach(var point in spawnPoints)
+		{
+			spawnTileIndex[count_index++] = tileController.GetTileObject(point.x, point.y).GetComponent<TileMovement>().index;
+		}
 
 		for(int i=1; i<=4; i++)
 		{
@@ -160,17 +169,17 @@ public class GameController : MonoBehaviour {
 		switch(playerIndex)
 		{
 		case 1 :
-			pos = tileController.GetWorldPos(2, 2) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
+			pos = tileController.GetWorldPos(spawnPosOffset, spawnPosOffset) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
 			break;
 		case 2:
-			pos = tileController.GetWorldPos(boardWidth - 1 - 2, 2) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
+			pos = tileController.GetWorldPos(boardWidth - 1 - spawnPosOffset, spawnPosOffset) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
 			break;
 		case 3:
-			pos = tileController.GetWorldPos(boardWidth - 1 - 2, boardHeight - 1 - 2) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
+			pos = tileController.GetWorldPos(boardWidth - 1 - spawnPosOffset, boardHeight - 1 - spawnPosOffset) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
 			break;
 		case 4:
 		default:
-			pos = tileController.GetWorldPos(2, boardHeight - 1 - 2) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
+			pos = tileController.GetWorldPos(spawnPosOffset, boardHeight - 1 - spawnPosOffset) + new Vector3(0, spawnYPos + tileHeight / 2, 0);
 			break;
 		}
 
@@ -221,6 +230,10 @@ public class GameController : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.P))
 		{
 			StartCoroutine(FinishGame());
+		}
+		if(Input.GetKeyDown(KeyCode.O))
+		{
+			print(tileController.GetTilePos(tileController.GetTileObject(11, 5).transform.position));
 		}
 	}
 
@@ -336,6 +349,11 @@ public class GameController : MonoBehaviour {
 	public Point[] GetSpawnPoints()
 	{
 		return spawnPoints;
+	}
+
+	public int[] GetSpawnTileIndex()
+	{
+		return spawnTileIndex;
 	}
 
 	IEnumerator ShowStartCountdown(int value)

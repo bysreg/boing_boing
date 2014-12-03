@@ -132,6 +132,7 @@ public class TileController : MonoBehaviour {
 		t.parent = tilesLayer.transform;
 		tilesObj[y, x] = t.gameObject;
 		activeTiles.Add(t.gameObject);
+		t.GetComponent<TileMovement> ().index = activeTiles.Count - 1;
 	}
 
 	void CreateBoundaryTile(float world_x, float world_y, float world_z, int type, GameObject parent, int number, TileMovement.ShakeType shakeType)
@@ -196,7 +197,9 @@ public class TileController : MonoBehaviour {
 
 		for(int i=0;i<count;i++)
 		{
-			int random = Random.Range(i, activeTiles.Count);
+			if(i >= activeTiles.Count)
+				break;
+			int random = Random.Range(i, activeTiles.Count-1);
 
 			//swap it to beginning
 			GameObject temp = activeTiles[random];
@@ -205,16 +208,16 @@ public class TileController : MonoBehaviour {
 
 			bool forbidden = false;
 			Vector2 tilePos = GetTilePos(activeTiles[i].transform.position);
-			foreach(var point in gameController.GetSpawnPoints())
+			TileMovement tileMovement = activeTiles[i].GetComponent<TileMovement>();
+			foreach(var index in gameController.GetSpawnTileIndex())
 			{
-				if(point.x == (int)tilePos.x && point.y == (int)tilePos.y)
+				if(index == tileMovement.index)
 				{
 					forbidden = true;
 					break;
 				}
 			}
 
-			TileMovement tileMovement = activeTiles[i].GetComponent<TileMovement>();
 			if(!forbidden && !tileMovement.IsAboutToFall())
 				tileMovement.ShakeTile(TileMovement.ShakeType.AboutToFall);
 		}
@@ -301,5 +304,10 @@ public class TileController : MonoBehaviour {
 	public float GetTileHeight()
 	{
 		return tileHeight;
+	}
+
+	public GameObject GetTileObject(int x, int y)
+	{
+		return tilesObj [y, x].gameObject;
 	}
 }
