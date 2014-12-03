@@ -167,6 +167,7 @@ public class CharacterBaseController : MonoBehaviour {
 		//transform.position = new Vector3 (transform.position.x, firstPosition.y + (((Mathf.Sin (Time.time * floatingSpeed) + 1) / 2f) * maxHeight), transform.position.z);
 		//transform.position = new Vector3 (transform.position.x, firstPosition.y + (Mathf.Abs (Mathf.Sin (Time.time * floatingSpeed)) * maxHeight), transform.position.z);
 
+		/*
 		if (isCharacterSelection) {
 			elapsedTimeSelection += Time.deltaTime;
 			velocity0 -= a * elapsedTimeSelection;
@@ -176,6 +177,7 @@ public class CharacterBaseController : MonoBehaviour {
 				elapsedTimeSelection = 0f;
 			}
 		}
+		*/
 
 		if (isParabolicAnimating) {
 			elapsedTimeParabolic += Time.deltaTime;
@@ -185,7 +187,8 @@ public class CharacterBaseController : MonoBehaviour {
 			float vMagnitude;
 
 			if (isCharacterSelection) {
-				vMagnitude = velocity0;
+				//vMagnitude = velocity0;
+				vMagnitude = v.sqrMagnitude;
 			} else {
 				vMagnitude = v.sqrMagnitude;
 			}
@@ -271,7 +274,8 @@ public class CharacterBaseController : MonoBehaviour {
 
 	protected void MoveForward() {
 		if (isCharacterSelection) {
-			velocity0 += 5f;
+			//velocity0 += 5f;
+			rigidbody.AddForce (transform.forward * forwardSpeed);
 		} else {
 			if(hasTouchedTile)
 				rigidbody.AddForce (transform.forward * forwardSpeed);
