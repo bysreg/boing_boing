@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
 
 	bool initialized;
 	float spawnYPos;
-	int spawnPosOffset = 5;
+	int spawnPosOffset = 3;
 	Point[] spawnPoints;
 	int[] spawnTileIndex;
 	float OFFSET_SPAWN_Y_POS = 3f;

@@ -36,7 +36,7 @@ public class CharacterBaseController : MonoBehaviour {
 	float respawnTime;
 	const float MAX_RESPAWN_TIME = 1.5f;
 	Vector3 capsuleCollRadius;
-	const float DEATH_DEPTH = -50f; // safe net in case somehow the game does not respawn the character properly
+	const float DEATH_DEPTH = -25f; // safe net in case somehow the game does not respawn the character properly
 
 	protected bool isFreezeMovement;
 
